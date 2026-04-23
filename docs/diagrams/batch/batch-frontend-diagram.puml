@@ -1,0 +1,151 @@
+@startuml batch-frontend-diagram
+title QualiTrack – Batch Management Frontend
+
+interface Batch {
+  +id: string
+  +labId: string
+  +batchCode: string
+  +productId: string
+  +productName: string
+  +equipmentId: string
+  +status: string
+  +startDate: Date
+  +endDate: Date
+  +releasedBy: string
+  +releasedAt: Date
+  +rejectionReason: string
+}
+
+interface RawMaterialUsage {
+  +materialId: string
+  +materialName: string
+  +supplier: string
+  +batchNumber: string
+  +quantityUsed: number
+  +unit: string
+}
+
+interface BatchFilterRequest {
+  +status: string
+  +productId: string
+  +from: Date
+  +to: Date
+}
+
+interface BatchReleaseRequest {
+  +batchId: string
+  +qaManagerId: string
+  +digitalSignature: string
+  +observations: string
+}
+
+interface BatchRejectRequest {
+  +batchId: string
+  +rejectedBy: string
+  +rootCause: string
+  +correctiveAction: string
+}
+
+class BatchService {
+  -http: HttpClient
+  +getBatches(labId: string, filter: BatchFilterRequest): Observable<Batch[]>
+  +getBatchById(labId: string, batchId: string): Observable<Batch>
+  +createBatch(labId: string, batch: Batch): Observable<Batch>
+  +releaseBatch(request: BatchReleaseRequest): Observable<void>
+  +rejectBatch(request: BatchRejectRequest): Observable<void>
+  +getRawMaterialUsage(batchId: string): Observable<RawMaterialUsage[]>
+  +linkRawMaterial(batchId: string, usage: RawMaterialUsage): Observable<void>
+}
+
+class BatchListComponent {
+  -batchService: BatchService
+  +batches: Batch[]
+  +filter: BatchFilterRequest
+  +isLoading: boolean
+  +statusOptions: string[]
+  +ngOnInit(): void
+  +onFilterChange(): void
+  +onViewDetail(batchId: string): void
+}
+
+class BatchFilterComponent {
+  +filter: BatchFilterRequest
+  +filterChange: EventEmitter<BatchFilterRequest>
+  +products: string[]
+  +onApply(): void
+  +onReset(): void
+}
+
+class BatchDetailComponent {
+  -batchService: BatchService
+  +batchId: string
+  +batch: Batch
+  +rawMaterials: RawMaterialUsage[]
+  +isLoading: boolean
+  +canRelease: boolean
+  +canReject: boolean
+  +ngOnInit(): void
+  +getStatusColor(): string
+}
+
+class BatchFormComponent {
+  -batchService: BatchService
+  +form: FormGroup
+  +products: string[]
+  +equipments: string[]
+  +isLoading: boolean
+  +onSubmit(): void
+}
+
+class BatchReleaseFormComponent {
+  -batchService: BatchService
+  +batchId: string
+  +form: FormGroup
+  +isLoading: boolean
+  +onRelease(): void
+}
+
+class BatchRejectFormComponent {
+  -batchService: BatchService
+  +batchId: string
+  +form: FormGroup
+  +rootCauseOptions: string[]
+  +isLoading: boolean
+  +onReject(): void
+}
+
+class RawMaterialUsageComponent {
+  -batchService: BatchService
+  +batchId: string
+  +usages: RawMaterialUsage[]
+  +availableMaterials: string[]
+  +isLoading: boolean
+  +ngOnInit(): void
+  +onLinkMaterial(): void
+}
+
+class BatchStatusBadgeComponent {
+  +status: string
+  +getColor(): string
+  +getLabel(): string
+}
+
+BatchListComponent --> BatchService
+BatchListComponent --> BatchFilterComponent
+BatchDetailComponent --> BatchService
+BatchDetailComponent --> BatchReleaseFormComponent
+BatchDetailComponent --> BatchRejectFormComponent
+BatchDetailComponent --> RawMaterialUsageComponent
+BatchDetailComponent --> BatchStatusBadgeComponent
+BatchFormComponent --> BatchService
+BatchReleaseFormComponent --> BatchService
+BatchRejectFormComponent --> BatchService
+RawMaterialUsageComponent --> BatchService
+
+BatchService ..> Batch
+BatchService ..> RawMaterialUsage
+BatchService ..> BatchFilterRequest
+BatchService ..> BatchReleaseRequest
+BatchService ..> BatchRejectRequest
+
+@enduml
