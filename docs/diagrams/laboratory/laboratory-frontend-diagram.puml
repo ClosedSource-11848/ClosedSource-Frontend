@@ -1,0 +1,134 @@
+@startuml laboratory-frontend-diagram
+title QualiTrack – Laboratory Management Frontend
+
+interface Laboratory {
+  +id: string
+  +name: string
+  +ruc: string
+  +address: string
+  +phone: string
+  +applicableRegulations: string[]
+}
+
+interface StaffMember {
+  +id: string
+  +fullName: string
+  +role: string
+  +email: string
+  +active: boolean
+}
+
+interface PharmaceuticalProduct {
+  +id: string
+  +code: string
+  +name: string
+  +description: string
+  +specifications: string
+}
+
+interface RawMaterial {
+  +id: string
+  +name: string
+  +code: string
+  +supplier: string
+  +batchNumber: string
+  +expirationDate: Date
+  +quantityInStock: number
+  +minimumStock: number
+}
+
+class LaboratoryService {
+  -http: HttpClient
+  +getLaboratory(labId: string): Observable<Laboratory>
+  +updateLaboratory(labId: string, data: Laboratory): Observable<Laboratory>
+  +getStaff(labId: string): Observable<StaffMember[]>
+  +registerStaff(labId: string, staff: StaffMember): Observable<StaffMember>
+  +deactivateStaff(labId: string, staffId: string): Observable<void>
+  +getProducts(labId: string): Observable<PharmaceuticalProduct[]>
+  +createProduct(labId: string, product: PharmaceuticalProduct): Observable<PharmaceuticalProduct>
+  +getRawMaterials(labId: string): Observable<RawMaterial[]>
+  +createRawMaterial(labId: string, material: RawMaterial): Observable<RawMaterial>
+}
+
+class LabProfileComponent {
+  -labService: LaboratoryService
+  +laboratory: Laboratory
+  +isLoading: boolean
+  +isEditing: boolean
+  +form: FormGroup
+  +ngOnInit(): void
+  +onEdit(): void
+  +onSave(): void
+}
+
+class StaffListComponent {
+  -labService: LaboratoryService
+  +staffMembers: StaffMember[]
+  +isLoading: boolean
+  +ngOnInit(): void
+  +onDeactivate(staffId: string): void
+}
+
+class StaffFormComponent {
+  -labService: LaboratoryService
+  +form: FormGroup
+  +availableRoles: string[]
+  +isLoading: boolean
+  +ngOnInit(): void
+  +onSubmit(): void
+}
+
+class ProductCatalogComponent {
+  -labService: LaboratoryService
+  +products: PharmaceuticalProduct[]
+  +isLoading: boolean
+  +searchTerm: string
+  +ngOnInit(): void
+  +onSearch(): void
+}
+
+class ProductFormComponent {
+  -labService: LaboratoryService
+  +form: FormGroup
+  +isLoading: boolean
+  +onSubmit(): void
+}
+
+class RawMaterialListComponent {
+  -labService: LaboratoryService
+  +rawMaterials: RawMaterial[]
+  +lowStockMaterials: RawMaterial[]
+  +isLoading: boolean
+  +ngOnInit(): void
+  +hasLowStock(material: RawMaterial): boolean
+}
+
+class RawMaterialFormComponent {
+  -labService: LaboratoryService
+  +form: FormGroup
+  +isLoading: boolean
+  +onSubmit(): void
+}
+
+class RegulationSettingsComponent {
+  -labService: LaboratoryService
+  +availableRegulations: string[]
+  +selectedRegulations: string[]
+  +onSave(): void
+}
+
+LabProfileComponent --> LaboratoryService
+StaffListComponent --> LaboratoryService
+StaffFormComponent --> LaboratoryService
+ProductCatalogComponent --> LaboratoryService
+ProductFormComponent --> LaboratoryService
+RawMaterialListComponent --> LaboratoryService
+RawMaterialFormComponent --> LaboratoryService
+RegulationSettingsComponent --> LaboratoryService
+
+LaboratoryService ..> Laboratory
+LaboratoryService ..> StaffMember
+LaboratoryService ..> PharmaceuticalProduct
+LaboratoryService ..> RawMaterial
+
+@enduml
