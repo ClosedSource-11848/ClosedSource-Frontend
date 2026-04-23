@@ -1,0 +1,112 @@
+@startuml tracking-frontend-diagram
+title QualiTrack – Tracking Frontend
+
+interface Measurement {
+  +id: string
+  +equipmentId: string
+  +batchId: string
+  +temperature: number
+  +pressure: number
+  +ph: number
+  +timestamp: Date
+}
+
+interface EquipmentStatus {
+  +equipmentId: string
+  +equipmentName: string
+  +isConnected: boolean
+  +lastMeasurement: Measurement
+  +lastSeenAt: Date
+}
+
+interface TelemetryHistoryRequest {
+  +equipmentId: string
+  +from: Date
+  +to: Date
+  +variable: string
+}
+
+interface TelemetryHistoryPoint {
+  +timestamp: Date
+  +value: number
+  +variable: string
+}
+
+class TelemetryService {
+  -http: HttpClient
+  +getEquipmentStatuses(labId: string): Observable<EquipmentStatus[]>
+  +getLatestMeasurement(equipmentId: string): Observable<Measurement>
+  +getTelemetryHistory(request: TelemetryHistoryRequest): Observable<TelemetryHistoryPoint[]>
+  +pollEquipmentStatus(labId: string, intervalMs: number): Observable<EquipmentStatus[]>
+}
+
+class TelemetryDashboardComponent {
+  -telemetryService: TelemetryService
+  +equipmentStatuses: EquipmentStatus[]
+  +selectedEquipmentId: string
+  +isLoading: boolean
+  +pollingSubscription: Subscription
+  +ngOnInit(): void
+  +ngOnDestroy(): void
+  +onSelectEquipment(equipmentId: string): void
+  +startPolling(): void
+  +stopPolling(): void
+}
+
+class EquipmentStatusCardComponent {
+  +status: EquipmentStatus
+  +isConnected: boolean
+  +lastTemperature: number
+  +lastPressure: number
+  +lastPh: number
+  +getStatusColor(): string
+  +getTimeSinceLastSeen(): string
+}
+
+class TelemetryChartComponent {
+  -telemetryService: TelemetryService
+  +equipmentId: string
+  +variable: string
+  +fromDate: Date
+  +toDate: Date
+  +chartData: TelemetryHistoryPoint[]
+  +chartLabels: string[]
+  +chartType: string
+  +isLoading: boolean
+  +ngOnChanges(): void
+  +loadHistory(): void
+  +buildChart(): void
+}
+
+class TelemetryHistoryComponent {
+  -telemetryService: TelemetryService
+  +equipmentId: string
+  +measurements: Measurement[]
+  +fromDate: Date
+  +toDate: Date
+  +isLoading: boolean
+  +ngOnInit(): void
+  +onDateRangeChange(): void
+  +exportToCsv(): void
+}
+
+class VariableSelectorComponent {
+  +variables: string[]
+  +selectedVariable: string
+  +variableChange: EventEmitter<string>
+  +onSelect(variable: string): void
+}
+
+TelemetryDashboardComponent --> TelemetryService
+TelemetryDashboardComponent --> EquipmentStatusCardComponent
+TelemetryDashboardComponent --> TelemetryChartComponent
+TelemetryChartComponent --> TelemetryService
+TelemetryHistoryComponent --> TelemetryService
+TelemetryDashboardComponent --> VariableSelectorComponent
+
+TelemetryService ..> Measurement
+TelemetryService ..> EquipmentStatus
+TelemetryService ..> TelemetryHistoryRequest
+TelemetryService ..> TelemetryHistoryPoint
+
+@enduml
