@@ -1,0 +1,91 @@
+@startuml qualitrack-frontend-diagram
+title QualiTrack – Frontend Complete Diagram
+
+package "IAM" {
+  class SignInComponent
+  class SignUpComponent
+  class RecoverPasswordComponent
+  class AuthService
+}
+
+package "LaboratoryManagement" {
+  class LabProfileComponent
+  class StaffListComponent
+  class ProductCatalogComponent
+  class RawMaterialListComponent
+  class LaboratoryService
+}
+
+package "EquipmentManagement" {
+  class EquipmentListComponent
+  class EquipmentFormComponent
+  class BpmConfigFormComponent
+  class MaintenanceHistoryComponent
+  class EquipmentService
+}
+
+package "Tracking" {
+  class TelemetryDashboardComponent
+  class TelemetryChartComponent
+  class EquipmentStatusCardComponent
+  class TelemetryService
+}
+
+package "ComplianceAlerting" {
+  class AlertDashboardComponent
+  class AlertHistoryComponent
+  class DeviationDetailComponent
+  class NotificationSettingsComponent
+  class ComplianceService
+}
+
+package "BatchManagement" {
+  class BatchListComponent
+  class BatchDetailComponent
+  class BatchFormComponent
+  class BatchReleaseFormComponent
+  class BatchService
+}
+
+package "ReportingAudit" {
+  class KpiDashboardComponent
+  class ReportGeneratorComponent
+  class AuditLogViewerComponent
+  class ReportingService
+}
+
+package "Shared" {
+  class AuthGuard
+  class TokenInterceptor
+  class ErrorInterceptor
+  class BaseHttpService
+  class ToastService
+}
+
+SignInComponent --> AuthService
+SignUpComponent --> AuthService
+LabProfileComponent --> LaboratoryService
+StaffListComponent --> LaboratoryService
+EquipmentListComponent --> EquipmentService
+BpmConfigFormComponent --> EquipmentService
+TelemetryDashboardComponent --> TelemetryService
+TelemetryChartComponent --> TelemetryService
+AlertDashboardComponent --> ComplianceService
+AlertHistoryComponent --> ComplianceService
+BatchListComponent --> BatchService
+BatchReleaseFormComponent --> BatchService
+KpiDashboardComponent --> ReportingService
+ReportGeneratorComponent --> ReportingService
+
+AuthService --> BaseHttpService
+LaboratoryService --> BaseHttpService
+EquipmentService --> BaseHttpService
+TelemetryService --> BaseHttpService
+ComplianceService --> BaseHttpService
+BatchService --> BaseHttpService
+ReportingService --> BaseHttpService
+
+BaseHttpService --> TokenInterceptor
+BaseHttpService --> ErrorInterceptor
+
+@enduml
