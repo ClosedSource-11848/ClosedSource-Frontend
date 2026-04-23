@@ -1,134 +1,236 @@
 @startuml equipment-frontend-diagram
 title QualiTrack – Equipment Management Frontend
 
-interface Equipment {
-  +id: string
-  +labId: string
-  +name: string
-  +type: string
-  +deviceId: string
-  +status: string
-  +lastCalibrationDate: Date
-  +nextCalibrationDate: Date
+package "equipment-management" {
+
+  package "domain" {
+
+    interface Equipment {
+      +id: string
+      +labId: string
+      +name: string
+      +type: EquipmentType
+      +deviceId: string
+      +status: EquipmentStatus
+      +lastCalibrationDate: Date
+      +nextCalibrationDate: Date
+      +bpmConfig: BpmParameterConfig[]
+    }
+
+    interface BpmParameterConfig {
+      +equipmentId: string
+      +variable: CriticalVariable
+      +minValue: number
+      +maxValue: number
+      +unit: string
+    }
+
+    interface MaintenanceRecord {
+      +id: string
+      +equipmentId: string
+      +maintenanceType: MaintenanceType
+      +date: Date
+      +technician: string
+      +observations: string
+    }
+
+    interface CalibrationAlert {
+      +equipmentId: string
+      +equipmentName: string
+      +daysUntilExpiry: number
+      +nextCalibrationDate: Date
+      +isCritical: boolean
+    }
+
+    interface RegisterEquipmentCommand {
+      +labId: string
+      +name: string
+      +type: EquipmentType
+      +deviceId: string
+    }
+
+    interface LinkSensorCommand {
+      +labId: string
+      +equipmentId: string
+      +deviceId: string
+    }
+
+    interface ConfigureBpmCommand {
+      +equipmentId: string
+      +parameters: BpmParameterConfig[]
+    }
+
+    interface RegisterMaintenanceCommand {
+      +equipmentId: string
+      +maintenanceType: MaintenanceType
+      +date: Date
+      +technician: string
+      +observations: string
+    }
+
+    enum EquipmentType {
+      AUTOCLAVE
+      PH_METER
+      THERMOMETER
+      PRESSURE_SENSOR
+      CENTRIFUGE
+      SPECTROPHOTOMETER
+    }
+
+    enum EquipmentStatus {
+      ACTIVE
+      INACTIVE
+      UNDER_MAINTENANCE
+      PENDING_CALIBRATION
+    }
+
+    enum CriticalVariable {
+      TEMPERATURE
+      PRESSURE
+      PH
+      HUMIDITY
+      FLOW_RATE
+    }
+
+    enum MaintenanceType {
+      PREVENTIVE
+      CORRECTIVE
+      CALIBRATION
+    }
+  }
+
+  package "application" {
+
+    class EquipmentFacade {
+      -equipmentApiService: EquipmentApiService
+      +getEquipment(labId: string): Observable<Equipment[]>
+      +getEquipmentById(labId: string, equipmentId: string): Observable<Equipment>
+      +registerEquipment(command: RegisterEquipmentCommand): Observable<Equipment>
+      +linkSensor(command: LinkSensorCommand): Observable<void>
+      +configureBpmParameters(command: ConfigureBpmCommand): Observable<void>
+      +getMaintenanceHistory(equipmentId: string): Observable<MaintenanceRecord[]>
+      +registerMaintenance(command: RegisterMaintenanceCommand): Observable<MaintenanceRecord>
+      +getCalibrationAlerts(labId: string): Observable<CalibrationAlert[]>
+    }
+  }
+
+  package "infrastructure" {
+
+    class EquipmentApiService {
+      -http: HttpClient
+      -baseUrl: string
+      +getEquipment(labId: string): Observable<Equipment[]>
+      +getEquipmentById(labId: string, equipmentId: string): Observable<Equipment>
+      +registerEquipment(labId: string, body: RegisterEquipmentCommand): Observable<Equipment>
+      +linkSensor(labId: string, equipmentId: string, body: LinkSensorCommand): Observable<void>
+      +configureBpm(equipmentId: string, body: ConfigureBpmCommand): Observable<void>
+      +getMaintenanceHistory(equipmentId: string): Observable<MaintenanceRecord[]>
+      +registerMaintenance(equipmentId: string, body: RegisterMaintenanceCommand): Observable<MaintenanceRecord>
+      +getCalibrationAlerts(labId: string): Observable<CalibrationAlert[]>
+    }
+  }
+
+  package "interfaces" {
+
+    class EquipmentListComponent {
+      -equipmentFacade: EquipmentFacade
+      +equipmentList: Equipment[]
+      +isLoading: boolean
+      +searchTerm: string
+      +ngOnInit(): void
+      +loadEquipment(): void
+      +onSearch(): void
+      +onViewDetail(equipmentId: string): void
+    }
+
+    class EquipmentDetailComponent {
+      -equipmentFacade: EquipmentFacade
+      +equipment: Equipment
+      +maintenanceHistory: MaintenanceRecord[]
+      +isLoading: boolean
+      +activeTab: string
+      +ngOnInit(): void
+      +loadDetail(): void
+      +getStatusColor(): string
+    }
+
+    class EquipmentFormComponent {
+      -equipmentFacade: EquipmentFacade
+      -toastService: ToastService
+      +form: FormGroup
+      +equipmentTypes: EquipmentType[]
+      +isLoading: boolean
+      +isEditMode: boolean
+      +ngOnInit(): void
+      +buildForm(): void
+      +onSubmit(): void
+    }
+
+    class BpmConfigFormComponent {
+      -equipmentFacade: EquipmentFacade
+      -toastService: ToastService
+      +equipmentId: string
+      +bpmParameters: BpmParameterConfig[]
+      +form: FormGroup
+      +variables: CriticalVariable[]
+      +isLoading: boolean
+      +ngOnInit(): void
+      +addParameter(): void
+      +removeParameter(index: number): void
+      +onSave(): void
+    }
+
+    class MaintenanceHistoryComponent {
+      -equipmentFacade: EquipmentFacade
+      +equipmentId: string
+      +maintenanceRecords: MaintenanceRecord[]
+      +isLoading: boolean
+      +ngOnInit(): void
+      +loadHistory(): void
+    }
+
+    class MaintenanceFormComponent {
+      -equipmentFacade: EquipmentFacade
+      -toastService: ToastService
+      +equipmentId: string
+      +form: FormGroup
+      +maintenanceTypes: MaintenanceType[]
+      +isLoading: boolean
+      +buildForm(): void
+      +onSubmit(): void
+    }
+
+    class CalibrationAlertComponent {
+      -equipmentFacade: EquipmentFacade
+      +calibrationAlerts: CalibrationAlert[]
+      +criticalAlerts: CalibrationAlert[]
+      +isLoading: boolean
+      +labId: string
+      +ngOnInit(): void
+      +loadAlerts(): void
+      +isCritical(alert: CalibrationAlert): boolean
+    }
+  }
 }
 
-interface BpmParameterConfig {
-  +equipmentId: string
-  +variable: string
-  +minValue: number
-  +maxValue: number
-  +unit: string
-}
+EquipmentFacade --> EquipmentApiService
+EquipmentFacade ..> Equipment
+EquipmentFacade ..> BpmParameterConfig
+EquipmentFacade ..> MaintenanceRecord
+EquipmentFacade ..> CalibrationAlert
+EquipmentFacade ..> RegisterEquipmentCommand
+EquipmentFacade ..> LinkSensorCommand
+EquipmentFacade ..> ConfigureBpmCommand
+EquipmentFacade ..> RegisterMaintenanceCommand
 
-interface MaintenanceRecord {
-  +id: string
-  +equipmentId: string
-  +maintenanceType: string
-  +date: Date
-  +technician: string
-  +observations: string
-}
-
-interface CalibrationAlert {
-  +equipmentId: string
-  +equipmentName: string
-  +daysUntilExpiry: number
-  +nextCalibrationDate: Date
-}
-
-class EquipmentService {
-  -http: HttpClient
-  +getEquipment(labId: string): Observable<Equipment[]>
-  +getEquipmentById(labId: string, equipmentId: string): Observable<Equipment>
-  +registerEquipment(labId: string, equipment: Equipment): Observable<Equipment>
-  +updateEquipment(labId: string, equipmentId: string, data: Equipment): Observable<Equipment>
-  +getBpmConfig(equipmentId: string): Observable<BpmParameterConfig[]>
-  +updateBpmConfig(equipmentId: string, config: BpmParameterConfig[]): Observable<void>
-  +getMaintenanceHistory(equipmentId: string): Observable<MaintenanceRecord[]>
-  +registerMaintenance(equipmentId: string, record: MaintenanceRecord): Observable<MaintenanceRecord>
-  +getCalibrationAlerts(labId: string): Observable<CalibrationAlert[]>
-}
-
-class EquipmentListComponent {
-  -equipmentService: EquipmentService
-  +equipmentList: Equipment[]
-  +isLoading: boolean
-  +searchTerm: string
-  +ngOnInit(): void
-  +onSearch(): void
-  +onViewDetail(equipmentId: string): void
-}
-
-class EquipmentDetailComponent {
-  -equipmentService: EquipmentService
-  +equipment: Equipment
-  +bpmConfig: BpmParameterConfig[]
-  +maintenanceHistory: MaintenanceRecord[]
-  +isLoading: boolean
-  +ngOnInit(): void
-}
-
-class EquipmentFormComponent {
-  -equipmentService: EquipmentService
-  +form: FormGroup
-  +equipmentTypes: string[]
-  +isLoading: boolean
-  +isEditMode: boolean
-  +ngOnInit(): void
-  +onSubmit(): void
-}
-
-class BpmConfigFormComponent {
-  -equipmentService: EquipmentService
-  +equipmentId: string
-  +bpmParameters: BpmParameterConfig[]
-  +form: FormGroup
-  +variables: string[]
-  +ngOnInit(): void
-  +addParameter(): void
-  +removeParameter(index: number): void
-  +onSave(): void
-}
-
-class MaintenanceHistoryComponent {
-  -equipmentService: EquipmentService
-  +equipmentId: string
-  +maintenanceRecords: MaintenanceRecord[]
-  +isLoading: boolean
-  +ngOnInit(): void
-}
-
-class MaintenanceFormComponent {
-  -equipmentService: EquipmentService
-  +equipmentId: string
-  +form: FormGroup
-  +maintenanceTypes: string[]
-  +onSubmit(): void
-}
-
-class CalibrationAlertComponent {
-  -equipmentService: EquipmentService
-  +calibrationAlerts: CalibrationAlert[]
-  +criticalAlerts: CalibrationAlert[]
-  +isLoading: boolean
-  +ngOnInit(): void
-  +isCritical(alert: CalibrationAlert): boolean
-}
-
-EquipmentListComponent --> EquipmentService
-EquipmentDetailComponent --> EquipmentService
-EquipmentFormComponent --> EquipmentService
-BpmConfigFormComponent --> EquipmentService
-MaintenanceHistoryComponent --> EquipmentService
-MaintenanceFormComponent --> EquipmentService
-CalibrationAlertComponent --> EquipmentService
-
-EquipmentDetailComponent --> BpmConfigFormComponent
+EquipmentListComponent --> EquipmentFacade
+EquipmentDetailComponent --> EquipmentFacade
 EquipmentDetailComponent --> MaintenanceHistoryComponent
-
-EquipmentService ..> Equipment
-EquipmentService ..> BpmParameterConfig
-EquipmentService ..> MaintenanceRecord
-EquipmentService ..> CalibrationAlert
+EquipmentDetailComponent --> BpmConfigFormComponent
+EquipmentFormComponent --> EquipmentFacade
+BpmConfigFormComponent --> EquipmentFacade
+MaintenanceHistoryComponent --> EquipmentFacade
+MaintenanceFormComponent --> EquipmentFacade
+CalibrationAlertComponent --> EquipmentFacade
 
 @enduml
