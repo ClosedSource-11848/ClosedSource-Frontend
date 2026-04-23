@@ -1,0 +1,112 @@
+@startuml iam-frontend-diagram
+title QualiTrack – IAM Frontend
+
+interface AuthUser {
+  +id: string
+  +email: string
+  +role: string
+  +token: string
+}
+
+interface LoginRequest {
+  +email: string
+  +password: string
+}
+
+interface RegisterRequest {
+  +fullName: string
+  +email: string
+  +password: string
+  +role: string
+  +labId: string
+}
+
+interface RecoverPasswordRequest {
+  +email: string
+}
+
+class AuthService {
+  -http: HttpClient
+  -currentUser: BehaviorSubject<AuthUser>
+  +currentUser$: Observable<AuthUser>
+  +login(request: LoginRequest): Observable<AuthUser>
+  +register(request: RegisterRequest): Observable<void>
+  +recoverPassword(request: RecoverPasswordRequest): Observable<void>
+  +logout(): void
+  +isAuthenticated(): boolean
+  +getToken(): string
+  +getCurrentUser(): AuthUser
+}
+
+class SignInComponent {
+  -authService: AuthService
+  -router: Router
+  +form: FormGroup
+  +isLoading: boolean
+  +errorMessage: string
+  +ngOnInit(): void
+  +onSubmit(): void
+}
+
+class SignUpComponent {
+  -authService: AuthService
+  -router: Router
+  +form: FormGroup
+  +roles: string[]
+  +isLoading: boolean
+  +errorMessage: string
+  +ngOnInit(): void
+  +onSubmit(): void
+}
+
+class RecoverPasswordComponent {
+  -authService: AuthService
+  +form: FormGroup
+  +isLoading: boolean
+  +successMessage: string
+  +errorMessage: string
+  +onSubmit(): void
+}
+
+class UserManagementComponent {
+  -authService: AuthService
+  +users: AuthUser[]
+  +isLoading: boolean
+  +ngOnInit(): void
+  +deactivateUser(userId: string): void
+  +updateRole(userId: string, role: string): void
+}
+
+class RoleAssignmentComponent {
+  -authService: AuthService
+  +availableRoles: string[]
+  +selectedUserId: string
+  +selectedRole: string
+  +onAssign(): void
+}
+
+class AuthGuard {
+  -authService: AuthService
+  -router: Router
+  +canActivate(route: ActivatedRouteSnapshot): boolean
+}
+
+class RoleGuard {
+  -authService: AuthService
+  -router: Router
+  +requiredRoles: string[]
+  +canActivate(route: ActivatedRouteSnapshot): boolean
+}
+
+SignInComponent --> AuthService
+SignUpComponent --> AuthService
+RecoverPasswordComponent --> AuthService
+UserManagementComponent --> AuthService
+RoleAssignmentComponent --> AuthService
+AuthGuard --> AuthService
+RoleGuard --> AuthService
+AuthService ..> AuthUser
+AuthService ..> LoginRequest
+AuthService ..> RegisterRequest
+
+@enduml
