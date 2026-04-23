@@ -1,89 +1,178 @@
 @startuml qualitrack-frontend-diagram
 title QualiTrack – Frontend Complete Diagram
 
-package "IAM" {
-  class SignInComponent
-  class SignUpComponent
-  class RecoverPasswordComponent
-  class AuthService
+package "qualitrack-frontend" {
+
+package "iam" {
+  package "domain" {
+    interface AuthUser
+    interface LoginRequest
+    interface RegisterRequest
+  }
+  package "application" {
+    class AuthFacade
+  }
+  package "infrastructure" {
+    class AuthApiService
+  }
+  package "interfaces" {
+    class SignInComponent
+    class SignUpComponent
+  }
 }
 
-package "LaboratoryManagement" {
-  class LabProfileComponent
-  class StaffListComponent
-  class ProductCatalogComponent
-  class RawMaterialListComponent
-  class LaboratoryService
+package "laboratory-management" {
+  package "domain" {
+    interface Laboratory
+    interface StaffMember
+    interface PharmaceuticalProduct
+    interface RawMaterial
+  }
+  package "application" {
+    class LaboratoryFacade
+  }
+  package "infrastructure" {
+    class LaboratoryApiService
+  }
+  package "interfaces" {
+    class LabProfileComponent
+    class StaffListComponent
+  }
 }
 
-package "EquipmentManagement" {
-  class EquipmentListComponent
-  class EquipmentFormComponent
-  class BpmConfigFormComponent
-  class MaintenanceHistoryComponent
-  class EquipmentService
+package "equipment-management" {
+  package "domain" {
+    interface Equipment
+    interface BpmParameterConfig
+    interface MaintenanceRecord
+  }
+  package "application" {
+    class EquipmentFacade
+  }
+  package "infrastructure" {
+    class EquipmentApiService
+  }
+  package "interfaces" {
+    class EquipmentListComponent
+    class BpmConfigFormComponent
+  }
 }
 
-package "Tracking" {
-  class TelemetryDashboardComponent
-  class TelemetryChartComponent
-  class EquipmentStatusCardComponent
-  class TelemetryService
+package "tracking" {
+  package "domain" {
+    interface Measurement
+    interface EquipmentStatus
+  }
+  package "application" {
+    class TelemetryFacade
+  }
+  package "infrastructure" {
+    class TelemetryApiService
+  }
+  package "interfaces" {
+    class TelemetryDashboardComponent
+    class TelemetryChartComponent
+  }
 }
 
-package "ComplianceAlerting" {
-  class AlertDashboardComponent
-  class AlertHistoryComponent
-  class DeviationDetailComponent
-  class NotificationSettingsComponent
-  class ComplianceService
+package "compliance-alerting" {
+  package "domain" {
+    interface DeviationAlert
+    interface ComplianceEvent
+  }
+  package "application" {
+    class ComplianceFacade
+  }
+  package "infrastructure" {
+    class ComplianceApiService
+  }
+  package "interfaces" {
+    class AlertDashboardComponent
+    class AlertHistoryComponent
+  }
 }
 
-package "BatchManagement" {
-  class BatchListComponent
-  class BatchDetailComponent
-  class BatchFormComponent
-  class BatchReleaseFormComponent
-  class BatchService
+package "batch-management" {
+  package "domain" {
+    interface Batch
+    interface RawMaterialUsage
+  }
+  package "application" {
+    class BatchFacade
+  }
+  package "infrastructure" {
+    class BatchApiService
+  }
+  package "interfaces" {
+    class BatchListComponent
+    class BatchDetailComponent
+  }
 }
 
-package "ReportingAudit" {
-  class KpiDashboardComponent
-  class ReportGeneratorComponent
-  class AuditLogViewerComponent
-  class ReportingService
+package "reporting-audit" {
+  package "domain" {
+    interface KpiMetric
+    interface AuditLogEntry
+  }
+  package "application" {
+    class ReportingFacade
+  }
+  package "infrastructure" {
+    class ReportingApiService
+  }
+  package "interfaces" {
+    class KpiDashboardComponent
+    class ReportGeneratorComponent
+  }
 }
 
-package "Shared" {
-  class AuthGuard
-  class TokenInterceptor
-  class ErrorInterceptor
-  class BaseHttpService
-  class ToastService
+package "shared" {
+  package "domain" {
+    interface ApiResponse
+    interface PagedResult
+  }
+  package "infrastructure" {
+    class BaseHttpService
+    class TokenInterceptor
+    class ErrorInterceptor
+  }
+  package "interfaces" {
+    class AuthGuard
+    class RoleGuard
+    class ConfirmDialogComponent
+    class StatusBadgeComponent
+    class ToastService
+  }
+}
 }
 
-SignInComponent --> AuthService
-SignUpComponent --> AuthService
-LabProfileComponent --> LaboratoryService
-StaffListComponent --> LaboratoryService
-EquipmentListComponent --> EquipmentService
-BpmConfigFormComponent --> EquipmentService
-TelemetryDashboardComponent --> TelemetryService
-TelemetryChartComponent --> TelemetryService
-AlertDashboardComponent --> ComplianceService
-AlertHistoryComponent --> ComplianceService
-BatchListComponent --> BatchService
-BatchReleaseFormComponent --> BatchService
-KpiDashboardComponent --> ReportingService
-ReportGeneratorComponent --> ReportingService
+AuthFacade --> AuthApiService
+AuthApiService --> BaseHttpService
+SignInComponent --> AuthFacade
 
-AuthService --> BaseHttpService
-LaboratoryService --> BaseHttpService
-EquipmentService --> BaseHttpService
-TelemetryService --> BaseHttpService
-ComplianceService --> BaseHttpService
-BatchService --> BaseHttpService
-ReportingService --> BaseHttpService
+LaboratoryFacade --> LaboratoryApiService
+LaboratoryApiService --> BaseHttpService
+LabProfileComponent --> LaboratoryFacade
+
+EquipmentFacade --> EquipmentApiService
+EquipmentApiService --> BaseHttpService
+EquipmentListComponent --> EquipmentFacade
+
+TelemetryFacade --> TelemetryApiService
+TelemetryApiService --> BaseHttpService
+TelemetryDashboardComponent --> TelemetryFacade
+
+ComplianceFacade --> ComplianceApiService
+ComplianceApiService --> BaseHttpService
+AlertDashboardComponent --> ComplianceFacade
+
+BatchFacade --> BatchApiService
+BatchApiService --> BaseHttpService
+BatchListComponent --> BatchFacade
+
+ReportingFacade --> ReportingApiService
+ReportingApiService --> BaseHttpService
+KpiDashboardComponent --> ReportingFacade
 
 BaseHttpService --> TokenInterceptor
 BaseHttpService --> ErrorInterceptor
