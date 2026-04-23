@@ -1,0 +1,134 @@
+@startuml equipment-frontend-diagram
+title QualiTrack – Equipment Management Frontend
+
+interface Equipment {
+  +id: string
+  +labId: string
+  +name: string
+  +type: string
+  +deviceId: string
+  +status: string
+  +lastCalibrationDate: Date
+  +nextCalibrationDate: Date
+}
+
+interface BpmParameterConfig {
+  +equipmentId: string
+  +variable: string
+  +minValue: number
+  +maxValue: number
+  +unit: string
+}
+
+interface MaintenanceRecord {
+  +id: string
+  +equipmentId: string
+  +maintenanceType: string
+  +date: Date
+  +technician: string
+  +observations: string
+}
+
+interface CalibrationAlert {
+  +equipmentId: string
+  +equipmentName: string
+  +daysUntilExpiry: number
+  +nextCalibrationDate: Date
+}
+
+class EquipmentService {
+  -http: HttpClient
+  +getEquipment(labId: string): Observable<Equipment[]>
+  +getEquipmentById(labId: string, equipmentId: string): Observable<Equipment>
+  +registerEquipment(labId: string, equipment: Equipment): Observable<Equipment>
+  +updateEquipment(labId: string, equipmentId: string, data: Equipment): Observable<Equipment>
+  +getBpmConfig(equipmentId: string): Observable<BpmParameterConfig[]>
+  +updateBpmConfig(equipmentId: string, config: BpmParameterConfig[]): Observable<void>
+  +getMaintenanceHistory(equipmentId: string): Observable<MaintenanceRecord[]>
+  +registerMaintenance(equipmentId: string, record: MaintenanceRecord): Observable<MaintenanceRecord>
+  +getCalibrationAlerts(labId: string): Observable<CalibrationAlert[]>
+}
+
+class EquipmentListComponent {
+  -equipmentService: EquipmentService
+  +equipmentList: Equipment[]
+  +isLoading: boolean
+  +searchTerm: string
+  +ngOnInit(): void
+  +onSearch(): void
+  +onViewDetail(equipmentId: string): void
+}
+
+class EquipmentDetailComponent {
+  -equipmentService: EquipmentService
+  +equipment: Equipment
+  +bpmConfig: BpmParameterConfig[]
+  +maintenanceHistory: MaintenanceRecord[]
+  +isLoading: boolean
+  +ngOnInit(): void
+}
+
+class EquipmentFormComponent {
+  -equipmentService: EquipmentService
+  +form: FormGroup
+  +equipmentTypes: string[]
+  +isLoading: boolean
+  +isEditMode: boolean
+  +ngOnInit(): void
+  +onSubmit(): void
+}
+
+class BpmConfigFormComponent {
+  -equipmentService: EquipmentService
+  +equipmentId: string
+  +bpmParameters: BpmParameterConfig[]
+  +form: FormGroup
+  +variables: string[]
+  +ngOnInit(): void
+  +addParameter(): void
+  +removeParameter(index: number): void
+  +onSave(): void
+}
+
+class MaintenanceHistoryComponent {
+  -equipmentService: EquipmentService
+  +equipmentId: string
+  +maintenanceRecords: MaintenanceRecord[]
+  +isLoading: boolean
+  +ngOnInit(): void
+}
+
+class MaintenanceFormComponent {
+  -equipmentService: EquipmentService
+  +equipmentId: string
+  +form: FormGroup
+  +maintenanceTypes: string[]
+  +onSubmit(): void
+}
+
+class CalibrationAlertComponent {
+  -equipmentService: EquipmentService
+  +calibrationAlerts: CalibrationAlert[]
+  +criticalAlerts: CalibrationAlert[]
+  +isLoading: boolean
+  +ngOnInit(): void
+  +isCritical(alert: CalibrationAlert): boolean
+}
+
+EquipmentListComponent --> EquipmentService
+EquipmentDetailComponent --> EquipmentService
+EquipmentFormComponent --> EquipmentService
+BpmConfigFormComponent --> EquipmentService
+MaintenanceHistoryComponent --> EquipmentService
+MaintenanceFormComponent --> EquipmentService
+CalibrationAlertComponent --> EquipmentService
+
+EquipmentDetailComponent --> BpmConfigFormComponent
+EquipmentDetailComponent --> MaintenanceHistoryComponent
+
+EquipmentService ..> Equipment
+EquipmentService ..> BpmParameterConfig
+EquipmentService ..> MaintenanceRecord
+EquipmentService ..> CalibrationAlert
+
+@enduml
