@@ -1,0 +1,122 @@
+@startuml compliance-frontend-diagram
+title QualiTrack – Compliance & Alerting Frontend
+
+interface DeviationAlert {
+  +id: string
+  +equipmentId: string
+  +equipmentName: string
+  +batchId: string
+  +variable: string
+  +detectedValue: number
+  +minAllowed: number
+  +maxAllowed: number
+  +severity: string
+  +status: string
+  +triggeredAt: Date
+}
+
+interface ComplianceEvent {
+  +id: string
+  +equipmentId: string
+  +batchId: string
+  +result: string
+  +evaluatedAt: Date
+}
+
+interface NotificationPreference {
+  +userId: string
+  +emailEnabled: boolean
+  +webPushEnabled: boolean
+  +smsEnabled: boolean
+}
+
+interface AlertFilterRequest {
+  +equipmentId: string
+  +severity: string
+  +status: string
+  +from: Date
+  +to: Date
+}
+
+class ComplianceService {
+  -http: HttpClient
+  +getAlerts(labId: string, filter: AlertFilterRequest): Observable<DeviationAlert[]>
+  +getAlertById(alertId: string): Observable<DeviationAlert>
+  +getComplianceEvents(labId: string): Observable<ComplianceEvent[]>
+  +getNotificationPreferences(userId: string): Observable<NotificationPreference>
+  +updateNotificationPreferences(userId: string, prefs: NotificationPreference): Observable<void>
+  +getActiveAlertsCount(labId: string): Observable<number>
+}
+
+class AlertDashboardComponent {
+  -complianceService: ComplianceService
+  +activeAlerts: DeviationAlert[]
+  +criticalAlerts: DeviationAlert[]
+  +activeAlertsCount: number
+  +isLoading: boolean
+  +ngOnInit(): void
+  +loadAlerts(): void
+  +onViewDetail(alertId: string): void
+}
+
+class AlertHistoryComponent {
+  -complianceService: ComplianceService
+  +alerts: DeviationAlert[]
+  +filter: AlertFilterRequest
+  +isLoading: boolean
+  +severityOptions: string[]
+  +statusOptions: string[]
+  +ngOnInit(): void
+  +onFilterChange(): void
+  +onExport(): void
+}
+
+class AlertHistoryFilterComponent {
+  +filter: AlertFilterRequest
+  +filterChange: EventEmitter<AlertFilterRequest>
+  +equipments: string[]
+  +onApply(): void
+  +onReset(): void
+}
+
+class DeviationDetailComponent {
+  -complianceService: ComplianceService
+  +alertId: string
+  +alert: DeviationAlert
+  +isLoading: boolean
+  +ngOnInit(): void
+  +getSeverityColor(): string
+}
+
+class AlertBadgeComponent {
+  -complianceService: ComplianceService
+  +count: number
+  +hasAlerts: boolean
+  +ngOnInit(): void
+  +ngOnDestroy(): void
+  +startPolling(): void
+}
+
+class NotificationSettingsComponent {
+  -complianceService: ComplianceService
+  +preferences: NotificationPreference
+  +form: FormGroup
+  +isSaving: boolean
+  +ngOnInit(): void
+  +onSave(): void
+}
+
+AlertDashboardComponent --> ComplianceService
+AlertDashboardComponent --> DeviationDetailComponent
+AlertHistoryComponent --> ComplianceService
+AlertHistoryComponent --> AlertHistoryFilterComponent
+DeviationDetailComponent --> ComplianceService
+AlertBadgeComponent --> ComplianceService
+NotificationSettingsComponent --> ComplianceService
+
+ComplianceService ..> DeviationAlert
+ComplianceService ..> ComplianceEvent
+ComplianceService ..> NotificationPreference
+ComplianceService ..> AlertFilterRequest
+
+@enduml
