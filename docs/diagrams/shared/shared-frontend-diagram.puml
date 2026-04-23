@@ -1,140 +1,187 @@
 @startuml shared-frontend-diagram
 title QualiTrack – Shared Frontend
 
-interface ApiResponse<T> {
-  +data: T
-  +message: string
-  +status: number
-}
+package "shared" {
 
-interface PagedResult<T> {
-  +items: T[]
-  +totalItems: number
-  +page: number
-  +pageSize: number
-}
+  package "domain" {
 
-interface DateRange {
-  +from: Date
-  +to: Date
-}
+    interface ApiResponse {
+      +data: T
+      +message: string
+      +status: number
+    }
 
-interface SelectOption {
-  +value: string
-  +label: string
-}
+    interface PagedResult {
+      +items: T[]
+      +totalItems: number
+      +page: number
+      +pageSize: number
+    }
 
-class BaseHttpService {
-  -http: HttpClient
-  -baseUrl: string
-  +get<T>(endpoint: string): Observable<T>
-  +post<T>(endpoint: string, body: any): Observable<T>
-  +put<T>(endpoint: string, body: any): Observable<T>
-  +patch<T>(endpoint: string, body: any): Observable<T>
-  +delete<T>(endpoint: string): Observable<T>
-  +buildParams(params: any): HttpParams
-}
+    interface DateRange {
+      +from: Date
+      +to: Date
+    }
 
-class TokenInterceptor {
-  -authService: AuthService
-  +intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>
-  +addToken(req: HttpRequest<any>, token: string): HttpRequest<any>
-}
+    interface ErrorDetail {
+      +field: string
+      +message: string
+      +code: string
+    }
 
-class ErrorInterceptor {
-  -router: Router
-  +intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>
-  +handleError(error: HttpErrorResponse): Observable<never>
-}
+    interface ErrorResponse {
+      +status: number
+      +message: string
+      +errors: ErrorDetail[]
+      +timestamp: Date
+      +path: string
+    }
+  }
 
-class ToastService {
-  +showSuccess(message: string): void
-  +showError(message: string): void
-  +showWarning(message: string): void
-  +showInfo(message: string): void
-}
+  package "application" {
 
-class AuthGuard {
-  -authService: AuthService
-  -router: Router
-  +canActivate(route: ActivatedRouteSnapshot): boolean
-}
+    class ToastService {
+      +showSuccess(message: string): void
+      +showError(message: string): void
+      +showWarning(message: string): void
+      +showInfo(message: string): void
+      +clear(): void
+    }
 
-class RoleGuard {
-  -authService: AuthService
-  -router: Router
-  +requiredRoles: string[]
-  +canActivate(route: ActivatedRouteSnapshot): boolean
-}
+    class AuthFacadeRef {
+      +isAuthenticated(): boolean
+      +getToken(): string
+      +getCurrentUserId(): string
+      +getCurrentRole(): string
+      +logout(): void
+    }
+  }
 
-class ConfirmDialogComponent {
-  +title: string
-  +message: string
-  +confirmLabel: string
-  +cancelLabel: string
-  +confirmed: EventEmitter<void>
-  +cancelled: EventEmitter<void>
-  +onConfirm(): void
-  +onCancel(): void
-}
+  package "infrastructure" {
 
-class StatusBadgeComponent {
-  +status: string
-  +statusMap: Map<string, string>
-  +getColor(): string
-  +getLabel(): string
-}
+    class BaseHttpService {
+      -http: HttpClient
+      -baseUrl: string
+      +get<T>(endpoint: string, params?: any): Observable<T>
+      +post<T>(endpoint: string, body: any): Observable<T>
+      +put<T>(endpoint: string, body: any): Observable<T>
+      +patch<T>(endpoint: string, body: any): Observable<T>
+      +delete<T>(endpoint: string): Observable<T>
+      +downloadBlob(endpoint: string, params?: any): Observable<Blob>
+      +buildParams(params: any): HttpParams
+    }
 
-class DateRangePickerComponent {
-  +range: DateRange
-  +rangeChange: EventEmitter<DateRange>
-  +minDate: Date
-  +maxDate: Date
-  +onFromChange(date: Date): void
-  +onToChange(date: Date): void
-}
+    class TokenInterceptor {
+      -authFacadeRef: AuthFacadeRef
+      +intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>
+      -addAuthorizationHeader(req: HttpRequest<any>, token: string): HttpRequest<any>
+    }
 
-class SearchInputComponent {
-  +placeholder: string
-  +searchTerm: string
-  +searchChange: EventEmitter<string>
-  +debounceMs: number
-  +onInput(value: string): void
-  +onClear(): void
-}
+    class ErrorInterceptor {
+      -authFacadeRef: AuthFacadeRef
+      -toastService: ToastService
+      -router: Router
+      +intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>
+      -handleUnauthorized(): void
+      -handleForbidden(): void
+      -handleServerError(error: HttpErrorResponse): void
+    }
+  }
 
-class LoadingSpinnerComponent {
-  +isLoading: boolean
-  +message: string
-}
+  package "interfaces" {
 
-class PaginatorComponent {
-  +totalItems: number
-  +pageSize: number
-  +currentPage: number
-  +pageChange: EventEmitter<number>
-  +pageSizeChange: EventEmitter<number>
-  +onPageChange(page: number): void
-}
+    class AuthGuard {
+      -authFacadeRef: AuthFacadeRef
+      -router: Router
+      +canActivate(route: ActivatedRouteSnapshot): boolean
+      -redirectToLogin(): void
+    }
 
-class EmptyStateComponent {
-  +title: string
-  +message: string
-  +actionLabel: string
-  +action: EventEmitter<void>
-  +onAction(): void
-}
+    class RoleGuard {
+      -authFacadeRef: AuthFacadeRef
+      -router: Router
+      +requiredRoles: string[]
+      +canActivate(route: ActivatedRouteSnapshot): boolean
+    }
 
-class FormatDatePipe {
-  +transform(date: Date, format: string): string
-}
+    class ConfirmDialogComponent {
+      +title: string
+      +message: string
+      +confirmLabel: string
+      +cancelLabel: string
+      +isDanger: boolean
+      +confirmed: EventEmitter<void>
+      +cancelled: EventEmitter<void>
+      +onConfirm(): void
+      +onCancel(): void
+    }
 
-class TruncatePipe {
-  +transform(value: string, maxLength: number): string
-}
+    class StatusBadgeComponent {
+      +status: string
+      +statusColorMap: Map<string, string>
+      +statusLabelMap: Map<string, string>
+      +getColor(): string
+      +getLabel(): string
+    }
 
-class CapitalizePipe {
-  +transform(value: string): string
+    class DateRangePickerComponent {
+      +range: DateRange
+      +rangeChange: EventEmitter<DateRange>
+      +minDate: Date
+      +maxDate: Date
+      +onFromChange(date: Date): void
+      +onToChange(date: Date): void
+      +isValidRange(): boolean
+    }
+
+    class SearchInputComponent {
+      +placeholder: string
+      +searchTerm: string
+      +debounceMs: number
+      +searchChange: EventEmitter<string>
+      +ngOnInit(): void
+      +onInput(value: string): void
+      +onClear(): void
+    }
+
+    class LoadingSpinnerComponent {
+      +isLoading: boolean
+      +message: string
+      +fullScreen: boolean
+    }
+
+    class PaginatorComponent {
+      +totalItems: number
+      +pageSize: number
+      +currentPage: number
+      +pageSizeOptions: number[]
+      +pageChange: EventEmitter<number>
+      +pageSizeChange: EventEmitter<number>
+      +getTotalPages(): number
+      +onPageChange(page: number): void
+    }
+
+    class EmptyStateComponent {
+      +title: string
+      +message: string
+      +actionLabel: string
+      +iconName: string
+      +action: EventEmitter<void>
+      +onAction(): void
+    }
+
+    class FormatDatePipe {
+      +transform(date: Date, format: string): string
+    }
+
+    class TruncatePipe {
+      +transform(value: string, maxLength: number): string
+    }
+
+    class CapitalizePipe {
+      +transform(value: string): string
+    }
+  }
 }
 
 BaseHttpService --> TokenInterceptor
@@ -142,11 +189,14 @@ BaseHttpService --> ErrorInterceptor
 BaseHttpService ..> ApiResponse
 BaseHttpService ..> PagedResult
 
-AuthGuard --> BaseHttpService
-RoleGuard --> BaseHttpService
+TokenInterceptor --> AuthFacadeRef
+ErrorInterceptor --> AuthFacadeRef
+ErrorInterceptor --> ToastService
 
-ConfirmDialogComponent --> ToastService
+AuthGuard --> AuthFacadeRef
+RoleGuard --> AuthFacadeRef
+
 DateRangePickerComponent ..> DateRange
-StatusBadgeComponent ..> SelectOption
+ErrorInterceptor ..> ErrorResponse
 
 @enduml
