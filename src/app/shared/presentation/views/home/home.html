@@ -1,0 +1,21 @@
+<div class="container-with-spacing home-hero">
+  <img src="/qualitrack-logo.png"
+       alt="QualiTrack Logo"
+       class="home-logo"/>
+  <h1>{{ 'home.title' | translate }}</h1>
+  <p class="home-tagline">{{ 'home.content' | translate }}</p>
+
+  <div class="home-actions">
+    <a mat-raised-button
+       color="primary"
+       routerLink="/tracking/dashboard"
+       aria-label="Go to telemetry dashboard">
+      {{ 'home.go-dashboard' | translate }}
+    </a>
+    <a mat-stroked-button
+       routerLink="/batch-management/batches"
+       aria-label="Go to batch management">
+      {{ 'home.go-batches' | translate }}
+    </a>
+  </div>
+</div>

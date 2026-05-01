@@ -1,0 +1,15 @@
+.mat-spacer {
+  flex: 1 1 auto;
+}
+
+.nav-brand {
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-right: 8px;
+}
+
+a.active {
+  font-weight: bold;
+  border-bottom: 2px solid white;
+}
