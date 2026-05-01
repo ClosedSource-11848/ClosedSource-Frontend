@@ -1,0 +1,180 @@
+@startuml iam-frontend-diagram
+title QualiTrack – IAM Frontend
+
+package "iam" {
+
+  package "domain" {
+
+    interface AuthUser {
+      +id: string
+      +email: string
+      +fullName: string
+      +role: string
+      +labId: string
+      +token: string
+      +active: boolean
+    }
+
+    interface LoginRequest {
+      +email: string
+      +password: string
+    }
+
+    interface RegisterRequest {
+      +fullName: string
+      +email: string
+      +password: string
+      +role: string
+      +labId: string
+    }
+
+    interface RecoverPasswordRequest {
+      +email: string
+    }
+
+    interface AssignRoleRequest {
+      +userId: string
+      +role: string
+    }
+
+    interface UserListItem {
+      +id: string
+      +fullName: string
+      +email: string
+      +role: string
+      +active: boolean
+    }
+
+    enum UserRole {
+      QA_MANAGER
+      LAB_OPERATOR
+      AUDITOR
+    }
+  }
+
+  package "application" {
+
+    class AuthFacade {
+      -authApiService: AuthApiService
+      -currentUser: BehaviorSubject<AuthUser>
+      +currentUser$: Observable<AuthUser>
+      +login(request: LoginRequest): Observable<AuthUser>
+      +register(request: RegisterRequest): Observable<void>
+      +recoverPassword(request: RecoverPasswordRequest): Observable<void>
+      +assignRole(request: AssignRoleRequest): Observable<void>
+      +deactivateUser(userId: string): Observable<void>
+      +logout(): void
+      +isAuthenticated(): boolean
+      +getCurrentUser(): AuthUser
+      +hasRole(role: UserRole): boolean
+      +getToken(): string
+    }
+  }
+
+  package "infrastructure" {
+
+    class AuthApiService {
+      -http: HttpClient
+      -baseUrl: string
+      +login(request: LoginRequest): Observable<AuthUser>
+      +register(request: RegisterRequest): Observable<void>
+      +recoverPassword(request: RecoverPasswordRequest): Observable<void>
+      +getUsersByLab(labId: string): Observable<UserListItem[]>
+      +assignRole(userId: string, role: string): Observable<void>
+      +deactivateUser(userId: string): Observable<void>
+    }
+  }
+
+  package "interfaces" {
+
+    class SignInComponent {
+      -authFacade: AuthFacade
+      -router: Router
+      -toastService: ToastService
+      +form: FormGroup
+      +isLoading: boolean
+      +errorMessage: string
+      +ngOnInit(): void
+      +onSubmit(): void
+      +navigateToRegister(): void
+      +navigateToRecover(): void
+    }
+
+    class SignUpComponent {
+      -authFacade: AuthFacade
+      -router: Router
+      -toastService: ToastService
+      +form: FormGroup
+      +availableRoles: UserRole[]
+      +isLoading: boolean
+      +errorMessage: string
+      +ngOnInit(): void
+      +onSubmit(): void
+      +buildForm(): void
+    }
+
+    class RecoverPasswordComponent {
+      -authFacade: AuthFacade
+      -toastService: ToastService
+      +form: FormGroup
+      +isLoading: boolean
+      +successMessage: string
+      +onSubmit(): void
+    }
+
+    class UserManagementComponent {
+      -authFacade: AuthFacade
+      -toastService: ToastService
+      +users: UserListItem[]
+      +isLoading: boolean
+      +ngOnInit(): void
+      +loadUsers(): void
+      +onDeactivate(userId: string): void
+    }
+
+    class RoleAssignmentComponent {
+      -authFacade: AuthFacade
+      -toastService: ToastService
+      +availableRoles: UserRole[]
+      +selectedUserId: string
+      +selectedRole: UserRole
+      +isLoading: boolean
+      +onAssign(): void
+    }
+
+    class AuthGuard {
+      -authFacade: AuthFacade
+      -router: Router
+      +canActivate(route: ActivatedRouteSnapshot): boolean
+    }
+
+    class RoleGuard {
+      -authFacade: AuthFacade
+      -router: Router
+      +requiredRoles: UserRole[]
+      +canActivate(route: ActivatedRouteSnapshot): boolean
+    }
+  }
+}
+
+AuthFacade --> AuthApiService
+AuthFacade ..> AuthUser
+AuthFacade ..> LoginRequest
+AuthFacade ..> RegisterRequest
+AuthFacade ..> RecoverPasswordRequest
+AuthFacade ..> UserRole
+
+SignInComponent --> AuthFacade
+SignUpComponent --> AuthFacade
+RecoverPasswordComponent --> AuthFacade
+UserManagementComponent --> AuthFacade
+RoleAssignmentComponent --> AuthFacade
+AuthGuard --> AuthFacade
+RoleGuard --> AuthFacade
+
+AuthApiService ..> LoginRequest
+AuthApiService ..> RegisterRequest
+AuthApiService ..> AuthUser
+AuthApiService ..> UserListItem
+
+@enduml

@@ -1,0 +1,167 @@
+@startuml tracking-frontend-diagram
+title QualiTrack – Tracking Frontend
+
+package "tracking" {
+
+  package "domain" {
+
+    interface Measurement {
+      +id: string
+      +equipmentId: string
+      +batchId: string
+      +temperature: number
+      +pressure: number
+      +ph: number
+      +complianceResult: ComplianceResult
+      +timestamp: Date
+    }
+
+    interface EquipmentStatus {
+      +equipmentId: string
+      +equipmentName: string
+      +isConnected: boolean
+      +lastMeasurement: Measurement
+      +lastSeenAt: Date
+    }
+
+    interface TelemetryHistoryPoint {
+      +timestamp: Date
+      +value: number
+      +variable: CriticalVariable
+    }
+
+    interface GetTelemetryHistoryQuery {
+      +equipmentId: string
+      +variable: CriticalVariable
+      +from: Date
+      +to: Date
+    }
+
+    interface GetEquipmentStatusQuery {
+      +labId: string
+    }
+
+    enum ComplianceResult {
+      PENDING
+      CONFORM
+      DEVIATION
+      CRITICAL_DEVIATION
+    }
+
+    enum CriticalVariable {
+      TEMPERATURE
+      PRESSURE
+      PH
+      HUMIDITY
+      FLOW_RATE
+    }
+  }
+
+  package "application" {
+
+    class TelemetryFacade {
+      -telemetryApiService: TelemetryApiService
+      +getEquipmentStatuses(query: GetEquipmentStatusQuery): Observable<EquipmentStatus[]>
+      +getLatestMeasurement(equipmentId: string): Observable<Measurement>
+      +getTelemetryHistory(query: GetTelemetryHistoryQuery): Observable<TelemetryHistoryPoint[]>
+      +getMeasurementsByBatch(batchId: string): Observable<Measurement[]>
+      +pollEquipmentStatuses(labId: string, intervalMs: number): Observable<EquipmentStatus[]>
+    }
+  }
+
+  package "infrastructure" {
+
+    class TelemetryApiService {
+      -http: HttpClient
+      -baseUrl: string
+      +getEquipmentStatuses(labId: string): Observable<EquipmentStatus[]>
+      +getLatestMeasurement(equipmentId: string): Observable<Measurement>
+      +getTelemetryHistory(equipmentId: string, variable: string, from: string, to: string): Observable<TelemetryHistoryPoint[]>
+      +getMeasurementsByBatch(batchId: string): Observable<Measurement[]>
+    }
+  }
+
+  package "interfaces" {
+
+    class TelemetryDashboardComponent {
+      -telemetryFacade: TelemetryFacade
+      -toastService: ToastService
+      +equipmentStatuses: EquipmentStatus[]
+      +selectedEquipmentId: string
+      +selectedVariable: CriticalVariable
+      +isLoading: boolean
+      +pollingSubscription: Subscription
+      +ngOnInit(): void
+      +ngOnDestroy(): void
+      +onSelectEquipment(equipmentId: string): void
+      +onSelectVariable(variable: CriticalVariable): void
+      +startPolling(): void
+      +stopPolling(): void
+    }
+
+    class EquipmentStatusCardComponent {
+      +status: EquipmentStatus
+      +getStatusColor(): string
+      +getTimeSinceLastSeen(): string
+      +isOnline(): boolean
+    }
+
+    class TelemetryChartComponent {
+      -telemetryFacade: TelemetryFacade
+      +equipmentId: string
+      +variable: CriticalVariable
+      +fromDate: Date
+      +toDate: Date
+      +chartData: TelemetryHistoryPoint[]
+      +chartLabels: string[]
+      +isLoading: boolean
+      +ngOnChanges(): void
+      +loadHistory(): void
+      +buildChartDataset(): void
+      +getVariableUnit(): string
+    }
+
+    class TelemetryHistoryComponent {
+      -telemetryFacade: TelemetryFacade
+      +equipmentId: string
+      +measurements: Measurement[]
+      +fromDate: Date
+      +toDate: Date
+      +isLoading: boolean
+      +ngOnInit(): void
+      +onDateRangeChange(): void
+      +getComplianceColor(result: ComplianceResult): string
+    }
+
+    class VariableSelectorComponent {
+      +variables: CriticalVariable[]
+      +selectedVariable: CriticalVariable
+      +variableChange: EventEmitter<CriticalVariable>
+      +onSelect(variable: CriticalVariable): void
+      +getVariableLabel(variable: CriticalVariable): string
+    }
+
+    class ComplianceResultBadgeComponent {
+      +result: ComplianceResult
+      +getColor(): string
+      +getLabel(): string
+    }
+  }
+}
+
+TelemetryFacade --> TelemetryApiService
+TelemetryFacade ..> Measurement
+TelemetryFacade ..> EquipmentStatus
+TelemetryFacade ..> TelemetryHistoryPoint
+TelemetryFacade ..> GetTelemetryHistoryQuery
+TelemetryFacade ..> GetEquipmentStatusQuery
+
+TelemetryDashboardComponent --> TelemetryFacade
+TelemetryDashboardComponent --> EquipmentStatusCardComponent
+TelemetryDashboardComponent --> TelemetryChartComponent
+TelemetryDashboardComponent --> VariableSelectorComponent
+TelemetryChartComponent --> TelemetryFacade
+TelemetryHistoryComponent --> TelemetryFacade
+TelemetryHistoryComponent --> ComplianceResultBadgeComponent
+
+@enduml

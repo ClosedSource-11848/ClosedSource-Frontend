@@ -1,0 +1,206 @@
+@startuml reporting-frontend-diagram
+title QualiTrack – Reporting & Audit Frontend
+
+package "reporting-audit" {
+
+  package "domain" {
+
+    interface KpiMetric {
+      +name: string
+      +value: number
+      +unit: string
+      +trend: Trend
+      +comparedToPreviousPeriod: number
+    }
+
+    interface KpiDashboardData {
+      +conformBatchesPercentage: number
+      +totalDeviationsThisMonth: number
+      +averageBatchReleaseTimeMinutes: number
+      +lowStockMaterialsCount: number
+      +equipmentWithExpiredCalibration: number
+      +kpis: KpiMetric[]
+    }
+
+    interface DeviationTrend {
+      +period: string
+      +equipmentId: string
+      +equipmentName: string
+      +variable: string
+      +deviationCount: number
+    }
+
+    interface AuditLogEntry {
+      +id: string
+      +userId: string
+      +userName: string
+      +action: string
+      +entity: string
+      +entityId: string
+      +details: string
+      +occurredAt: Date
+    }
+
+    interface GenerateBatchReportCommand {
+      +labId: string
+      +batchId: string
+    }
+
+    interface GenerateComplianceReportCommand {
+      +labId: string
+      +from: Date
+      +to: Date
+    }
+
+    interface ExportEquipmentLogCommand {
+      +labId: string
+      +equipmentId: string
+      +from: Date
+      +to: Date
+    }
+
+    interface GetDeviationTrendsQuery {
+      +labId: string
+      +from: Date
+      +to: Date
+    }
+
+    interface GetAuditLogQuery {
+      +labId: string
+      +from: Date
+      +to: Date
+      +userId: string
+    }
+
+    enum Trend {
+      IMPROVING
+      STABLE
+      WORSENING
+    }
+  }
+
+  package "application" {
+
+    class ReportingFacade {
+      -reportingApiService: ReportingApiService
+      +getKpiDashboard(labId: string): Observable<KpiDashboardData>
+      +getDeviationTrends(query: GetDeviationTrendsQuery): Observable<DeviationTrend[]>
+      +generateBatchReport(command: GenerateBatchReportCommand): Observable<Blob>
+      +generateComplianceReport(command: GenerateComplianceReportCommand): Observable<Blob>
+      +exportEquipmentLog(command: ExportEquipmentLogCommand): Observable<Blob>
+      +getAuditLog(query: GetAuditLogQuery): Observable<AuditLogEntry[]>
+      +downloadPdf(blob: Blob, filename: string): void
+    }
+  }
+
+  package "infrastructure" {
+
+    class ReportingApiService {
+      -http: HttpClient
+      -baseUrl: string
+      +getKpiDashboard(labId: string): Observable<KpiDashboardData>
+      +getDeviationTrends(labId: string, from: string, to: string): Observable<DeviationTrend[]>
+      +generateBatchReport(labId: string, batchId: string): Observable<Blob>
+      +generateComplianceReport(labId: string, from: string, to: string): Observable<Blob>
+      +exportEquipmentLog(labId: string, equipmentId: string, from: string, to: string): Observable<Blob>
+      +getAuditLog(labId: string, params: GetAuditLogQuery): Observable<AuditLogEntry[]>
+    }
+  }
+
+  package "interfaces" {
+
+    class KpiDashboardComponent {
+      -reportingFacade: ReportingFacade
+      +dashboardData: KpiDashboardData
+      +isLoading: boolean
+      +labId: string
+      +ngOnInit(): void
+      +loadDashboard(): void
+      +refreshDashboard(): void
+    }
+
+    class KpiCardComponent {
+      +metric: KpiMetric
+      +getTrendIcon(): string
+      +getTrendColor(): string
+      +formatValue(): string
+    }
+
+    class DeviationTrendChartComponent {
+      -reportingFacade: ReportingFacade
+      +labId: string
+      +fromDate: Date
+      +toDate: Date
+      +trends: DeviationTrend[]
+      +chartData: any
+      +chartLabels: string[]
+      +isLoading: boolean
+      +ngOnInit(): void
+      +onDateRangeChange(): void
+      +buildChart(): void
+    }
+
+    class ReportGeneratorComponent {
+      -reportingFacade: ReportingFacade
+      -toastService: ToastService
+      +reportType: string
+      +reportTypes: string[]
+      +form: FormGroup
+      +isGenerating: boolean
+      +ngOnInit(): void
+      +buildForm(): void
+      +onGenerate(): void
+    }
+
+    class BatchReportButtonComponent {
+      -reportingFacade: ReportingFacade
+      -toastService: ToastService
+      +labId: string
+      +batchId: string
+      +isGenerating: boolean
+      +onDownload(): void
+    }
+
+    class AuditLogViewerComponent {
+      -reportingFacade: ReportingFacade
+      +labId: string
+      +auditLogs: AuditLogEntry[]
+      +filter: GetAuditLogQuery
+      +isLoading: boolean
+      +searchTerm: string
+      +ngOnInit(): void
+      +loadLogs(): void
+      +onFilterChange(): void
+      +onExport(): void
+    }
+
+    class TrendBadgeComponent {
+      +trend: Trend
+      +getIcon(): string
+      +getColor(): string
+      +getLabel(): string
+    }
+  }
+}
+
+ReportingFacade --> ReportingApiService
+ReportingFacade ..> KpiDashboardData
+ReportingFacade ..> KpiMetric
+ReportingFacade ..> DeviationTrend
+ReportingFacade ..> AuditLogEntry
+ReportingFacade ..> GenerateBatchReportCommand
+ReportingFacade ..> GenerateComplianceReportCommand
+ReportingFacade ..> ExportEquipmentLogCommand
+ReportingFacade ..> GetDeviationTrendsQuery
+ReportingFacade ..> GetAuditLogQuery
+
+KpiDashboardComponent --> ReportingFacade
+KpiDashboardComponent --> KpiCardComponent
+KpiDashboardComponent --> DeviationTrendChartComponent
+DeviationTrendChartComponent --> ReportingFacade
+ReportGeneratorComponent --> ReportingFacade
+BatchReportButtonComponent --> ReportingFacade
+AuditLogViewerComponent --> ReportingFacade
+KpiCardComponent --> TrendBadgeComponent
+
+@enduml

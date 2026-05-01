@@ -1,0 +1,201 @@
+@startuml compliance-frontend-diagram
+title QualiTrack – Compliance & Alerting Frontend
+
+package "compliance-alerting" {
+
+  package "domain" {
+
+    interface DeviationAlert {
+      +id: string
+      +equipmentId: string
+      +equipmentName: string
+      +batchId: string
+      +variable: CriticalVariable
+      +detectedValue: number
+      +minAllowed: number
+      +maxAllowed: number
+      +severity: DeviationSeverity
+      +status: AlertStatus
+      +triggeredAt: Date
+      +resolvedAt: Date
+    }
+
+    interface ComplianceEvent {
+      +id: string
+      +equipmentId: string
+      +batchId: string
+      +result: ComplianceResult
+      +evaluatedAt: Date
+    }
+
+    interface NotificationPreference {
+      +userId: string
+      +emailEnabled: boolean
+      +webPushEnabled: boolean
+      +smsEnabled: boolean
+    }
+
+    interface GetAlertsQuery {
+      +labId: string
+      +severity: DeviationSeverity
+      +status: AlertStatus
+      +from: Date
+      +to: Date
+      +equipmentId: string
+    }
+
+    interface UpdateNotificationPreferenceCommand {
+      +userId: string
+      +emailEnabled: boolean
+      +webPushEnabled: boolean
+      +smsEnabled: boolean
+    }
+
+    enum DeviationSeverity {
+      WARNING
+      CRITICAL
+      CATASTROPHIC
+    }
+
+    enum AlertStatus {
+      ACTIVE
+      ACKNOWLEDGED
+      RESOLVED
+      ESCALATED
+    }
+
+    enum ComplianceResult {
+      CONFORM
+      WARNING
+      DEVIATION
+      CRITICAL_DEVIATION
+    }
+
+    enum CriticalVariable {
+      TEMPERATURE
+      PRESSURE
+      PH
+      HUMIDITY
+      FLOW_RATE
+    }
+  }
+
+  package "application" {
+
+    class ComplianceFacade {
+      -complianceApiService: ComplianceApiService
+      +getAlerts(query: GetAlertsQuery): Observable<DeviationAlert[]>
+      +getAlertById(alertId: string): Observable<DeviationAlert>
+      +getActiveAlertsCount(labId: string): Observable<number>
+      +getComplianceEvents(labId: string): Observable<ComplianceEvent[]>
+      +getNotificationPreferences(userId: string): Observable<NotificationPreference>
+      +updateNotificationPreferences(command: UpdateNotificationPreferenceCommand): Observable<void>
+      +pollActiveAlertsCount(labId: string, intervalMs: number): Observable<number>
+    }
+  }
+
+  package "infrastructure" {
+
+    class ComplianceApiService {
+      -http: HttpClient
+      -baseUrl: string
+      +getAlerts(labId: string, params: GetAlertsQuery): Observable<DeviationAlert[]>
+      +getAlertById(alertId: string): Observable<DeviationAlert>
+      +getActiveAlertsCount(labId: string): Observable<number>
+      +getComplianceEvents(labId: string): Observable<ComplianceEvent[]>
+      +getNotificationPreferences(userId: string): Observable<NotificationPreference>
+      +updateNotificationPreferences(userId: string, body: UpdateNotificationPreferenceCommand): Observable<void>
+    }
+  }
+
+  package "interfaces" {
+
+    class AlertDashboardComponent {
+      -complianceFacade: ComplianceFacade
+      -toastService: ToastService
+      +activeAlerts: DeviationAlert[]
+      +criticalAlerts: DeviationAlert[]
+      +activeAlertsCount: number
+      +isLoading: boolean
+      +ngOnInit(): void
+      +loadAlerts(): void
+      +onViewDetail(alertId: string): void
+      +filterCritical(): DeviationAlert[]
+    }
+
+    class AlertHistoryComponent {
+      -complianceFacade: ComplianceFacade
+      +alerts: DeviationAlert[]
+      +filter: GetAlertsQuery
+      +isLoading: boolean
+      +ngOnInit(): void
+      +onFilterChange(filter: GetAlertsQuery): void
+      +onExport(): void
+    }
+
+    class AlertHistoryFilterComponent {
+      +filter: GetAlertsQuery
+      +filterChange: EventEmitter<GetAlertsQuery>
+      +severityOptions: DeviationSeverity[]
+      +statusOptions: AlertStatus[]
+      +onApply(): void
+      +onReset(): void
+    }
+
+    class DeviationDetailComponent {
+      -complianceFacade: ComplianceFacade
+      +alertId: string
+      +alert: DeviationAlert
+      +isLoading: boolean
+      +ngOnInit(): void
+      +loadDetail(): void
+      +getSeverityColor(): string
+      +getDeviationPercentage(): number
+    }
+
+    class AlertBadgeComponent {
+      -complianceFacade: ComplianceFacade
+      +count: number
+      +hasAlerts: boolean
+      +pollingSubscription: Subscription
+      +ngOnInit(): void
+      +ngOnDestroy(): void
+      +startPolling(): void
+    }
+
+    class NotificationSettingsComponent {
+      -complianceFacade: ComplianceFacade
+      -toastService: ToastService
+      +preferences: NotificationPreference
+      +form: FormGroup
+      +isSaving: boolean
+      +userId: string
+      +ngOnInit(): void
+      +buildForm(prefs: NotificationPreference): void
+      +onSave(): void
+    }
+
+    class DeviationSeverityBadgeComponent {
+      +severity: DeviationSeverity
+      +getColor(): string
+      +getLabel(): string
+    }
+  }
+}
+
+ComplianceFacade --> ComplianceApiService
+ComplianceFacade ..> DeviationAlert
+ComplianceFacade ..> ComplianceEvent
+ComplianceFacade ..> NotificationPreference
+ComplianceFacade ..> GetAlertsQuery
+ComplianceFacade ..> UpdateNotificationPreferenceCommand
+
+AlertDashboardComponent --> ComplianceFacade
+AlertHistoryComponent --> ComplianceFacade
+AlertHistoryComponent --> AlertHistoryFilterComponent
+DeviationDetailComponent --> ComplianceFacade
+DeviationDetailComponent --> DeviationSeverityBadgeComponent
+AlertBadgeComponent --> ComplianceFacade
+NotificationSettingsComponent --> ComplianceFacade
+
+@enduml

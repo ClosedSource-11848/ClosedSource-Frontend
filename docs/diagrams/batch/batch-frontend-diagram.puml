@@ -1,0 +1,219 @@
+@startuml batch-frontend-diagram
+title QualiTrack – Batch Management Frontend
+
+package "batch-management" {
+
+  package "domain" {
+
+    interface Batch {
+      +id: string
+      +labId: string
+      +batchCode: string
+      +productId: string
+      +productName: string
+      +equipmentId: string
+      +status: BatchStatus
+      +startDate: Date
+      +endDate: Date
+      +releasedBy: string
+      +releasedAt: Date
+      +rejectionReason: string
+      +rawMaterialUsages: RawMaterialUsage[]
+    }
+
+    interface RawMaterialUsage {
+      +materialId: string
+      +materialName: string
+      +supplier: string
+      +batchNumber: string
+      +quantityUsed: number
+      +unit: string
+    }
+
+    interface CreateBatchCommand {
+      +labId: string
+      +batchCode: string
+      +productId: string
+      +equipmentId: string
+      +startDate: Date
+    }
+
+    interface ReleaseBatchCommand {
+      +batchId: string
+      +qaManagerId: string
+      +observations: string
+    }
+
+    interface RejectBatchCommand {
+      +batchId: string
+      +rejectedBy: string
+      +rootCause: string
+      +correctiveAction: string
+    }
+
+    interface LinkRawMaterialCommand {
+      +batchId: string
+      +materialId: string
+      +quantityUsed: number
+      +unit: string
+    }
+
+    interface GetBatchesQuery {
+      +labId: string
+      +status: BatchStatus
+      +productId: string
+      +from: Date
+      +to: Date
+    }
+
+    enum BatchStatus {
+      IN_PROCESS
+      BLOCKED
+      UNDER_INVESTIGATION
+      RELEASED
+      REJECTED
+      COMPLETED
+    }
+  }
+
+  package "application" {
+
+    class BatchFacade {
+      -batchApiService: BatchApiService
+      +getBatches(query: GetBatchesQuery): Observable<Batch[]>
+      +getBatchById(labId: string, batchId: string): Observable<Batch>
+      +createBatch(command: CreateBatchCommand): Observable<Batch>
+      +releaseBatch(command: ReleaseBatchCommand): Observable<void>
+      +rejectBatch(command: RejectBatchCommand): Observable<void>
+      +linkRawMaterial(command: LinkRawMaterialCommand): Observable<void>
+      +getRawMaterialUsage(batchId: string): Observable<RawMaterialUsage[]>
+    }
+  }
+
+  package "infrastructure" {
+
+    class BatchApiService {
+      -http: HttpClient
+      -baseUrl: string
+      +getBatches(labId: string, params: GetBatchesQuery): Observable<Batch[]>
+      +getBatchById(labId: string, batchId: string): Observable<Batch>
+      +createBatch(labId: string, body: CreateBatchCommand): Observable<Batch>
+      +releaseBatch(labId: string, batchId: string, body: ReleaseBatchCommand): Observable<void>
+      +rejectBatch(labId: string, batchId: string, body: RejectBatchCommand): Observable<void>
+      +linkRawMaterial(batchId: string, body: LinkRawMaterialCommand): Observable<void>
+      +getRawMaterialUsage(batchId: string): Observable<RawMaterialUsage[]>
+    }
+  }
+
+  package "interfaces" {
+
+    class BatchListComponent {
+      -batchFacade: BatchFacade
+      +batches: Batch[]
+      +filter: GetBatchesQuery
+      +isLoading: boolean
+      +statusOptions: BatchStatus[]
+      +ngOnInit(): void
+      +loadBatches(): void
+      +onFilterChange(filter: GetBatchesQuery): void
+      +onViewDetail(batchId: string): void
+    }
+
+    class BatchFilterComponent {
+      +filter: GetBatchesQuery
+      +filterChange: EventEmitter<GetBatchesQuery>
+      +statusOptions: BatchStatus[]
+      +products: string[]
+      +onApply(): void
+      +onReset(): void
+    }
+
+    class BatchDetailComponent {
+      -batchFacade: BatchFacade
+      -toastService: ToastService
+      +batchId: string
+      +batch: Batch
+      +rawMaterials: RawMaterialUsage[]
+      +isLoading: boolean
+      +canRelease: boolean
+      +canReject: boolean
+      +ngOnInit(): void
+      +loadDetail(): void
+      +getStatusColor(): string
+      +checkPermissions(): void
+    }
+
+    class BatchFormComponent {
+      -batchFacade: BatchFacade
+      -toastService: ToastService
+      +form: FormGroup
+      +products: string[]
+      +equipments: string[]
+      +isLoading: boolean
+      +buildForm(): void
+      +onSubmit(): void
+    }
+
+    class BatchReleaseFormComponent {
+      -batchFacade: BatchFacade
+      -toastService: ToastService
+      +batchId: string
+      +form: FormGroup
+      +isLoading: boolean
+      +buildForm(): void
+      +onRelease(): void
+    }
+
+    class BatchRejectFormComponent {
+      -batchFacade: BatchFacade
+      -toastService: ToastService
+      +batchId: string
+      +form: FormGroup
+      +rootCauseOptions: string[]
+      +isLoading: boolean
+      +buildForm(): void
+      +onReject(): void
+    }
+
+    class RawMaterialUsageComponent {
+      -batchFacade: BatchFacade
+      -toastService: ToastService
+      +batchId: string
+      +usages: RawMaterialUsage[]
+      +isLoading: boolean
+      +ngOnInit(): void
+      +loadUsages(): void
+      +onLinkMaterial(): void
+    }
+
+    class BatchStatusBadgeComponent {
+      +status: BatchStatus
+      +getColor(): string
+      +getLabel(): string
+    }
+  }
+}
+
+BatchFacade --> BatchApiService
+BatchFacade ..> Batch
+BatchFacade ..> RawMaterialUsage
+BatchFacade ..> CreateBatchCommand
+BatchFacade ..> ReleaseBatchCommand
+BatchFacade ..> RejectBatchCommand
+BatchFacade ..> LinkRawMaterialCommand
+BatchFacade ..> GetBatchesQuery
+
+BatchListComponent --> BatchFacade
+BatchListComponent --> BatchFilterComponent
+BatchListComponent --> BatchStatusBadgeComponent
+BatchDetailComponent --> BatchFacade
+BatchDetailComponent --> BatchReleaseFormComponent
+BatchDetailComponent --> BatchRejectFormComponent
+BatchDetailComponent --> RawMaterialUsageComponent
+BatchDetailComponent --> BatchStatusBadgeComponent
+BatchFormComponent --> BatchFacade
+BatchReleaseFormComponent --> BatchFacade
+BatchRejectFormComponent --> BatchFacade
+RawMaterialUsageComponent --> BatchFacade
+
+@enduml
