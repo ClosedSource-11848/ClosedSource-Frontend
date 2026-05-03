@@ -1,0 +1,123 @@
+<div class="container-with-spacing">
+  <h2>{{ 'raw-material-form.title' | translate }}</h2>
+
+  @if (store.error()) {
+    <p class="error-message" role="alert">{{ store.error() }}</p>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>{{ 'raw-material-form.name' | translate }}</mat-label>
+        <input matInput
+               formControlName="name"
+               aria-label="Raw material name"/>
+        @if (form.get('name')?.hasError('required')) {
+          <mat-error>{{ 'common.required' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>{{ 'raw-material-form.code' | translate }}</mat-label>
+        <input matInput
+               formControlName="code"
+               aria-label="Raw material internal code"/>
+        @if (form.get('code')?.hasError('required')) {
+          <mat-error>{{ 'common.required' | translate }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>{{ 'raw-material-form.supplier' | translate }}</mat-label>
+        <input matInput
+               formControlName="supplier"
+               aria-label="Raw material supplier name"/>
+        @if (form.get('supplier')?.hasError('required')) {
+          <mat-error>{{ 'common.required' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>{{ 'raw-material-form.batchNumber' | translate }}</mat-label>
+        <input matInput
+               formControlName="batchNumber"
+               aria-label="Supplier batch number"/>
+        @if (form.get('batchNumber')?.hasError('required')) {
+          <mat-error>{{ 'common.required' | translate }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'raw-material-form.expirationDate' | translate }}</mat-label>
+      <input matInput
+             [matDatepicker]="picker"
+             formControlName="expirationDate"
+             aria-label="Raw material expiration date"/>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"/>
+      <mat-datepicker #picker/>
+      @if (form.get('expirationDate')?.hasError('required')) {
+        <mat-error>{{ 'common.required' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>{{ 'raw-material-form.quantityInStock' | translate }}</mat-label>
+        <input matInput
+               type="number"
+               formControlName="quantityInStock"
+               aria-label="Current stock quantity"/>
+        @if (form.get('quantityInStock')?.hasError('min')) {
+          <mat-error>{{ 'common.minZero' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>{{ 'raw-material-form.unit' | translate }}</mat-label>
+        <mat-select formControlName="unit" aria-label="Unit of measurement">
+          @for (unit of units; track unit) {
+            <mat-option [value]="unit">{{ unit }}</mat-option>
+          }
+        </mat-select>
+        @if (form.get('unit')?.hasError('required')) {
+          <mat-error>{{ 'common.required' | translate }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'raw-material-form.minimumStock' | translate }}</mat-label>
+      <input matInput
+             type="number"
+             formControlName="minimumStock"
+             aria-label="Minimum stock threshold for alerts"/>
+      @if (form.get('minimumStock')?.hasError('min')) {
+        <mat-error>{{ 'common.minZero' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="form-actions">
+      <button mat-raised-button
+              color="primary"
+              type="submit"
+              aria-label="Register raw material"
+              [disabled]="form.invalid || store.isLoading()">
+        @if (store.isLoading()) {
+          <mat-spinner diameter="20"/>
+        } @else {
+          {{ 'common.register' | translate }}
+        }
+      </button>
+      <button mat-button
+              type="button"
+              aria-label="Cancel raw material registration"
+              (click)="onCancel()">
+        {{ 'common.cancel' | translate }}
+      </button>
+    </div>
+  </form>
+</div>
