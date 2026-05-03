@@ -1,16 +1,16 @@
-.full-width {
-  width: 100%;
-  margin-bottom: 12px;
-}
+.form-container { display: flex; justify-content: center; padding: 40px 20px; }
+.staff-card { width: 100%; max-width: 500px; border-radius: 12px; }
+.header-icon { background: #1a3a5c; color: white; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+.staff-form { margin-top: 24px; }
+.full-width { width: 100%; margin-bottom: 16px; }
+
+.error-box { background: #fff5f5; color: #c53030; padding: 12px; border-radius: 8px; display: flex; align-items: center; gap: 8px; margin-bottom: 20px; border: 1px solid #fc8181; }
 
 .form-actions {
   display: flex;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.error-message {
-  color: #d32f2f;
-  font-size: 0.9rem;
-  margin-bottom: 12px;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
 }

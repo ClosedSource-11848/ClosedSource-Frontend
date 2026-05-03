@@ -8,16 +8,18 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LaboratoryStore } from '../../../application/laboratory.store';
-
-const LAB_ID = 'TEMP_LAB_ID'; // TODO: obtener desde IAM store
+import { IamStore } from '../../../../iam/application/iam.store';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-lab-profile',
+  standalone: true,
   imports: [
     ReactiveFormsModule,
     TranslatePipe,
     MatFormFieldModule,
     MatInputModule,
+    MatIcon,
     MatButtonModule,
     MatSelectModule,
     MatCardModule,
@@ -28,6 +30,7 @@ const LAB_ID = 'TEMP_LAB_ID'; // TODO: obtener desde IAM store
 })
 export class LabProfile implements OnInit {
   protected readonly store = inject(LaboratoryStore);
+  protected readonly iamStore = inject(IamStore); // Inyección del store de identidad
   private readonly fb = inject(FormBuilder);
 
   protected isEditing = signal(false);
@@ -41,13 +44,18 @@ export class LabProfile implements OnInit {
     applicableRegulations: [[], Validators.required],
   });
 
+  private get currentLabId(): string {
+    return this.iamStore.currentUserId() || 'DEFAULT_LAB_ID';
+  }
+
   ngOnInit(): void {
-    this.store.loadLaboratory(LAB_ID);
+    this.store.loadLaboratory(this.currentLabId);
   }
 
   protected onEdit(): void {
     const lab = this.store.laboratory();
     if (!lab) return;
+
     this.form.patchValue({
       name: lab.name,
       address: lab.address,
@@ -59,7 +67,7 @@ export class LabProfile implements OnInit {
 
   protected onSave(): void {
     if (this.form.invalid) return;
-    this.store.updateLaboratory(LAB_ID, this.form.getRawValue());
+    this.store.updateLaboratory(this.currentLabId, this.form.getRawValue());
     this.isEditing.set(false);
   }
 

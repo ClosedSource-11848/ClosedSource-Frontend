@@ -6,23 +6,35 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { LaboratoryStore } from '../../../application/laboratory.store';
-
-const LAB_ID = 'TEMP_LAB_ID';
+import { IamStore } from '../../../../iam/application/iam.store';
+import {
+  MatCard,
+  MatCardContent,
+  MatCardHeader,
+  MatCardSubtitle,
+  MatCardTitle,
+} from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-raw-material-form',
+  standalone: true,
   imports: [
     ReactiveFormsModule,
     TranslatePipe,
     MatFormFieldModule,
     MatInputModule,
+    MatCard,
+    MatCardHeader,
+    MatIcon,
+    MatCardTitle,
+    MatCardSubtitle,
+    MatCardContent,
     MatButtonModule,
     MatSelectModule,
-    MatProgressSpinnerModule,
     MatDatepickerModule,
     MatNativeDateModule,
   ],
@@ -31,10 +43,15 @@ const LAB_ID = 'TEMP_LAB_ID';
 })
 export class RawMaterialForm {
   protected readonly store = inject(LaboratoryStore);
+  protected readonly iamStore = inject(IamStore);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
 
   protected readonly units = ['kg', 'g', 'L', 'mL', 'units'];
+
+  private get currentLabId(): string {
+    return this.iamStore.currentUserId() || 'DEFAULT_LAB_ID';
+  }
 
   protected form: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.maxLength(150)]],
@@ -50,8 +67,8 @@ export class RawMaterialForm {
   protected onSubmit(): void {
     if (this.form.invalid) return;
     const value = this.form.getRawValue();
-    this.store.createRawMaterial(LAB_ID, {
-      labId: LAB_ID,
+    this.store.createRawMaterial(this.currentLabId, {
+      labId: this.currentLabId,
       ...value,
       expirationDate: new Date(value.expirationDate).toISOString().split('T')[0],
     });

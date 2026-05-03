@@ -1,20 +1,98 @@
+.container-with-spacing {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.lab-card {
+  margin-top: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.lab-avatar {
+  background-color: #1a3a5c;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.lab-details {
+  margin-top: 16px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.lab-details p {
+  margin-bottom: 12px;
+}
+
+.regulations-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.tag {
+  background-color: #e8eaed;
+  color: #1a3a5c;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.edit-form {
+  padding: 16px 0;
+}
+
 .full-width {
   width: 100%;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .form-actions {
   display: flex;
-  gap: 8px;
-  margin-top: 8px;
+  gap: 12px;
+  margin-top: 16px;
+  justify-content: flex-end;
+}
+
+.alert {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.alert-error {
+  background-color: #fff5f5;
+  border-left: 4px solid #f56565;
+}
+
+.alert-success {
+  background-color: #f0fdf4;
+  border-left: 4px solid #48bb78;
 }
 
 .error-message {
-  color: #d32f2f;
-  font-size: 0.9rem;
+  color: #c53030;
+  font-size: 0.95rem;
+  margin: 0;
+  font-weight: 500;
 }
 
 .success-message {
-  color: #388e3c;
-  font-size: 0.9rem;
+  color: #2f855a;
+  font-size: 0.95rem;
+  margin: 0;
+  font-weight: 500;
 }

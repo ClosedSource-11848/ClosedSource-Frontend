@@ -8,15 +8,29 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LaboratoryStore } from '../../../application/laboratory.store';
-
-const LAB_ID = 'TEMP_LAB_ID';
+import { IamStore } from '../../../../iam/application/iam.store';
+import {
+  MatCard,
+  MatCardContent,
+  MatCardHeader,
+  MatCardSubtitle,
+  MatCardTitle,
+} from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-staff-form',
+  standalone: true,
   imports: [
     ReactiveFormsModule,
     TranslatePipe,
     MatFormFieldModule,
+    MatCard,
+    MatCardHeader,
+    MatIcon,
+    MatCardTitle,
+    MatCardSubtitle,
+    MatCardContent,
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
@@ -27,10 +41,15 @@ const LAB_ID = 'TEMP_LAB_ID';
 })
 export class StaffForm {
   protected readonly store = inject(LaboratoryStore);
+  protected readonly iamStore = inject(IamStore);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
 
   protected readonly roles = ['QA_MANAGER', 'LAB_OPERATOR', 'AUDITOR'];
+
+  private get currentLabId(): string {
+    return this.iamStore.currentUserId() || 'DEFAULT_LAB_ID';
+  }
 
   protected form: FormGroup = this.fb.group({
     fullName: ['', [Validators.required, Validators.maxLength(150)]],
@@ -40,8 +59,8 @@ export class StaffForm {
 
   protected onSubmit(): void {
     if (this.form.invalid) return;
-    this.store.registerStaff(LAB_ID, {
-      labId: LAB_ID,
+    this.store.registerStaff(this.currentLabId, {
+      labId: this.currentLabId,
       ...this.form.getRawValue(),
     });
     this.router.navigate(['/laboratory/staff-list']);
