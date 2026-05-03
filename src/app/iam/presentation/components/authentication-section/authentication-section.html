@@ -1,0 +1,26 @@
+<div class="auth-section">
+  <p class="auth-hint">{{ 'auth.already-have-account' | translate }}</p>
+
+  <button mat-flat-button class="btn-primary auth-main-btn" routerLink="/iam/sign-in">
+    <mat-icon>login</mat-icon>
+    {{ 'auth.sign-in' | translate }}
+  </button>
+
+  <!-- Divisor Visual -->
+  <div class="auth-divider">
+    <span class="divider-line"></span>
+    <span class="divider-text">{{ 'auth.or-create-account' | translate }}</span>
+    <span class="divider-line"></span>
+  </div>
+
+  <!-- Sección de Registro por Rol -->
+  <div class="role-buttons">
+    <button mat-stroked-button class="btn-role" [routerLink]="['/iam/sign-up']" [queryParams]="{role: 'qa-manager'}">
+      QA MANAGER / SUPERVISOR
+    </button>
+
+    <button mat-stroked-button class="btn-role" [routerLink]="['/iam/sign-up']" [queryParams]="{role: 'lab-operator'}">
+      LAB OPERATOR
+    </button>
+  </div>
+</div>
