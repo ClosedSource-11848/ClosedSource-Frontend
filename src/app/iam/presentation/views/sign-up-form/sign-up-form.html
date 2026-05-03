@@ -1,0 +1,66 @@
+<app-toolbar></app-toolbar>
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="card-header">
+      <div style="display: inline-block; padding: 4px 12px; background: #e8eaed; border-radius: 16px; font-size: 0.8rem; font-weight: 600; margin-bottom: 12px; color: #1a3a5c;">
+        Registration Mode: {{ displayRoleName }}
+      </div>
+      <h1>Create Account</h1>
+      <p>Sign up to access the QualiTrack system.</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div *ngIf="store.error()" class="alert alert-error">
+        <span>{{ store.error() }}</span>
+      </div>
+
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input id="username" type="text" formControlName="username" placeholder="Choose a username"
+               [class.error]="form.get('username')?.invalid && form.get('username')?.touched" />
+        <span class="error-message" *ngIf="form.get('username')?.invalid && form.get('username')?.touched">
+          {{ getUsernameError() }}
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password-input-wrapper">
+          <input id="password" [type]="hidePassword ? 'password' : 'text'" formControlName="password" placeholder="Create a password"
+                 [class.error]="form.get('password')?.invalid && form.get('password')?.touched" />
+          <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+            <span *ngIf="hidePassword">👁️</span>
+            <span *ngIf="!hidePassword">🙈</span>
+          </button>
+        </div>
+        <span class="error-message" *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+          {{ getPasswordError() }}
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <div class="password-input-wrapper">
+          <input id="confirmPassword" [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword" placeholder="Confirm your password"
+                 [class.error]="form.get('confirmPassword')?.invalid && form.get('confirmPassword')?.touched" />
+          <button type="button" class="toggle-password" (click)="toggleConfirmPasswordVisibility()">
+            <span *ngIf="hideConfirmPassword">👁️</span>
+            <span *ngIf="!hideConfirmPassword">🙈</span>
+          </button>
+        </div>
+        <span class="error-message" *ngIf="form.hasError('passwordMismatch') && form.get('confirmPassword')?.touched">
+          Passwords do not match
+        </span>
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="store.loading()">
+        <span *ngIf="!store.loading()">Register as {{ displayRoleName }}</span>
+        <span *ngIf="store.loading()">Creating account...</span>
+      </button>
+    </form>
+
+    <div class="footer-link">
+      <p>Already have an account? <a routerLink="/iam/sign-in">Sign In</a></p>
+    </div>
+  </div>
+</div>
