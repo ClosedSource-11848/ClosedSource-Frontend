@@ -8,7 +8,7 @@ import { RawMaterialResource } from './laboratory-response';
 import { RawMaterialAssembler } from './raw-material-assembler';
 import { CreateRawMaterialRequest } from './laboratory.request';
 
-const labEndpointUrl = `${environment.apiBaseUrl}/labs`;
+const labEndpointUrl = `${environment.serverBasePath}${environment.laboratoryLabsEndpointPath}`;
 
 export class RawMaterialApiEndpoint extends BaseApiEndpoint<
   RawMaterial,

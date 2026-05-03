@@ -8,7 +8,7 @@ import { PharmaceuticalProductResource } from './laboratory-response';
 import { ProductAssembler } from './product-assembler';
 import { CreateProductRequest } from './laboratory.request';
 
-const labEndpointUrl = `${environment.apiBaseUrl}/labs`;
+const labEndpointUrl = `${environment.serverBasePath}${environment.laboratoryLabsEndpointPath}`;
 
 export class ProductApiEndpoint extends BaseApiEndpoint<
   PharmaceuticalProduct,

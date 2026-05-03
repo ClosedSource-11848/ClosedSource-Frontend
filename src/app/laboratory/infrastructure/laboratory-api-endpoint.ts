@@ -8,7 +8,7 @@ import { LaboratoryResource } from './laboratory-response';
 import { LaboratoryAssembler } from './laboratory-assembler';
 import { UpdateLaboratoryRequest } from './laboratory.request';
 
-const labEndpointUrl = `${environment.apiBaseUrl}/labs`;
+const labEndpointUrl = `${environment.serverBasePath}${environment.laboratoryLabsEndpointPath}`;
 
 export class LaboratoryApiEndpoint extends BaseApiEndpoint<
   Laboratory,
