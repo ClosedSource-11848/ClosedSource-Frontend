@@ -1,25 +1,60 @@
-.home-hero {
+.landing-container {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  background-color: #fafbfc;
+}
+
+.landing-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex: 1;
+  padding: 0 40px 40px 80px;
+  gap: 40px;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 4rem 2rem;
-  gap: 1.5rem;
 }
 
-.home-logo {
-  height: 8em;
+.text-section {
+  max-width: 550px;
 }
 
-.home-tagline {
+.main-title {
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #1a1a1a;
+  margin-bottom: 20px;
+  letter-spacing: -1px;
+}
+
+.sub-title {
   font-size: 1.1rem;
-  color: #555;
-  max-width: 600px;
+  color: #5f6368;
+  line-height: 1.6;
+  margin-bottom: 40px;
 }
 
-.home-actions {
+.image-section {
+  height: 100%;
   display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.hero-image {
+  max-width: 100%;
+  height: auto;
+  max-height: 80vh;
+  object-fit: cover;
+  box-shadow: -10px 10px 30px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 1024px) {
+  .landing-content {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+  .image-section {
+    display: none;
+  }
 }

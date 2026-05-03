@@ -1,19 +1,82 @@
-<mat-toolbar color="primary">
-  <mat-toolbar-row>
-    <span class="nav-brand">QualiTrack</span>
-    <div class="mat-spacer"></div>
-    @for (option of options; track option.label) {
-      <a mat-button
-         [routerLink]="option.link"
-         routerLinkActive="active"
-         [attr.aria-label]="option.label | translate">
-        {{ option.label | translate }}
-      </a>
-    }
-    <app-language-switcher/>
-  </mat-toolbar-row>
+<!-- TOOLBAR FIJO -->
+<mat-toolbar class="toolbar">
+  <button mat-icon-button
+          aria-label="Toggle navigation menu"
+          (click)="drawer.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <img src="/qualitrack-logo.png" alt="QualiTrack logo"/>
+  <span class="toolbar-title">QualiTrack</span>
+  <span class="spacer"></span>
+  <app-language-switcher/>
 </mat-toolbar>
 
-<router-outlet/>
+<!-- BODY CON SIDENAV -->
+<div class="layout-body">
+  <mat-sidenav-container class="sidenav-container">
 
-<app-footer-content/>
+    <!-- SIDENAV -->
+    <mat-sidenav
+      #drawer
+      [mode]="sidenavMode"
+      [opened]="sidenavOpened">
+
+      <!-- Logo Section -->
+      <div class="logo-section">
+        <div class="logo-wrapper">
+          <div class="logo-icon">
+            <mat-icon aria-hidden="true">verified</mat-icon>
+          </div>
+          <div class="logo-text">
+            <h2>{{ 'nav.quality-management' | translate }}</h2>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="nav-menu" aria-label="Main navigation">
+        @for (option of options; track option.link) {
+          <div class="nav-item"
+               [class.active]="isActive(option.link)"
+               [matTooltip]="option.label | translate"
+               matTooltipPosition="right"
+               [attr.aria-label]="option.label | translate"
+               (click)="navigateTo(option.link)">
+
+            <div class="nav-icon-wrapper">
+              <mat-icon aria-hidden="true">{{ option.icon }}</mat-icon>
+            </div>
+
+            <span class="nav-label">{{ option.label | translate }}</span>
+
+            @if (isActive(option.link)) {
+              <div class="active-indicator"></div>
+            }
+          </div>
+        }
+      </nav>
+
+      <!-- Footer del sidenav -->
+      <div class="sidenav-footer">
+        <div class="footer-content">
+          <div class="footer-info">
+            <mat-icon aria-hidden="true">code</mat-icon>
+            <div class="footer-text">
+              <span class="company-name">ClosedSource</span>
+              <span class="copyright">© {{ getCurrentYear() }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </mat-sidenav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <mat-sidenav-content>
+      <div class="content-wrapper">
+        <router-outlet/>
+      </div>
+    </mat-sidenav-content>
+
+  </mat-sidenav-container>
+</div>

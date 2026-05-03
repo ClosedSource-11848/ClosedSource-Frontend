@@ -1,15 +1,234 @@
-.mat-spacer {
+/* ==================== TOOLBAR ==================== */
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  height: 64px;
+  background: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  color: #1a3a5c;
+}
+
+.toolbar img {
+  height: 40px;
+  width: auto;
+  margin-right: 12px;
+}
+
+.toolbar-title {
+  font-weight: 700;
+  font-size: 22px;
+  color: #1a3a5c;
+  letter-spacing: 0.5px;
+}
+
+.spacer {
   flex: 1 1 auto;
 }
 
-.nav-brand {
-  font-size: 1.2rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  margin-right: 8px;
+/* ==================== LAYOUT BODY ==================== */
+.layout-body {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  height: calc(100vh - 64px);
+  overflow: hidden;
+  background: #f4f6f9;
 }
 
-a.active {
-  font-weight: bold;
-  border-bottom: 2px solid white;
+.sidenav-container {
+  flex: 1;
+  height: 100%;
+}
+
+/* ==================== SIDENAV ==================== */
+mat-sidenav {
+  width: 260px;
+  background: #ffffff;
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.08);
+  border-right: 1px solid #e8eaed;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Logo Section */
+.logo-section {
+  padding: 20px 16px;
+  border-bottom: 1px solid #e8eaed;
+  background: #fafbfc;
+}
+
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  background: #1a3a5c;
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo-icon mat-icon {
+  color: white;
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+}
+
+.logo-text h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a3a5c;
+  white-space: nowrap;
+}
+
+/* Navigation Menu */
+.nav-menu {
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #5f6368;
+  white-space: nowrap;
+  position: relative;
+}
+
+.nav-item:hover {
+  background: #eaf0fb;
+  color: #1a3a5c;
+}
+
+.nav-item.active {
+  background: #ddeaf8;
+  color: #1a3a5c;
+  font-weight: 600;
+}
+
+.nav-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nav-item.active .nav-icon-wrapper {
+  background: rgba(26, 58, 92, 0.1);
+}
+
+.nav-icon-wrapper mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.nav-label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.active-indicator {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 60%;
+  background: #1a3a5c;
+  border-radius: 2px 0 0 2px;
+}
+
+/* Footer del sidenav */
+.sidenav-footer {
+  padding: 16px 12px;
+  border-top: 1px solid #e8eaed;
+  background: #fafbfc;
+}
+
+.footer-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #5f6368;
+}
+
+.footer-info mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: #1a3a5c;
+}
+
+.footer-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.company-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a3a5c;
+}
+
+.copyright {
+  font-size: 11px;
+  color: #80868b;
+}
+
+/* ==================== CONTENT ==================== */
+mat-sidenav-content {
+  background: #f4f6f9;
+  overflow-y: auto;
+}
+
+.content-wrapper {
+  padding: 24px;
+  min-height: 100%;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 0 16px;
+  }
+
+  mat-sidenav {
+    width: 260px;
+    position: fixed;
+  }
+
+  .content-wrapper {
+    padding: 16px;
+  }
 }

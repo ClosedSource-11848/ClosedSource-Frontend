@@ -1,55 +1,91 @@
-import { Component } from '@angular/core';
-import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
+import { Component, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { MatButton } from '@angular/material/button';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { RouterOutlet } from '@angular/router';
 import { LanguageSwitcher } from '../language-switcher/language-switcher';
-import { FooterContent } from '../footer-content/footer-content';
 
-/**
- * @summary Layout principal de la aplicación QualiTrack.
- * @remarks Componente raíz de presentación que define la estructura visual
- * global: toolbar de navegación superior con acceso a los módulos principales
- * (Dashboard, Lotes, Equipos, Alertas, Reportes, Configuración), selector de
- * idioma ES/EN, router-outlet para las vistas de cada bounded context y footer
- * corporativo. Las opciones de menú se alinean con los wireframes definidos:
- * Panel de Control, Ejecución de Lote, Estado de Equipos, Centro de Alertas,
- * Resumen de Calidad y Logs de Auditoría.
- * @author QualiTrack
- */
 @Component({
   selector: 'app-layout',
+  standalone: true,
   imports: [
-    MatToolbar,
-    MatToolbarRow,
+    CommonModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
     TranslatePipe,
-    RouterLink,
-    RouterLinkActive,
-    MatButton,
-    LanguageSwitcher,
     RouterOutlet,
-    FooterContent,
+    LanguageSwitcher,
   ],
   templateUrl: './layout.html',
   styleUrl: './layout.css',
 })
 export class Layout {
-  /**
-   * Navigation options aligned with the QualiTrack wireframe screens:
-   * - Dashboard
-   * - Batches
-   * - Equipment
-   * - Alerts
-   * - Compliance
-   * - Reports
-   */
+  @ViewChild(MatSidenav) drawer!: MatSidenav;
+
+  sidenavMode: 'side' | 'over' = 'side';
+  sidenavOpened = true;
+
   options = [
-    { link: '/home', label: 'option.home' },
-    { link: '/tracking/dashboard', label: 'option.dashboard' },
-    { link: '/batch-management/batches', label: 'option.batches' },
-    { link: '/equipment-management/equipment', label: 'option.equipment' },
-    { link: '/compliance-alerting/alerts', label: 'option.alerts' },
-    { link: '/reporting-audit/kpis', label: 'option.reports' },
-    { link: '/laboratory-management/lab-profile', label: 'option.settings' },
+    { label: 'nav.home', icon: 'home', link: '/home', color: '#1a5276' },
+    { label: 'nav.dashboard', icon: 'dashboard', link: '/tracking/dashboard', color: '#1a5276' },
+    { label: 'nav.batches', icon: 'science', link: '/batch-management/batches', color: '#1a5276' },
+    {
+      label: 'nav.equipment',
+      icon: 'precision_manufacturing',
+      link: '/equipment-management/equipment',
+      color: '#1a5276',
+    },
+    {
+      label: 'nav.alerts',
+      icon: 'notification_important',
+      link: '/compliance-alerting/alerts',
+      color: '#1a5276',
+    },
+    { label: 'nav.reports', icon: 'assessment', link: '/reporting-audit/kpis', color: '#1a5276' },
+    {
+      label: 'nav.laboratory',
+      icon: 'settings',
+      link: '/laboratory-management/lab-profile',
+      color: '#1a5276',
+    },
   ];
+
+  constructor(
+    private router: Router,
+    private observer: BreakpointObserver,
+  ) {
+    this.observer.observe(['(max-width: 768px)']).subscribe((result) => {
+      if (result.matches) {
+        this.sidenavMode = 'over';
+        this.sidenavOpened = false;
+      } else {
+        this.sidenavMode = 'side';
+        this.sidenavOpened = true;
+      }
+    });
+  }
+
+  navigateTo(link: string): void {
+    this.router.navigate([link]).then();
+    if (this.sidenavMode === 'over') {
+      this.drawer.toggle().then();
+    }
+  }
+
+  isActive(link: string): boolean {
+    return this.router.url.startsWith(link);
+  }
+
+  getCurrentYear(): number {
+    return new Date().getFullYear();
+  }
 }
