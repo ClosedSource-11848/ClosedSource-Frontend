@@ -7,11 +7,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { LaboratoryStore } from '../../../application/laboratory.store';
-
-const LAB_ID = 'TEMP_LAB_ID';
+import { IamStore } from '../../../../iam/application/iam.store';
 
 @Component({
   selector: 'app-staff-list',
+  standalone: true,
   imports: [
     TranslatePipe,
     MatTableModule,
@@ -25,12 +25,17 @@ const LAB_ID = 'TEMP_LAB_ID';
 })
 export class StaffList implements OnInit {
   protected readonly store = inject(LaboratoryStore);
+  protected readonly iamStore = inject(IamStore);
   private readonly router = inject(Router);
+
+  private get currentLabId(): string {
+    return this.iamStore.currentUserId() || 'DEFAULT_LAB_ID';
+  }
 
   protected readonly displayedColumns = ['fullName', 'role', 'email', 'active', 'actions'];
 
   ngOnInit(): void {
-    this.store.loadStaff(LAB_ID);
+    this.store.loadStaff(this.currentLabId);
   }
 
   protected onRegister(): void {
@@ -38,6 +43,8 @@ export class StaffList implements OnInit {
   }
 
   protected onDeactivate(staffId: string): void {
-    this.store.deactivateStaff(LAB_ID, staffId);
+    if (confirm('Are you sure you want to deactivate this staff member?')) {
+      this.store.deactivateStaff(this.currentLabId, staffId);
+    }
   }
 }

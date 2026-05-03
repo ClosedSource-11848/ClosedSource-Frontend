@@ -1,27 +1,20 @@
-.form-row {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 0;
-}
+.form-container { display: flex; justify-content: center; padding: 40px 20px; }
+.raw-material-card { width: 100%; max-width: 650px; border-radius: 12px; }
+.header-icon { background: #1a3a5c; color: white; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+.raw-form { margin-top: 24px; }
 
-.half-width {
-  flex: 1;
-  margin-bottom: 12px;
-}
-
-.full-width {
-  width: 100%;
-  margin-bottom: 12px;
-}
+.grid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px; }
+.full-width { width: 100%; margin-bottom: 8px; }
 
 .form-actions {
   display: flex;
-  gap: 8px;
-  margin-top: 8px;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
 }
 
-.error-message {
-  color: #d32f2f;
-  font-size: 0.9rem;
-  margin-bottom: 12px;
+@media (max-width: 600px) {
+  .grid-row { grid-template-columns: 1fr; }
 }

@@ -6,13 +6,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatBadgeModule } from '@angular/material/badge';
 import { LaboratoryStore } from '../../../application/laboratory.store';
-
-const LAB_ID = 'TEMP_LAB_ID';
+import { IamStore } from '../../../../iam/application/iam.store';
 
 @Component({
   selector: 'app-raw-material-list',
+  standalone: true,
   imports: [
     TranslatePipe,
     MatTableModule,
@@ -20,14 +19,18 @@ const LAB_ID = 'TEMP_LAB_ID';
     MatIconModule,
     MatProgressSpinnerModule,
     MatChipsModule,
-    MatBadgeModule,
   ],
   templateUrl: './raw-material-list.html',
   styleUrl: './raw-material-list.css',
 })
 export class RawMaterialList implements OnInit {
   protected readonly store = inject(LaboratoryStore);
+  protected readonly iamStore = inject(IamStore);
   private readonly router = inject(Router);
+
+  private get currentLabId(): string {
+    return this.iamStore.currentUserId() || 'DEFAULT_LAB_ID';
+  }
 
   protected readonly displayedColumns = [
     'name',
@@ -39,11 +42,11 @@ export class RawMaterialList implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.store.loadRawMaterials(LAB_ID);
+    this.store.loadRawMaterials(this.currentLabId);
   }
 
-  protected isLowStock(quantityInStock: number, minimumStock: number): boolean {
-    return quantityInStock <= minimumStock;
+  protected isLowStock(quantity: number, min: number): boolean {
+    return quantity <= min;
   }
 
   protected onAdd(): void {

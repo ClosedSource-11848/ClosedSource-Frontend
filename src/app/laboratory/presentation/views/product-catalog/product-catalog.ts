@@ -9,16 +9,18 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormsModule } from '@angular/forms';
 import { LaboratoryStore } from '../../../application/laboratory.store';
 import { PharmaceuticalProduct } from '../../../domain/model/pharmaceutical-product.entity';
-
-const LAB_ID = 'TEMP_LAB_ID';
+import { IamStore } from '../../../../iam/application/iam.store';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-product-catalog',
+  standalone: true,
   imports: [
     TranslatePipe,
     MatTableModule,
     MatButtonModule,
     MatInputModule,
+    MatIcon,
     MatFormFieldModule,
     MatProgressSpinnerModule,
     FormsModule,
@@ -28,13 +30,18 @@ const LAB_ID = 'TEMP_LAB_ID';
 })
 export class ProductCatalog implements OnInit {
   protected readonly store = inject(LaboratoryStore);
+  protected readonly iamStore = inject(IamStore);
   private readonly router = inject(Router);
+
+  private get currentLabId(): string {
+    return this.iamStore.currentUserId() || 'DEFAULT_LAB_ID';
+  }
 
   protected searchTerm = signal('');
   protected readonly displayedColumns = ['code', 'name', 'specifications', 'active'];
 
   ngOnInit(): void {
-    this.store.loadProducts(LAB_ID);
+    this.store.loadProducts(this.currentLabId);
   }
 
   protected get filtered(): PharmaceuticalProduct[] {

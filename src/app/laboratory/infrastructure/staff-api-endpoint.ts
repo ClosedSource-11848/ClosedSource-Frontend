@@ -8,7 +8,7 @@ import { StaffMemberResource } from './laboratory-response';
 import { StaffAssembler } from './staff-assembler';
 import { RegisterStaffRequest } from './laboratory.request';
 
-const labEndpointUrl = `${environment.apiBaseUrl}/labs`;
+const labEndpointUrl = `${environment.serverBasePath}${environment.laboratoryLabsEndpointPath}`;
 
 export class StaffApiEndpoint extends BaseApiEndpoint<
   StaffMember,

@@ -1,70 +1,71 @@
-<div class="container-with-spacing">
+<div class="staff-container">
   <div class="section-header">
-    <h2>{{ 'staff-list.title' | translate }}</h2>
-    <button mat-raised-button
-            color="primary"
-            aria-label="Register new staff member"
-            (click)="onRegister()">
+    <div class="title-group">
+      <mat-icon class="title-icon">badge</mat-icon>
+      <h2>{{ 'staff-list.title' | translate }}</h2>
+    </div>
+    <button mat-flat-button color="primary" (click)="onRegister()">
+      <mat-icon>person_add</mat-icon>
       {{ 'staff-list.register' | translate }}
     </button>
   </div>
 
-  @if (store.isLoading()) {
-    <mat-spinner diameter="48" aria-label="Loading staff list"/>
-  }
+  <div class="table-card mat-elevation-z2">
+    @if (store.isLoading()) {
+      <div class="loading-overlay">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    }
 
-  @if (store.error()) {
-    <p class="error-message" role="alert">{{ store.error() }}</p>
-  }
+    <table mat-table [dataSource]="store.staffList()" class="full-width-table">
+      <ng-container matColumnDef="fullName">
+        <th mat-header-cell *matHeaderCellDef>{{ 'staff-list.name' | translate }}</th>
+        <td mat-cell *matCellDef="let member" class="name-cell">{{ member.fullName }}</td>
+      </ng-container>
 
-  <table mat-table [dataSource]="store.staffList()" class="full-width-table">
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef>{{ 'staff-list.role' | translate }}</th>
+        <td mat-cell *matCellDef="let member">
+          <span class="role-tag">{{ member.role }}</span>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="fullName">
-      <th mat-header-cell *matHeaderCellDef>{{ 'staff-list.name' | translate }}</th>
-      <td mat-cell *matCellDef="let member">{{ member.fullName }}</td>
-    </ng-container>
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>{{ 'staff-list.email' | translate }}</th>
+        <td mat-cell *matCellDef="let member">{{ member.email }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="role">
-      <th mat-header-cell *matHeaderCellDef>{{ 'staff-list.role' | translate }}</th>
-      <td mat-cell *matCellDef="let member">{{ member.role }}</td>
-    </ng-container>
+      <ng-container matColumnDef="active">
+        <th mat-header-cell *matHeaderCellDef>{{ 'staff-list.status' | translate }}</th>
+        <td mat-cell *matCellDef="let member">
+          <mat-chip-set>
+            <mat-chip [class]="member.active ? 'chip-active' : 'chip-inactive'">
+              {{ (member.active ? 'common.active' : 'common.inactive') | translate }}
+            </mat-chip>
+          </mat-chip-set>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="email">
-      <th mat-header-cell *matHeaderCellDef>{{ 'staff-list.email' | translate }}</th>
-      <td mat-cell *matCellDef="let member">{{ member.email }}</td>
-    </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.actions' | translate }}</th>
+        <td mat-cell *matCellDef="let member">
+          @if (member.active) {
+            <button mat-icon-button color="warn" matTooltip="Deactivate member" (click)="onDeactivate(member.id)">
+              <mat-icon>person_off</mat-icon>
+            </button>
+          }
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="active">
-      <th mat-header-cell *matHeaderCellDef>{{ 'staff-list.status' | translate }}</th>
-      <td mat-cell *matCellDef="let member">
-        <mat-chip-set>
-          <mat-chip [class]="member.active ? 'chip-active' : 'chip-inactive'"
-                    [attr.aria-label]="member.active ? 'Active' : 'Inactive'">
-            {{ (member.active ? 'common.active' : 'common.inactive') | translate }}
-          </mat-chip>
-        </mat-chip-set>
-      </td>
-    </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="staff-row"></tr>
+    </table>
 
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>{{ 'common.actions' | translate }}</th>
-      <td mat-cell *matCellDef="let member">
-        @if (member.active) {
-          <button mat-icon-button
-                  color="warn"
-                  [attr.aria-label]="'Deactivate ' + member.fullName"
-                  (click)="onDeactivate(member.id)">
-            <mat-icon>person_off</mat-icon>
-          </button>
-        }
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-
-  @if (!store.isLoading() && store.staffList().length === 0) {
-    <p class="empty-state">{{ 'staff-list.empty' | translate }}</p>
-  }
+    @if (!store.isLoading() && store.staffList().length === 0) {
+      <div class="empty-state">
+        <mat-icon>people_outline</mat-icon>
+        <p>{{ 'staff-list.empty' | translate }}</p>
+      </div>
+    }
+  </div>
 </div>
