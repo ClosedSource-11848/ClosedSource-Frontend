@@ -1,0 +1,35 @@
+{
+  "home": {
+    "title": "We care about accuracy, we ensure quality.",
+    "content": "Advanced data management for high-stakes operational environments. Ensure total compliance and laboratory-grade accuracy."
+  },
+  "auth": {
+    "already-have-account": "Already have an account?",
+    "sign-in": "Sign In",
+    "or-create-account": "or create account"
+  },
+  "nav": {
+    "quality-management": "Quality Management",
+    "home": "Home",
+    "dashboard": "Telemetry Dashboard",
+    "batches": "Batch Management",
+    "equipment": "Equipment",
+    "alerts": "Compliance Alerts",
+    "reports": "Reports & KPIs",
+    "laboratory": "Lab Profile"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "powered-by": "Powered by",
+    "and": "and"
+  },
+  "page-not-found": {
+    "title": "Page Not Found",
+    "content": "The path <strong>{{invalid_path}}</strong> is not valid.",
+    "go-home": "Go to Home"
+  },
+  "about": {
+    "title": "About QualiTrack",
+    "content": "QualiTrack is a comprehensive pharmaceutical quality management system with IoT integration."
+  }
+}
