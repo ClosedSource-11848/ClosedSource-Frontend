@@ -1,0 +1,35 @@
+{
+  "home": {
+    "title": "Nos preocupamos por la precisión, aseguramos la calidad.",
+    "content": "Gestión avanzada de datos para entornos operativos de alto riesgo. Asegure el cumplimiento normativo total y la precisión a nivel de laboratorio."
+  },
+  "auth": {
+    "already-have-account": "¿Ya tienes una cuenta?",
+    "sign-in": "Iniciar Sesión",
+    "or-create-account": "o crear cuenta"
+  },
+  "nav": {
+    "quality-management": "Gestión de Calidad",
+    "home": "Inicio",
+    "dashboard": "Panel de Telemetría",
+    "batches": "Gestión de Lotes",
+    "equipment": "Equipos Industriales",
+    "alerts": "Alertas de Cumplimiento",
+    "reports": "Reportes y Auditoría",
+    "laboratory": "Perfil del Laboratorio"
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados.",
+    "powered-by": "Desarrollado con",
+    "and": "y"
+  },
+  "page-not-found": {
+    "title": "Página No Encontrada",
+    "content": "La ruta <strong>{{invalid_path}}</strong> no es válida.",
+    "go-home": "Volver al Inicio"
+  },
+  "about": {
+    "title": "Acerca de QualiTrack",
+    "content": "QualiTrack es un sistema integral de gestión de calidad farmacéutica con integración IoT."
+  }
+}
