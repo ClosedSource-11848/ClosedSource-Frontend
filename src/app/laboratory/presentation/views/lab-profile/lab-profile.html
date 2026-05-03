@@ -1,0 +1,92 @@
+<div class="container-with-spacing">
+  <h2>{{ 'lab-profile.title' | translate }}</h2>
+
+  @if (store.isLoading()) {
+    <mat-spinner diameter="48" aria-label="Loading laboratory profile"/>
+  }
+
+  @if (store.error()) {
+    <p class="error-message" role="alert">{{ store.error() }}</p>
+  }
+
+  @if (store.successMsg()) {
+    <p class="success-message" role="status">{{ store.successMsg() }}</p>
+  }
+
+  @if (store.laboratory(); as lab) {
+    @if (!isEditing()) {
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{ lab.name }}</mat-card-title>
+          <mat-card-subtitle>RUC: {{ lab.ruc }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p><strong>{{ 'lab-profile.address' | translate }}:</strong> {{ lab.address }}</p>
+          <p><strong>{{ 'lab-profile.phone' | translate }}:</strong> {{ lab.phone }}</p>
+          <p>
+            <strong>{{ 'lab-profile.regulations' | translate }}:</strong>
+            {{ lab.applicableRegulations.join(', ') }}
+          </p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button
+                  color="primary"
+                  aria-label="Edit laboratory profile"
+                  (click)="onEdit()">
+            {{ 'lab-profile.edit' | translate }}
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="onSave()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'lab-profile.name' | translate }}</mat-label>
+          <input matInput
+                 formControlName="name"
+                 aria-label="Laboratory name"/>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'lab-profile.address' | translate }}</mat-label>
+          <input matInput
+                 formControlName="address"
+                 aria-label="Laboratory address"/>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'lab-profile.phone' | translate }}</mat-label>
+          <input matInput
+                 formControlName="phone"
+                 aria-label="Laboratory phone number"/>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'lab-profile.regulations' | translate }}</mat-label>
+          <mat-select formControlName="applicableRegulations"
+                      multiple
+                      aria-label="Applicable regulations">
+            @for (reg of regulations; track reg) {
+              <mat-option [value]="reg">{{ reg }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-raised-button
+                  color="primary"
+                  type="submit"
+                  aria-label="Save laboratory profile"
+                  [disabled]="form.invalid || store.isLoading()">
+            {{ 'common.save' | translate }}
+          </button>
+          <button mat-button
+                  type="button"
+                  aria-label="Cancel editing"
+                  (click)="onCancel()">
+            {{ 'common.cancel' | translate }}
+          </button>
+        </div>
+      </form>
+    }
+  }
+</div>

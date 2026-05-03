@@ -1,0 +1,51 @@
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.full-width-table {
+  width: 100%;
+}
+
+.low-stock-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #fff3e0;
+  color: #e65100;
+  padding: 10px 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.low-stock-cell {
+  color: #c62828;
+  font-weight: bold;
+}
+
+.row-low-stock {
+  background-color: #fff8f8;
+}
+
+.chip-warning {
+  background-color: #ffe082 !important;
+  color: #e65100 !important;
+}
+
+.chip-ok {
+  background-color: #c8e6c9 !important;
+  color: #2e7d32 !important;
+}
+
+.error-message {
+  color: #d32f2f;
+}
+
+.empty-state {
+  text-align: center;
+  color: #999;
+  margin-top: 32px;
+}

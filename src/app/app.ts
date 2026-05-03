@@ -1,10 +1,20 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [RouterOutlet, TranslateModule],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css'],
 })
 export class App {
-  protected readonly title = signal('ClosedSource-Frontend');
+  protected readonly title = signal('FrontendClosedSource');
+  private translate = inject(TranslateService);
+
+  constructor() {
+    this.translate.addLangs(['en', 'es']);
+    this.translate.use('en');
+  }
 }

@@ -1,0 +1,72 @@
+<div class="container-with-spacing">
+  <h2>{{ 'product-form.title' | translate }}</h2>
+
+  @if (store.error()) {
+    <p class="error-message" role="alert">{{ store.error() }}</p>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'product-form.code' | translate }}</mat-label>
+      <input matInput
+             formControlName="code"
+             aria-label="Pharmaceutical product code"/>
+      @if (form.get('code')?.hasError('required')) {
+        <mat-error>{{ 'common.required' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'product-form.name' | translate }}</mat-label>
+      <input matInput
+             formControlName="name"
+             aria-label="Pharmaceutical product name"/>
+      @if (form.get('name')?.hasError('required')) {
+        <mat-error>{{ 'common.required' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'product-form.description' | translate }}</mat-label>
+      <textarea matInput
+                formControlName="description"
+                rows="3"
+                aria-label="Pharmaceutical product description"></textarea>
+      @if (form.get('description')?.hasError('required')) {
+        <mat-error>{{ 'common.required' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'product-form.specifications' | translate }}</mat-label>
+      <textarea matInput
+                formControlName="specifications"
+                rows="4"
+                aria-label="Pharmaceutical product BPM specifications"></textarea>
+      @if (form.get('specifications')?.hasError('required')) {
+        <mat-error>{{ 'common.required' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="form-actions">
+      <button mat-raised-button
+              color="primary"
+              type="submit"
+              aria-label="Register pharmaceutical product"
+              [disabled]="form.invalid || store.isLoading()">
+        @if (store.isLoading()) {
+          <mat-spinner diameter="20"/>
+        } @else {
+          {{ 'common.register' | translate }}
+        }
+      </button>
+      <button mat-button
+              type="button"
+              aria-label="Cancel product registration"
+              (click)="onCancel()">
+        {{ 'common.cancel' | translate }}
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,63 @@
+<div class="container-with-spacing">
+  <h2>{{ 'staff-form.title' | translate }}</h2>
+
+  @if (store.error()) {
+    <p class="error-message" role="alert">{{ store.error() }}</p>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'staff-form.fullName' | translate }}</mat-label>
+      <input matInput
+             formControlName="fullName"
+             aria-label="Staff member full name"/>
+      @if (form.get('fullName')?.hasError('required')) {
+        <mat-error>{{ 'common.required' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'staff-form.role' | translate }}</mat-label>
+      <mat-select formControlName="role" aria-label="Staff member role">
+        @for (role of roles; track role) {
+          <mat-option [value]="role">{{ role }}</mat-option>
+        }
+      </mat-select>
+      @if (form.get('role')?.hasError('required')) {
+        <mat-error>{{ 'common.required' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'staff-form.email' | translate }}</mat-label>
+      <input matInput
+             formControlName="email"
+             type="email"
+             aria-label="Staff member email address"/>
+      @if (form.get('email')?.hasError('email')) {
+        <mat-error>{{ 'common.invalidEmail' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="form-actions">
+      <button mat-raised-button
+              color="primary"
+              type="submit"
+              aria-label="Register staff member"
+              [disabled]="form.invalid || store.isLoading()">
+        @if (store.isLoading()) {
+          <mat-spinner diameter="20"/>
+        } @else {
+          {{ 'common.register' | translate }}
+        }
+      </button>
+      <button mat-button
+              type="button"
+              aria-label="Cancel registration"
+              (click)="onCancel()">
+        {{ 'common.cancel' | translate }}
+      </button>
+    </div>
+  </form>
+</div>
