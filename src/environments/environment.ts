@@ -1,25 +1,41 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'http://localhost:8080/api/v1',
-  labsEndpointPath: '/labs',
-  staffEndpointPath: '/staff',
-  productsEndpointPath: '/products',
-  rawMaterialsEndpointPath: '/raw-materials',
+
+  // Base API URL
+  serverBasePath: 'http://localhost:8080/api/v1',
+
+  // IAM (Identity and Access Management)
+  iamSignInEndpointPath: '/auth/sign-in',
+  iamSignUpEndpointPath: '/auth/sign-up',
+  iamRecoverPasswordEndpointPath: '/auth/recover-password',
+
+  // Laboratory
+  laboratoryLabsEndpointPath: '/labs',
+  laboratoryStaffEndpointPath: '/staff',
+  laboratoryProductsEndpointPath: '/products',
+  laboratoryRawMaterialsEndpointPath: '/raw-materials',
+
+  // Equipment
   equipmentEndpointPath: '/equipment',
-  bpmConfigEndpointPath: '/bpm-config',
-  maintenanceEndpointPath: '/maintenance',
-  telemetryEndpointPath: '/telemetry',
-  deviceBindingsEndpointPath: '/device-bindings',
-  complianceEndpointPath: '/compliance',
-  alertsEndpointPath: '/alerts',
-  notificationPrefsEndpointPath: '/notification-preferences',
-  batchesEndpointPath: '/batches',
-  rawMaterialUsageEndpointPath: '/raw-material-usages',
-  reportsEndpointPath: '/reports',
-  kpisEndpointPath: '/kpis',
-  auditLogEndpointPath: '/audit-log',
-  deviationTrendsEndpointPath: '/deviation-trends',
-  signInEndpointPath: '/auth/sign-in',
-  signUpEndpointPath: '/auth/sign-up',
-  recoverPasswordEndpointPath: '/auth/recover-password',
+  equipmentBpmConfigEndpointPath: '/bpm-config',
+  equipmentMaintenanceEndpointPath: '/maintenance',
+
+  // Batch
+  batchBatchesEndpointPath: '/batches',
+  batchRawMaterialUsageEndpointPath: '/raw-material-usages',
+
+  // Tracking (IoT)
+  trackingTelemetryEndpointPath: '/telemetry',
+  trackingDeviceBindingsEndpointPath: '/device-bindings',
+
+  // CA (Compliance & Alerting)
+  caComplianceEndpointPath: '/compliance',
+  caAlertsEndpointPath: '/alerts',
+  caNotificationPrefsEndpointPath: '/notification-preferences',
+
+  // RA (Reporting & Audit)
+  raReportsEndpointPath: '/reports',
+  raKpisEndpointPath: '/kpis',
+  raAuditLogEndpointPath: '/audit-log',
+  raDeviationTrendsEndpointPath: '/deviation-trends',
 };

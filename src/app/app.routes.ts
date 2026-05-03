@@ -1,13 +1,18 @@
 import { Routes } from '@angular/router';
 import { Home } from './shared/presentation/views/home/home';
 
-const about = () => import('./shared/presentation/views/about/about').then((m) => m.About);
+const about = () =>
+  import('./shared/presentation/views/about/about').then((m) => m.About);
 
 const pageNotFound = () =>
   import('./shared/presentation/views/page-not-found/page-not-found').then((m) => m.PageNotFound);
 
 const laboratoryRoutes = () =>
   import('./laboratory/presentation/laboratory-routes').then((m) => m.laboratoryRoutes);
+
+const iamRoutes = () =>
+  import('./iam/presentation/iam.routes').then((m) => m.iamRoutes);
+
 /*
 const equipmentRoutes = () =>
   import('./equipment/presentation/equipment-routes').then((m) => m.equipmentRoutes);
@@ -29,6 +34,7 @@ const baseTitle = 'QualiTrack';
 export const routes: Routes = [
   { path: 'home', component: Home, title: `Home - ${baseTitle}` },
   { path: 'about', loadComponent: about, title: `About - ${baseTitle}` },
+  { path: 'iam', loadChildren: iamRoutes },
   { path: 'laboratory', loadChildren: laboratoryRoutes },
   /*
   { path: 'equipment', loadChildren: equipmentRoutes },
