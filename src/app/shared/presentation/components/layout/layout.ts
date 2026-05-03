@@ -35,28 +35,13 @@ export class Layout {
   sidenavOpened = true;
 
   options = [
-    { label: 'nav.home', icon: 'home', link: '/home', color: '#1a5276' },
-    { label: 'nav.dashboard', icon: 'dashboard', link: '/tracking/dashboard', color: '#1a5276' },
-    { label: 'nav.batches', icon: 'science', link: '/batch-management/batches', color: '#1a5276' },
-    {
-      label: 'nav.equipment',
-      icon: 'precision_manufacturing',
-      link: '/equipment-management/equipment',
-      color: '#1a5276',
-    },
-    {
-      label: 'nav.alerts',
-      icon: 'notification_important',
-      link: '/compliance-alerting/alerts',
-      color: '#1a5276',
-    },
-    { label: 'nav.reports', icon: 'assessment', link: '/reporting-audit/kpis', color: '#1a5276' },
-    {
-      label: 'nav.laboratory',
-      icon: 'settings',
-      link: '/laboratory-management/lab-profile',
-      color: '#1a5276',
-    },
+    { label: 'nav.home', icon: 'home', link: '/home', color: '#148f77' },
+    { label: 'nav.dashboard', icon: 'analytics', link: '/tracking/dashboard', color: '#148f77' },
+    { label: 'nav.batches', icon: 'inventory_2', link: '/batch/batches', color: '#148f77' },
+    { label: 'nav.equipment', icon: 'settings_suggest', link: '/equipment', color: '#148f77' },
+    { label: 'nav.alerts', icon: 'warning', link: '/ca/alerts', color: '#148f77' },
+    { label: 'nav.reports', icon: 'description', link: '/ra/kpis', color: '#148f77' },
+    { label: 'nav.laboratory', icon: 'science', link: '/laboratory/lab-profile', color: '#148f77' },
   ];
 
   constructor(
