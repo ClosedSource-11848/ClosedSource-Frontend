@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { EquipmentStore } from '../../../application/equipment.store';
 import { IamStore } from '../../../../iam/application/iam.store';
+import { CalibrationAlert } from '../calibration-alert/calibration-alert';
 
 @Component({
   selector: 'app-equipment-list',
@@ -22,6 +23,7 @@ import { IamStore } from '../../../../iam/application/iam.store';
     MatChipsModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
+    CalibrationAlert,
     RouterModule,
     TranslatePipe,
   ],
