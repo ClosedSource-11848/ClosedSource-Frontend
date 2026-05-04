@@ -38,7 +38,18 @@ export class Layout {
 
   options = [
     { label: 'nav.dashboard', icon: 'analytics', link: '/tracking/dashboard' },
-    { label: 'nav.batches', icon: 'inventory_2', link: '/batch/batches' },
+    {
+      label: 'nav.batches',
+      icon: 'inventory_2',
+      link: '/batch',
+      children: [
+        { label: 'batches.title', link: '/batch/batch-list' },
+        { label: 'product-form.title', link: '/batch/batch-form' },
+        { label: 'equipment-detail.title', link: '/batch/batch-detail' },
+        { label: 'batches.actions.release', link: '/batch/batch-release-form' },
+        { label: 'batches.actions.reject', link: '/batch/batch-reject-form' },
+      ],
+    },
     {
       label: 'nav.equipment',
       icon: 'settings_suggest',

@@ -14,15 +14,15 @@ const iamRoutes = () => import('./iam/presentation/iam.routes').then((m) => m.ia
 const equipmentRoutes = () =>
   import('./equipment/presentation/equipment-routes').then((m) => m.equipmentRoutes);
 
+const batchRoutes = () => import('./batch/presentation/batch-routes').then((m) => m.batchRoutes);
+
 /*
+// Módulos pendientes de implementación
 const trackingRoutes = () =>
   import('./tracking/presentation/tracking-routes').then((m) => m.trackingRoutes);
 
 const caRoutes = () =>
   import('./ca/presentation/ca-routes').then((m) => m.caRoutes);
-
-const batchRoutes = () =>
-  import('./batch/presentation/batch-routes').then((m) => m.batchRoutes);
 
 const raRoutes = () =>
   import('./ra/presentation/ra-routes').then((m) => m.raRoutes);
@@ -35,16 +35,15 @@ export const routes: Routes = [
   { path: 'about', loadComponent: about, title: `About - ${baseTitle}` },
   { path: 'iam', loadChildren: iamRoutes },
   { path: 'laboratory', loadChildren: laboratoryRoutes },
-
-  // Se registra la ruta principal de equipment
   { path: 'equipment', loadChildren: equipmentRoutes },
+  { path: 'batch', loadChildren: batchRoutes },
 
   /*
   { path: 'tracking', loadChildren: trackingRoutes },
   { path: 'ca', loadChildren: caRoutes },
-  { path: 'batch', loadChildren: batchRoutes },
   { path: 'ra', loadChildren: raRoutes },
-   */
+  */
+
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', loadComponent: pageNotFound, title: `Page Not Found - ${baseTitle}` },
 ];
