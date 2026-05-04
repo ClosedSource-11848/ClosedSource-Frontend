@@ -39,7 +39,19 @@ export class Layout {
   options = [
     { label: 'nav.dashboard', icon: 'analytics', link: '/tracking/dashboard' },
     { label: 'nav.batches', icon: 'inventory_2', link: '/batch/batches' },
-    { label: 'nav.equipment', icon: 'settings_suggest', link: '/equipment' },
+    {
+      label: 'nav.equipment',
+      icon: 'settings_suggest',
+      link: '/equipment',
+      children: [
+        { label: 'equipment-list.title', link: '/equipment/equipment-list' },
+        { label: 'equipment-form.title', link: '/equipment/register-equipment' },
+        { label: 'equipment-detail.title', link: '/equipment/equipment-detail' },
+        { label: 'bpm-config.title', link: '/equipment/bpm-config-form' },
+        { label: 'maintenance-history.title', link: '/equipment/maintenance-history' },
+        { label: 'maintenance-form.title', link: '/equipment/maintenance-form' },
+      ],
+    },
     { label: 'nav.alerts', icon: 'warning', link: '/ca/alerts' },
     { label: 'nav.reports', icon: 'description', link: '/ra/kpis' },
     {
