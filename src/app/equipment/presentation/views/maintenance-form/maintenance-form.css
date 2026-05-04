@@ -1,0 +1,54 @@
+.form-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.maintenance-card {
+  max-width: 700px;
+  width: 100%;
+  border-top: 4px solid #ff9800; /* Color distintivo para mantenimiento */
+}
+
+.maintenance-form {
+  margin-top: 24px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+@media (max-width: 550px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .full-width {
+    grid-column: span 1;
+  }
+}
+
+textarea {
+  resize: none;
+}
+
+.error-msg {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 12px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+mat-card-actions {
+  padding: 16px 0 0;
+  gap: 12px;
+}

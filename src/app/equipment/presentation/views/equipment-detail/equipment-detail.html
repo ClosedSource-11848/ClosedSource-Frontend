@@ -1,0 +1,111 @@
+<div class="detail-container">
+  @if (store.isLoading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+
+  <header class="detail-header">
+    <button mat-icon-button routerLink="../../equipment-list">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="title-group">
+      <h1>{{ currentEquipment?.name || 'Cargando equipo...' }}</h1>
+      <span class="serial-badge">SN: {{ currentEquipment?.serialNumber }}</span>
+    </div>
+  </header>
+
+  <mat-tab-group animationDuration="0ms">
+    <!-- Tab 1: Información General -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">info</mat-icon>
+        {{ 'EQUIPMENT.DETAIL.TABS.GENERAL' | translate }}
+      </ng-template>
+
+      <div class="tab-content">
+        <mat-card appearance="outlined">
+          <mat-card-content class="info-grid">
+            <div class="info-item">
+              <label>{{ 'EQUIPMENT.FIELDS.TYPE' | translate }}</label>
+              <p>{{ currentEquipment?.type }}</p>
+            </div>
+            <div class="info-item">
+              <label>{{ 'EQUIPMENT.FIELDS.MODEL' | translate }}</label>
+              <p>{{ currentEquipment?.model }}</p>
+            </div>
+            <div class="info-item">
+              <label>{{ 'EQUIPMENT.FIELDS.STATUS' | translate }}</label>
+              <p class="status-text" [ngClass]="currentEquipment?.status?.toLowerCase()">
+                {{ currentEquipment?.status }}
+              </p>
+            </div>
+            <div class="info-item">
+              <label>Fecha de Registro</label>
+              <p>{{ currentEquipment?.createdAt | date:'mediumDate' }}</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+
+    <!-- Tab 2: Configuración BPM (Tolerancias) -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">settings_input_component</mat-icon>
+        {{ 'EQUIPMENT.DETAIL.TABS.BPM' | translate }}
+      </ng-template>
+      <div class="tab-content">
+        <div class="tab-header">
+          <h3>Parámetros de Calidad Automáticos</h3>
+          <button mat-flat-button color="primary" [routerLink]="['../../bpm-config-form', equipmentId()]">
+            <mat-icon>add</mat-icon> Configurar Parámetro
+          </button>
+        </div>
+
+        <!-- Aquí iría la lista de BPM Config del store -->
+        @for (config of store.bpmConfigs(); track config.id) {
+          <mat-card class="config-card" appearance="outlined">
+            <mat-card-content>
+              <strong>{{ config.parameterName }}</strong>:
+              {{ config.minValue }} - {{ config.maxValue }} {{ config.unit }}
+            </mat-card-content>
+          </mat-card>
+        } @empty {
+          <p class="empty-msg">No hay parámetros configurados para este equipo.</p>
+        }
+      </div>
+    </mat-tab>
+
+    <!-- Tab 3: Historial de Mantenimiento -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">history</mat-icon>
+        {{ 'EQUIPMENT.DETAIL.TABS.MAINTENANCE' | translate }}
+      </ng-template>
+      <div class="tab-content">
+        <div class="tab-header">
+          <h3>Registro de Actividades Técnicas</h3>
+          <button mat-flat-button color="accent" [routerLink]="['../../maintenance-form', equipmentId()]">
+            <mat-icon>build</mat-icon> Registrar Mantenimiento
+          </button>
+        </div>
+
+        <div class="maintenance-timeline">
+          @for (record of store.maintenanceHistory(); track record.id) {
+            <div class="timeline-item">
+              <div class="date">{{ record.maintenanceDate | date:'shortDate' }}</div>
+              <mat-card appearance="outlined">
+                <mat-card-header>
+                  <mat-card-title>{{ record.type }}</mat-card-title>
+                  <mat-card-subtitle>Técnico: {{ record.technicianName }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>{{ record.description }}</mat-card-content>
+              </mat-card>
+            </div>
+          } @empty {
+            <p class="empty-msg">No se registran mantenimientos previos.</p>
+          }
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
