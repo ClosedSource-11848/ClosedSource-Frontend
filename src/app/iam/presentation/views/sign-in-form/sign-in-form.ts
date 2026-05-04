@@ -5,11 +5,13 @@ import { Router } from '@angular/router';
 import { SignInCommand } from '../../../domain/model/sign-in.command';
 import { IamStore } from '../../../application/iam.store';
 import { Toolbar } from '../../../../shared/presentation/components/toolbar/toolbar';
+import { TranslatePipe } from '@ngx-translate/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-sign-in',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, Toolbar],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, MatProgressSpinnerModule, Toolbar],
   templateUrl: './sign-in-form.html',
   styleUrls: ['./sign-in-form.css'],
 })

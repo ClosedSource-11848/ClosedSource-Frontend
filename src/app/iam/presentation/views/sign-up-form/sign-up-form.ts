@@ -12,11 +12,20 @@ import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { IamStore } from '../../../application/iam.store';
 import { SignUpCommand } from '../../../domain/model/sign-up.command';
 import { Toolbar } from '../../../../shared/presentation/components/toolbar/toolbar';
+import { TranslatePipe } from '@ngx-translate/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, Toolbar],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TranslatePipe,
+    MatProgressSpinnerModule,
+    RouterLink,
+    Toolbar,
+  ],
   templateUrl: './sign-up-form.html',
   styleUrls: ['./sign-up-form.css'],
 })
@@ -24,6 +33,12 @@ export class SignUpForm {
   protected store = inject(IamStore);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+
+  /**
+   * Propiedad 'role' añadida para resolver el error TS2339 en el HTML.
+   * Se usa para las llaves de traducción dinámica: 'iam.sign-up.roles.' + role
+   */
+  role: string = 'lab-operator';
 
   selectedRole: string = 'ROLE_LAB_OPERATOR';
   displayRoleName: string = 'Lab Operator';
@@ -51,10 +66,13 @@ export class SignUpForm {
 
   constructor() {
     this.route.queryParams.subscribe((params) => {
+      // Sincronizamos 'role' para el HTML y 'selectedRole' para el comando del Backend
       if (params['role'] === 'qa-manager') {
+        this.role = 'qa-manager';
         this.selectedRole = 'ROLE_QA_MANAGER';
         this.displayRoleName = 'QA Manager / Supervisor';
       } else {
+        this.role = 'lab-operator';
         this.selectedRole = 'ROLE_LAB_OPERATOR';
         this.displayRoleName = 'Lab Operator';
       }
