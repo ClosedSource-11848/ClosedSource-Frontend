@@ -46,3 +46,32 @@
 .footer-link p { color: #5f6368; }
 .footer-link a { color: #148f77; font-weight: 700; cursor: pointer; text-decoration: none; }
 .footer-link a:hover { text-decoration: underline; }
+
+.registration-mode-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #e8eaed;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #1a3a5c;
+}
+
+.alert-error {
+  background: #fff5f5;
+  color: #c53030;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #fc8181;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+.btn-primary:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
