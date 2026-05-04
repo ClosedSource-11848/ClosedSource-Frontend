@@ -42,7 +42,8 @@
     "required": "This field is required",
     "invalidEmail": "Please enter a valid email",
     "minZero": "Value must be at least 0",
-    "actions": "Actions"
+    "actions": "Actions",
+    "status-loading": "Loading data..."
   },
   "nav": {
     "quality-management": "Quality Management",
@@ -126,7 +127,9 @@
     "operational": "Operational",
     "maintenance": "Maintenance",
     "out_of_service": "Out of Service",
-    "calibration_required": "Calibration Required"
+    "calibration_required": "Calibration Required",
+    "unknown": "Unknown Status",
+    "loading": "Loading equipment..."
   },
   "lab-profile": {
     "title": "Laboratory Profile",

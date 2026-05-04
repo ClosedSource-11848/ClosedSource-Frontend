@@ -42,7 +42,8 @@
     "required": "Este campo es obligatorio",
     "invalidEmail": "Ingrese un correo válido",
     "minZero": "El valor debe ser al menos 0",
-    "actions": "Acciones"
+    "actions": "Acciones",
+    "status-loading": "Cargando datos..."
   },
   "nav": {
     "quality-management": "Gestión de Calidad",
@@ -126,7 +127,9 @@
     "operational": "Operativo",
     "maintenance": "Mantenimiento",
     "out_of_service": "Fuera de Servicio",
-    "calibration_required": "Calibración Requerida"
+    "calibration_required": "Calibración Requerida",
+    "unknown": "Estado Desconocido",
+    "loading": "Cargando equipo..."
   },
   "lab-profile": {
     "title": "Perfil del Laboratorio",
