@@ -1,0 +1,66 @@
+<div class="form-container">
+  <mat-card class="equipment-card">
+    <mat-card-header>
+      <mat-card-title>{{ 'EQUIPMENT.FORM.TITLE' | translate }}</mat-card-title>
+      <mat-card-subtitle>{{ 'EQUIPMENT.FORM.SUBTITLE' | translate }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <form [formGroup]="form" (ngSubmit)="onSave()" class="equipment-form">
+      <mat-card-content>
+        <div class="form-grid">
+          <!-- Equipment Name -->
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'EQUIPMENT.FIELDS.NAME' | translate }}</mat-label>
+            <input matInput formControlName="name" placeholder="E.g. Autoclave Estándar">
+            @if (form.get('name')?.hasError('required')) {
+              <mat-error>{{ 'COMMON.ERRORS.REQUIRED' | translate }}</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Equipment Type -->
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'EQUIPMENT.FIELDS.TYPE' | translate }}</mat-label>
+            <mat-select formControlName="type">
+              @for (type of equipmentTypes; track type) {
+                <mat-option [value]="type">{{ type }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Model -->
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'EQUIPMENT.FIELDS.MODEL' | translate }}</mat-label>
+            <input matInput formControlName="model" placeholder="E.g. RX-200">
+          </mat-form-field>
+
+          <!-- Serial Number -->
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'EQUIPMENT.FIELDS.SERIAL' | translate }}</mat-label>
+            <input matInput formControlName="serialNumber" placeholder="E.g. SN-987654321">
+          </mat-form-field>
+        </div>
+
+        @if (store.error()) {
+          <div class="error-msg">
+            <mat-icon>error</mat-icon>
+            <span>{{ store.error() }}</span>
+          </div>
+        }
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button mat-button type="button" routerLink="../equipment-list">
+          {{ 'COMMON.ACTIONS.CANCEL' | translate }}
+        </button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || store.isLoading()">
+          @if (store.isLoading()) {
+            <mat-icon><mat-spinner diameter="18"></mat-spinner></mat-icon>
+          } @else {
+            <mat-icon>save</mat-icon>
+          }
+          {{ 'COMMON.ACTIONS.SAVE' | translate }}
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</div>
