@@ -1,0 +1,79 @@
+<div class="batch-form-container">
+  <header class="page-header">
+    <div class="header-content">
+      <button mat-icon-button routerLink="../batch-list" color="primary">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div>
+        <h1>{{ 'product-form.title' | translate }}</h1>
+        <p>{{ 'product-form.specifications' | translate }}</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="form-card mat-elevation-z3">
+    <form [formGroup]="batchForm" (ngSubmit)="onSubmit()">
+
+      <!-- Product Selection -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ 'product-catalog.name' | translate }}</mat-label>
+        <mat-select formControlName="productId">
+          @for (product of labStore.products(); track product.id) {
+            <mat-option [value]="product.id">{{ product.name }} ({{ product.code }})</mat-option>
+          }
+        </mat-select>
+        @if (batchForm.get('productId')?.hasError('required')) {
+          <mat-error>{{ 'common.required' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="form-row">
+        <!-- Batch Number -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'raw-material-form.batchNumber' | translate }}</mat-label>
+          <input matInput formControlName="batchNumber" placeholder="LOT-2026-001">
+          <mat-hint>Format: LOT-YYYY-NNN</mat-hint>
+          @if (batchForm.get('batchNumber')?.hasError('required')) {
+            <mat-error>{{ 'common.required' | translate }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Start Date -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'maintenance-history.fields.date' | translate }}</mat-label>
+          <input matInput type="date" formControlName="startDate">
+          @if (batchForm.get('startDate')?.hasError('required')) {
+            <mat-error>{{ 'common.required' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <!-- Quantity -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'raw-material-list.stock' | translate }}</mat-label>
+          <input matInput type="number" formControlName="quantity">
+          @if (batchForm.get('quantity')?.hasError('min')) {
+            <mat-error>{{ 'common.minZero' | translate }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Notes (BPM observations) -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'maintenance-history.fields.description' | translate }}</mat-label>
+          <textarea matInput formControlName="notes" rows="1"></textarea>
+        </mat-form-field>
+      </div>
+
+      <div class="form-actions">
+        <button mat-button type="button" routerLink="../batch-list">
+          {{ 'common.cancel' | translate }}
+        </button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="batchForm.invalid || store.isLoading()">
+          <mat-icon>save</mat-icon>
+          {{ 'common.register' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

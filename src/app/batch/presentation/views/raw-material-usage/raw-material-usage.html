@@ -1,0 +1,81 @@
+<div class="usage-container">
+  <!-- Formulario para añadir material -->
+  <mat-card class="add-material-card mat-elevation-z2">
+    <mat-card-header>
+      <mat-card-title>{{ 'raw-material-form.title' | translate }}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="usageForm" (ngSubmit)="onAddMaterial()" class="usage-form">
+        <div class="form-inputs">
+          <!-- Selector de Materia Prima -->
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'raw-material-list.name' | translate }}</mat-label>
+            <mat-select formControlName="rawMaterialId">
+              @for (material of labStore.rawMaterials(); track material.id) {
+                <mat-option [value]="material.id">
+                  {{ material.name }} ({{ material.code }}) - Stock: {{ material.quantityInStock }}
+                </mat-option>
+              }
+            </mat-select>
+            @if (usageForm.get('rawMaterialId')?.hasError('required')) {
+              <mat-error>{{ 'common.required' | translate }}</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Cantidad a utilizar -->
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'raw-material-form.quantityInStock' | translate }}</mat-label>
+            <input matInput type="number" formControlName="quantityUsed" step="0.01">
+            @if (usageForm.get('quantityUsed')?.hasError('min')) {
+              <mat-error>{{ 'common.minZero' | translate }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <button mat-raised-button color="accent" type="submit" [disabled]="usageForm.invalid || store.isLoading()">
+          <mat-icon>add_circle</mat-icon>
+          {{ 'raw-material-list.add' | translate }}
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tabla de historial de uso -->
+  <div class="table-section">
+    <h3>{{ 'raw-material-list.title' | translate }}</h3>
+
+    <div class="mat-elevation-z2 table-wrapper">
+      <table mat-table [dataSource]="store.currentBatchUsage()">
+
+        <!-- Material Column -->
+        <ng-container matColumnDef="material">
+          <th mat-header-cell *matHeaderCellDef>{{ 'raw-material-list.name' | translate }}</th>
+          <td mat-cell *matCellDef="let element">{{ element.rawMaterialName }}</td>
+        </ng-container>
+
+        <!-- Quantity Column -->
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef>{{ 'raw-material-form.quantityInStock' | translate }}</th>
+          <td mat-cell *matCellDef="let element">{{ element.quantityUsed }} {{ element.unit }}</td>
+        </ng-container>
+
+        <!-- Date Column -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>{{ 'maintenance-history.fields.date' | translate }}</th>
+          <td mat-cell *matCellDef="let element">{{ element.usageDate | date:'short' }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <!-- Row shown when there is no data -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="3" style="text-align: center; padding: 1rem;">
+            {{ 'raw-material-list.empty' | translate }}
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

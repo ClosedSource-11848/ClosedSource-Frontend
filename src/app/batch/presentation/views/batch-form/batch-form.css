@@ -1,0 +1,65 @@
+.batch-form-container {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-content h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  color: #2c3e50;
+}
+
+.header-content p {
+  margin: 4px 0 0;
+  color: #7f8c8d;
+}
+
+.form-card {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #f0f2f5;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Validation styles similar to equipment module */
+mat-form-field {
+  margin-bottom: 8px;
+}

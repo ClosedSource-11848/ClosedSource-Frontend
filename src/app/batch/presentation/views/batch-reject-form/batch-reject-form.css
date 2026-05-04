@@ -1,0 +1,54 @@
+.reject-form-container {
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.critical-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  color: #e74c3c; /* Color rojo para rechazo */
+}
+
+.warning-text {
+  margin: 4px 0 0;
+  color: #c0392b;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.form-card {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+}
+
+.border-top-danger {
+  border-top: 4px solid #e74c3c;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* Sincronización con el estilo de Equipment Module[cite: 18] */
+mat-form-field {
+  margin-bottom: 8px;
+}
