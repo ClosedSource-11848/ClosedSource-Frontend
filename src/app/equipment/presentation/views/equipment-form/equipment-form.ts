@@ -12,6 +12,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { EquipmentStore } from '../../../application/equipment.store';
 import { IamStore } from '../../../../iam/application/iam.store';
 import { RegisterEquipmentCommand } from '../../../domain/model/register-equipment.command';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-equipment-form',
@@ -25,6 +26,7 @@ import { RegisterEquipmentCommand } from '../../../domain/model/register-equipme
     MatSelectModule,
     MatIconModule,
     MatCardModule,
+    MatProgressSpinnerModule,
     RouterModule,
     TranslatePipe,
   ],

@@ -7,6 +7,7 @@ import { MatListModule } from '@angular/material/list';
 import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { EquipmentStore } from '../../../application/equipment.store';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-calibration-alert',
@@ -17,6 +18,7 @@ import { EquipmentStore } from '../../../application/equipment.store';
     MatButtonModule,
     MatIconModule,
     MatListModule,
+    MatTooltipModule,
     RouterModule,
     TranslatePipe,
   ],
