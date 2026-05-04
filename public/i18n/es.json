@@ -54,6 +54,80 @@
     "reports": "Reportes y Auditoría",
     "laboratory": "Laboratorio"
   },
+  "equipment-list": {
+    "title": "Catálogo de Equipos",
+    "subtitle": "Gestión y monitoreo de activos industriales del laboratorio",
+    "add-button": "Registrar Equipo",
+    "empty": "No se encontraron equipos en este laboratorio",
+    "fields": {
+      "name": "Nombre",
+      "type": "Tipo",
+      "model": "Modelo",
+      "serial": "Número de Serie",
+      "status": "Estado"
+    }
+  },
+  "equipment-form": {
+    "title": "Nuevo Equipo",
+    "subtitle": "Ingrese las especificaciones técnicas del activo",
+    "placeholders": {
+      "name": "Ej. Autoclave Estándar",
+      "model": "Ej. RX-200",
+      "serial": "Ej. SN-987654321"
+    }
+  },
+  "equipment-detail": {
+    "title": "Detalles del Equipo",
+    "tabs": {
+      "general": "Información General",
+      "bpm": "Configuración BPM",
+      "maintenance": "Mantenimiento"
+    }
+  },
+  "bpm-config": {
+    "title": "Configuración Parámetros BPM",
+    "subtitle": "Establece los rangos de tolerancia para el monitoreo de calidad",
+    "fields": {
+      "parameter": "Nombre del Parámetro",
+      "min": "Valor Mínimo",
+      "max": "Valor Máximo",
+      "unit": "Unidad de Medida"
+    }
+  },
+  "maintenance-history": {
+    "title": "Historial de Mantenimiento",
+    "subtitle": "Registro cronológico de actividades técnicas y calibraciones",
+    "add-button": "Registrar Nuevo Evento",
+    "empty": "No se han registrado eventos de mantenimiento para este equipo",
+    "fields": {
+      "date": "Fecha",
+      "type": "Tipo",
+      "technician": "Técnico Responsable",
+      "description": "Descripción de la Actividad"
+    },
+    "types": {
+      "preventive": "Preventivo",
+      "corrective": "Correctivo",
+      "calibration": "Calibración",
+      "inspection": "Inspección"
+    }
+  },
+  "maintenance-form": {
+    "title": "Registro de Actividad Técnica",
+    "subtitle": "Completa los detalles de la intervención realizada"
+  },
+  "equipment-alert": {
+    "title": "Alertas de Calibración",
+    "subtitle": "Equipos que requieren intervención técnica inmediata",
+    "action-tooltip": "Registrar Calibración",
+    "view-all": "VER TODOS LOS EQUIPOS"
+  },
+  "equipment-status": {
+    "operational": "Operativo",
+    "maintenance": "Mantenimiento",
+    "out_of_service": "Fuera de Servicio",
+    "calibration_required": "Calibración Requerida"
+  },
   "lab-profile": {
     "title": "Perfil del Laboratorio",
     "name": "Nombre del Laboratorio",

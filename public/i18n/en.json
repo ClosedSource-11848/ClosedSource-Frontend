@@ -54,6 +54,80 @@
     "reports": "Reports & KPIs",
     "laboratory": "Laboratory"
   },
+  "equipment-list": {
+    "title": "Equipment Catalog",
+    "subtitle": "Management and monitoring of industrial laboratory assets",
+    "add-button": "Register Equipment",
+    "empty": "No equipment found in this laboratory",
+    "fields": {
+      "name": "Name",
+      "type": "Type",
+      "model": "Model",
+      "serial": "Serial Number",
+      "status": "Status"
+    }
+  },
+  "equipment-form": {
+    "title": "New Equipment",
+    "subtitle": "Enter the technical specifications of the asset",
+    "placeholders": {
+      "name": "e.g. Standard Autoclave",
+      "model": "e.g. RX-200",
+      "serial": "e.g. SN-987654321"
+    }
+  },
+  "equipment-detail": {
+    "title": "Equipment Details",
+    "tabs": {
+      "general": "General Info",
+      "bpm": "BPM Config",
+      "maintenance": "Maintenance"
+    }
+  },
+  "bpm-config": {
+    "title": "BPM Parameter Config",
+    "subtitle": "Set tolerance ranges for quality monitoring",
+    "fields": {
+      "parameter": "Parameter Name",
+      "min": "Min Value",
+      "max": "Max Value",
+      "unit": "Unit"
+    }
+  },
+  "maintenance-history": {
+    "title": "Maintenance History",
+    "subtitle": "Chronological record of technical activities and calibrations",
+    "add-button": "Register New Event",
+    "empty": "No maintenance events recorded for this equipment",
+    "fields": {
+      "date": "Date",
+      "type": "Type",
+      "technician": "Responsible Technician",
+      "description": "Activity Description"
+    },
+    "types": {
+      "preventive": "Preventive",
+      "corrective": "Corrective",
+      "calibration": "Calibration",
+      "inspection": "Inspection"
+    }
+  },
+  "maintenance-form": {
+    "title": "Technical Activity Record",
+    "subtitle": "Complete the details of the intervention performed"
+  },
+  "equipment-alert": {
+    "title": "Calibration Alerts",
+    "subtitle": "Equipment requiring immediate technical intervention",
+    "action-tooltip": "Register Calibration",
+    "view-all": "VIEW ALL EQUIPMENT"
+  },
+  "equipment-status": {
+    "operational": "Operational",
+    "maintenance": "Maintenance",
+    "out_of_service": "Out of Service",
+    "calibration_required": "Calibration Required"
+  },
   "lab-profile": {
     "title": "Laboratory Profile",
     "name": "Laboratory Name",
