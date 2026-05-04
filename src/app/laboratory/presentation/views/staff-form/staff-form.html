@@ -43,7 +43,10 @@
             @if (store.isLoading()) {
               <mat-spinner diameter="20"></mat-spinner>
             } @else {
-              {{ 'common.register' | translate }}
+              <ng-container>
+                <mat-icon>person_add</mat-icon>
+                {{ 'common.register' | translate }}
+              </ng-container>
             }
           </button>
         </div>

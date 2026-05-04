@@ -18,6 +18,7 @@ import {
   MatCardTitle,
 } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinnerModule, MatSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-raw-material-form',
@@ -29,6 +30,7 @@ import { MatIcon } from '@angular/material/icon';
     MatInputModule,
     MatCard,
     MatCardHeader,
+    MatProgressSpinnerModule,
     MatIcon,
     MatCardTitle,
     MatCardSubtitle,

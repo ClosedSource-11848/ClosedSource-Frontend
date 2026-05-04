@@ -61,7 +61,14 @@
         <div class="form-actions">
           <button mat-button type="button" (click)="onCancel()">{{ 'common.cancel' | translate }}</button>
           <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || store.isLoading()">
-            {{ 'common.register' | translate }}
+            @if (store.isLoading()) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              <ng-container>
+                <mat-icon>inventory_2</mat-icon>
+                {{ 'common.register' | translate }}
+              </ng-container>
+            }
           </button>
         </div>
       </form>
