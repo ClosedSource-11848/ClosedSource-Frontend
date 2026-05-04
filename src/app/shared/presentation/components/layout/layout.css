@@ -51,7 +51,7 @@
 
 /* ==================== SIDENAV ==================== */
 mat-sidenav {
-  width: 260px;
+  width: 280px;
   background: #ffffff;
   box-shadow: 2px 0 15px rgba(0, 0, 0, 0.08);
   border-right: 1px solid #e8eaed;
@@ -59,46 +59,6 @@ mat-sidenav {
   flex-direction: column;
 }
 
-/* Logo Section */
-.logo-section {
-  padding: 20px 16px;
-  border-bottom: 1px solid #e8eaed;
-  background: #fafbfc;
-}
-
-.logo-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.logo-icon {
-  background: #1a3a5c;
-  border-radius: 10px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.logo-icon mat-icon {
-  color: white;
-  font-size: 22px;
-  width: 22px;
-  height: 22px;
-}
-
-.logo-text h2 {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: #1a3a5c;
-  white-space: nowrap;
-}
-
-/* Navigation Menu */
 .nav-menu {
   padding: 12px 10px;
   display: flex;
@@ -109,6 +69,7 @@ mat-sidenav {
   overflow-x: hidden;
 }
 
+/* Estilo para items principales */
 .nav-item {
   display: flex;
   align-items: center;
@@ -118,12 +79,11 @@ mat-sidenav {
   cursor: pointer;
   transition: all 0.2s ease;
   color: #5f6368;
-  white-space: nowrap;
   position: relative;
 }
 
-.nav-item:hover {
-  background: #eaf0fb;
+.nav-item:hover, .nav-item-header:hover {
+  background: #eaf0fb !important;
   color: #1a3a5c;
 }
 
@@ -149,8 +109,6 @@ mat-sidenav {
 
 .nav-icon-wrapper mat-icon {
   font-size: 20px;
-  width: 20px;
-  height: 20px;
 }
 
 .nav-label {
@@ -169,66 +127,72 @@ mat-sidenav {
   border-radius: 2px 0 0 2px;
 }
 
-/* Footer del sidenav */
-.sidenav-footer {
-  padding: 16px 12px;
-  border-top: 1px solid #e8eaed;
-  background: #fafbfc;
+/* ==================== SUB-MENU CORREGIDO ==================== */
+.sub-menu-container {
+  margin-left: 28px;
+  padding-left: 12px;
+  border-left: 2px solid #e8eaed;
+  margin-top: 4px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.footer-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.sub-nav-item {
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
   color: #5f6368;
 }
 
-.footer-info mat-icon {
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
+.sub-nav-item:hover {
+  background: #f1f3f4;
   color: #1a3a5c;
 }
 
-.footer-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.company-name {
+.sub-nav-label {
   font-size: 13px;
-  font-weight: 700;
-  color: #1a3a5c;
+  font-weight: 500;
 }
 
-.copyright {
-  font-size: 11px;
-  color: #80868b;
+.sub-nav-item.sub-active {
+  background: rgba(20, 143, 119, 0.08);
+  color: #148f77;
+}
+
+.sub-nav-item.sub-active .sub-nav-label {
+  font-weight: 700;
+}
+
+/* ==================== EXPANSION PANEL RESET ==================== */
+.nav-expansion-panel {
+  background: transparent !important;
+}
+
+.nav-item-header {
+  height: 48px !important;
+  padding: 0 10px !important;
+  border-radius: 10px !important;
+}
+
+.nav-item-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+::ng-deep .nav-expansion-panel .mat-expansion-panel-body {
+  padding: 0 !important;
 }
 
 /* ==================== CONTENT ==================== */
 mat-sidenav-content {
   background: #f4f6f9;
-  overflow-y: auto;
 }
 
 .content-wrapper {
   padding: 24px;
   min-height: 100%;
-}
-
-/* ==================== RESPONSIVE ==================== */
-@media (max-width: 768px) {
-  .toolbar {
-    padding: 0 16px;
-  }
-
-  mat-sidenav {
-    width: 260px;
-    position: fixed;
-  }
-
-  .content-wrapper {
-    padding: 16px;
-  }
 }

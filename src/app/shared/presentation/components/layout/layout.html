@@ -21,53 +21,54 @@
       [mode]="sidenavMode"
       [opened]="sidenavOpened">
 
-      <!-- Logo Section -->
-      <div class="logo-section">
-        <div class="logo-wrapper">
-          <div class="logo-icon">
-            <mat-icon aria-hidden="true">verified</mat-icon>
-          </div>
-          <div class="logo-text">
-            <h2>{{ 'nav.quality-management' | translate }}</h2>
-          </div>
-        </div>
-      </div>
-
       <!-- Navigation Menu -->
       <nav class="nav-menu" aria-label="Main navigation">
-        @for (option of options; track option.link) {
-          <div class="nav-item"
-               [class.active]="isActive(option.link)"
-               [matTooltip]="option.label | translate"
-               matTooltipPosition="right"
-               [attr.aria-label]="option.label | translate"
-               (click)="navigateTo(option.link)">
+        @for (option of options; track option.label) {
 
-            <div class="nav-icon-wrapper">
-              <mat-icon aria-hidden="true">{{ option.icon }}</mat-icon>
+          @if (!option.children) {
+            <!-- OPCIÓN SIMPLE (Sin sub-menú) -->
+            <div class="nav-item"
+                 [class.active]="isActive(option.link)"
+                 [matTooltip]="option.label | translate"
+                 matTooltipPosition="right"
+                 (click)="navigateTo(option.link)">
+              <div class="nav-icon-wrapper">
+                <mat-icon aria-hidden="true">{{ option.icon }}</mat-icon>
+              </div>
+              <span class="nav-label">{{ option.label | translate }}</span>
+              @if (isActive(option.link)) {
+                <div class="active-indicator"></div>
+              }
             </div>
+          } @else {
+            <!-- OPCIÓN CON SUB-MENÚ (Acordeón) -->
+            <mat-expansion-panel
+              [expanded]="isActive(option.link)"
+              class="mat-elevation-z0 nav-expansion-panel">
 
-            <span class="nav-label">{{ option.label | translate }}</span>
+              <mat-expansion-panel-header class="nav-item-header">
+                <mat-panel-title class="nav-item-title">
+                  <div class="nav-icon-wrapper">
+                    <mat-icon aria-hidden="true">{{ option.icon }}</mat-icon>
+                  </div>
+                  <span class="nav-label">{{ option.label | translate }}</span>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
 
-            @if (isActive(option.link)) {
-              <div class="active-indicator"></div>
-            }
-          </div>
+              <!-- Lista de Sub-elementos sin iconos -->
+              <div class="sub-menu-container">
+                @for (child of option.children; track child.link) {
+                  <div class="sub-nav-item"
+                       [class.sub-active]="isActive(child.link)"
+                       (click)="navigateTo(child.link)">
+                    <span class="sub-nav-label">{{ child.label | translate }}</span>
+                  </div>
+                }
+              </div>
+            </mat-expansion-panel>
+          }
         }
       </nav>
-
-      <!-- Footer del sidenav -->
-      <div class="sidenav-footer">
-        <div class="footer-content">
-          <div class="footer-info">
-            <mat-icon aria-hidden="true">code</mat-icon>
-            <div class="footer-text">
-              <span class="company-name">ClosedSource</span>
-              <span class="copyright">© {{ getCurrentYear() }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
 
     </mat-sidenav>
 

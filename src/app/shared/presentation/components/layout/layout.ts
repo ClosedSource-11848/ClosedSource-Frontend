@@ -10,6 +10,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { RouterOutlet } from '@angular/router';
 import { LanguageSwitcher } from '../language-switcher/language-switcher';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-layout',
@@ -18,6 +19,7 @@ import { LanguageSwitcher } from '../language-switcher/language-switcher';
     CommonModule,
     MatSidenavModule,
     MatToolbarModule,
+    MatExpansionModule,
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
@@ -35,13 +37,29 @@ export class Layout {
   sidenavOpened = true;
 
   options = [
-    { label: 'nav.home', icon: 'home', link: '/home', color: '#148f77' },
-    { label: 'nav.dashboard', icon: 'analytics', link: '/tracking/dashboard', color: '#148f77' },
-    { label: 'nav.batches', icon: 'inventory_2', link: '/batch/batches', color: '#148f77' },
-    { label: 'nav.equipment', icon: 'settings_suggest', link: '/equipment', color: '#148f77' },
-    { label: 'nav.alerts', icon: 'warning', link: '/ca/alerts', color: '#148f77' },
-    { label: 'nav.reports', icon: 'description', link: '/ra/kpis', color: '#148f77' },
-    { label: 'nav.laboratory', icon: 'science', link: '/laboratory/lab-profile', color: '#148f77' },
+    { label: 'nav.dashboard', icon: 'analytics', link: '/tracking/dashboard' },
+    { label: 'nav.batches', icon: 'inventory_2', link: '/batch/batches' },
+    { label: 'nav.equipment', icon: 'settings_suggest', link: '/equipment' },
+    { label: 'nav.alerts', icon: 'warning', link: '/ca/alerts' },
+    { label: 'nav.reports', icon: 'description', link: '/ra/kpis' },
+    {
+      label: 'nav.laboratory',
+      icon: 'science',
+      link: '/laboratory',
+      children: [
+        { label: 'lab-profile.title', link: '/laboratory/lab-profile' },
+        { label: 'staff-list.title', link: '/laboratory/staff-list' },
+        { label: 'staff-form.title', link: '/laboratory/staff-form' },
+        { label: 'product-catalog.title', link: '/laboratory/product-catalog' },
+        { label: 'product-form.title', link: '/laboratory/product-form' },
+        { label: 'raw-material-list.title', link: '/laboratory/raw-material-list' },
+        {
+          label: 'raw-material-form.title',
+          icon: 'post_add',
+          link: '/laboratory/raw-material-form',
+        },
+      ],
+    },
   ];
 
   constructor(
