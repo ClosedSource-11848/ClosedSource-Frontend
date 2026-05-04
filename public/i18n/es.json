@@ -3,10 +3,46 @@
     "title": "Nos preocupamos por la precisión, aseguramos la calidad.",
     "content": "Gestión avanzada de datos para entornos operativos de alto riesgo. Asegure el cumplimiento normativo total y la precisión a nivel de laboratorio."
   },
-  "auth": {
-    "already-have-account": "¿Ya tienes una cuenta?",
-    "sign-in": "Iniciar Sesión",
-    "or-create-account": "o crear cuenta"
+  "iam": {
+    "sign-in": {
+      "title": "Iniciar Sesión",
+      "subtitle": "Bienvenido de nuevo a QualiTrack.",
+      "username": "Usuario",
+      "username-placeholder": "Ingrese su usuario",
+      "password": "Contraseña",
+      "password-placeholder": "Ingrese su contraseña",
+      "button": "Ingresar",
+      "no-account": "¿No tienes una cuenta?"
+    },
+    "sign-up": {
+      "title": "Crear Cuenta",
+      "subtitle": "Regístrese para acceder al sistema QualiTrack.",
+      "username": "Usuario",
+      "username-placeholder": "Elija un nombre de usuario",
+      "password": "Contraseña",
+      "password-placeholder": "Cree una contraseña",
+      "confirm-password": "Confirmar Contraseña",
+      "confirm-password-placeholder": "Confirme su contraseña",
+      "mode-label": "Modo de Registro",
+      "register-as": "Registrarse como {{role}}",
+      "roles": {
+        "manager": "QA Manager / Supervisor",
+        "operator": "Operador de Laboratorio"
+      }
+    }
+  },
+  "common": {
+    "save": "Guardar Cambios",
+    "cancel": "Cancelar",
+    "register": "Registrar",
+    "search": "Buscar...",
+    "status": "Estado",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "required": "Este campo es obligatorio",
+    "invalidEmail": "Ingrese un correo válido",
+    "minZero": "El valor debe ser al menos 0",
+    "actions": "Acciones"
   },
   "nav": {
     "quality-management": "Gestión de Calidad",
@@ -18,10 +54,67 @@
     "reports": "Reportes y Auditoría",
     "laboratory": "Laboratorio"
   },
-  "footer": {
-    "rights": "Todos los derechos reservados.",
-    "powered-by": "Desarrollado con",
-    "and": "y"
+  "lab-profile": {
+    "title": "Perfil del Laboratorio",
+    "name": "Nombre del Laboratorio",
+    "address": "Dirección Física",
+    "phone": "Teléfono de Contacto",
+    "regulations": "Regulaciones Aplicables",
+    "edit": "Editar Perfil"
+  },
+  "staff-list": {
+    "title": "Gestión de Personal",
+    "register": "Añadir Personal",
+    "name": "Nombre Completo",
+    "role": "Cargo / Rol",
+    "email": "Correo Corporativo",
+    "status": "Estado Laboral",
+    "empty": "No hay personal registrado aún."
+  },
+  "staff-form": {
+    "title": "Registrar Miembro del Staff",
+    "fullName": "Nombre Completo",
+    "role": "Rol Asignado",
+    "email": "Correo Electrónico"
+  },
+  "product-catalog": {
+    "title": "Catálogo de Productos Farmacéuticos",
+    "add": "Nuevo Producto",
+    "code": "SKU / Código",
+    "name": "Nombre del Producto",
+    "specifications": "Especificaciones BPM",
+    "empty": "No se encontraron productos farmacéuticos."
+  },
+  "product-form": {
+    "title": "Registrar Nuevo Producto",
+    "code": "Código Interno de Producto",
+    "name": "Nombre Comercial",
+    "description": "Descripción Terapéutica",
+    "specifications": "Especificaciones de Calidad (BPM)"
+  },
+  "raw-material-list": {
+    "title": "Inventario de Materias Primas",
+    "add": "Añadir Materia",
+    "name": "Nombre del Material",
+    "code": "Código Interno",
+    "supplier": "Proveedor Autorizado",
+    "stock": "Stock Actual",
+    "expiration": "Fecha de Vencimiento",
+    "lowStock": "Stock Bajo",
+    "ok": "Stock OK",
+    "lowStockAlert": "Alerta: {{count}} materiales están por debajo del umbral mínimo",
+    "empty": "El inventario está vacío."
+  },
+  "raw-material-form": {
+    "title": "Registrar Materia Prima",
+    "name": "Nombre del Material",
+    "code": "Código Interno",
+    "supplier": "Nombre del Proveedor",
+    "batchNumber": "Lote de Proveedor",
+    "expirationDate": "Fecha de Vencimiento",
+    "quantityInStock": "Cantidad Inicial",
+    "unit": "Unidad de Medida",
+    "minimumStock": "Umbral de Stock Mínimo"
   },
   "page-not-found": {
     "title": "Página No Encontrada",

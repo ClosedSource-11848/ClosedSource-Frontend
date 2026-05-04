@@ -3,10 +3,46 @@
     "title": "We care about accuracy, we ensure quality.",
     "content": "Advanced data management for high-stakes operational environments. Ensure total compliance and laboratory-grade accuracy."
   },
-  "auth": {
-    "already-have-account": "Already have an account?",
-    "sign-in": "Sign In",
-    "or-create-account": "or create account"
+  "iam": {
+    "sign-in": {
+      "title": "Sign In",
+      "subtitle": "Welcome back to QualiTrack.",
+      "username": "Username",
+      "username-placeholder": "Enter your username",
+      "password": "Password",
+      "password-placeholder": "Enter your password",
+      "button": "Sign In",
+      "no-account": "Don't have an account?"
+    },
+    "sign-up": {
+      "title": "Create Account",
+      "subtitle": "Sign up to access the QualiTrack system.",
+      "username": "Username",
+      "username-placeholder": "Choose a username",
+      "password": "Password",
+      "password-placeholder": "Create a password",
+      "confirm-password": "Confirm Password",
+      "confirm-password-placeholder": "Confirm your password",
+      "mode-label": "Registration Mode",
+      "register-as": "Register as {{role}}",
+      "roles": {
+        "manager": "QA Manager / Supervisor",
+        "operator": "Lab Operator"
+      }
+    }
+  },
+  "common": {
+    "save": "Save Changes",
+    "cancel": "Cancel",
+    "register": "Register",
+    "search": "Search...",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email",
+    "minZero": "Value must be at least 0",
+    "actions": "Actions"
   },
   "nav": {
     "quality-management": "Quality Management",
@@ -18,10 +54,67 @@
     "reports": "Reports & KPIs",
     "laboratory": "Laboratory"
   },
-  "footer": {
-    "rights": "All rights reserved.",
-    "powered-by": "Powered by",
-    "and": "and"
+  "lab-profile": {
+    "title": "Laboratory Profile",
+    "name": "Laboratory Name",
+    "address": "Physical Address",
+    "phone": "Contact Phone",
+    "regulations": "Applicable Regulations",
+    "edit": "Edit Profile"
+  },
+  "staff-list": {
+    "title": "Personnel Management",
+    "register": "Add Staff",
+    "name": "Full Name",
+    "role": "Position / Role",
+    "email": "Corporate Email",
+    "status": "Employment Status",
+    "empty": "No staff members registered yet."
+  },
+  "staff-form": {
+    "title": "Register Staff Member",
+    "fullName": "Full Name",
+    "role": "Assigned Role",
+    "email": "Email Address"
+  },
+  "product-catalog": {
+    "title": "Pharmaceutical Product Catalog",
+    "add": "New Product",
+    "code": "SKU / Code",
+    "name": "Product Name",
+    "specifications": "BPM Specifications",
+    "empty": "No pharmaceutical products found."
+  },
+  "product-form": {
+    "title": "Register New Product",
+    "code": "Internal Product Code",
+    "name": "Commercial Name",
+    "description": "Therapeutic Description",
+    "specifications": "Quality Specifications (BPM)"
+  },
+  "raw-material-list": {
+    "title": "Raw Materials Inventory",
+    "add": "Add Material",
+    "name": "Material Name",
+    "code": "Internal Code",
+    "supplier": "Authorized Supplier",
+    "stock": "Current Stock",
+    "expiration": "Expiration Date",
+    "lowStock": "Low Stock",
+    "ok": "Stock OK",
+    "lowStockAlert": "Alert: {{count}} materials are below the minimum threshold",
+    "empty": "Inventory is currently empty."
+  },
+  "raw-material-form": {
+    "title": "Register Raw Material",
+    "name": "Material Name",
+    "code": "Internal Code",
+    "supplier": "Supplier Name",
+    "batchNumber": "Supplier Batch",
+    "expirationDate": "Expiration Date",
+    "quantityInStock": "Initial Quantity",
+    "unit": "Measurement Unit",
+    "minimumStock": "Minimum Stock Threshold"
   },
   "page-not-found": {
     "title": "Page Not Found",
