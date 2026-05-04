@@ -1,8 +1,9 @@
 <div class="form-container">
   <mat-card class="equipment-card">
     <mat-card-header>
-      <mat-card-title>{{ 'EQUIPMENT.FORM.TITLE' | translate }}</mat-card-title>
-      <mat-card-subtitle>{{ 'EQUIPMENT.FORM.SUBTITLE' | translate }}</mat-card-subtitle>
+      <!-- Títulos del formulario en minúsculas -->
+      <mat-card-title>{{ 'equipment-form.title' | translate }}</mat-card-title>
+      <mat-card-subtitle>{{ 'equipment-form.subtitle' | translate }}</mat-card-subtitle>
     </mat-card-header>
 
     <form [formGroup]="form" (ngSubmit)="onSave()" class="equipment-form">
@@ -10,16 +11,16 @@
         <div class="form-grid">
           <!-- Equipment Name -->
           <mat-form-field appearance="outline">
-            <mat-label>{{ 'EQUIPMENT.FIELDS.NAME' | translate }}</mat-label>
-            <input matInput formControlName="name" placeholder="E.g. Autoclave Estándar">
+            <mat-label>{{ 'equipment-list.fields.name' | translate }}</mat-label>
+            <input matInput formControlName="name" [placeholder]="'equipment-form.placeholders.name' | translate">
             @if (form.get('name')?.hasError('required')) {
-              <mat-error>{{ 'COMMON.ERRORS.REQUIRED' | translate }}</mat-error>
+              <mat-error>{{ 'common.errors.required' | translate }}</mat-error>
             }
           </mat-form-field>
 
           <!-- Equipment Type -->
           <mat-form-field appearance="outline">
-            <mat-label>{{ 'EQUIPMENT.FIELDS.TYPE' | translate }}</mat-label>
+            <mat-label>{{ 'equipment-list.fields.type' | translate }}</mat-label>
             <mat-select formControlName="type">
               @for (type of equipmentTypes; track type) {
                 <mat-option [value]="type">{{ type }}</mat-option>
@@ -29,14 +30,14 @@
 
           <!-- Model -->
           <mat-form-field appearance="outline">
-            <mat-label>{{ 'EQUIPMENT.FIELDS.MODEL' | translate }}</mat-label>
-            <input matInput formControlName="model" placeholder="E.g. RX-200">
+            <mat-label>{{ 'equipment-list.fields.model' | translate }}</mat-label>
+            <input matInput formControlName="model" [placeholder]="'equipment-form.placeholders.model' | translate">
           </mat-form-field>
 
           <!-- Serial Number -->
           <mat-form-field appearance="outline">
-            <mat-label>{{ 'EQUIPMENT.FIELDS.SERIAL' | translate }}</mat-label>
-            <input matInput formControlName="serialNumber" placeholder="E.g. SN-987654321">
+            <mat-label>{{ 'equipment-list.fields.serial' | translate }}</mat-label>
+            <input matInput formControlName="serialNumber" [placeholder]="'equipment-form.placeholders.serial' | translate">
           </mat-form-field>
         </div>
 
@@ -50,7 +51,7 @@
 
       <mat-card-actions align="end">
         <button mat-button type="button" routerLink="../equipment-list">
-          {{ 'COMMON.ACTIONS.CANCEL' | translate }}
+          {{ 'common.actions.cancel' | translate }}
         </button>
         <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || store.isLoading()">
           @if (store.isLoading()) {
@@ -58,7 +59,7 @@
           } @else {
             <mat-icon>save</mat-icon>
           }
-          {{ 'COMMON.ACTIONS.SAVE' | translate }}
+          {{ 'common.actions.save' | translate }}
         </button>
       </mat-card-actions>
     </form>

@@ -1,8 +1,9 @@
 <div class="form-container">
   <mat-card class="config-card">
     <mat-card-header>
-      <mat-card-title>Configuración de Parámetros BPM</mat-card-title>
-      <mat-card-subtitle>Establece los rangos de tolerancia para el monitoreo de calidad</mat-card-subtitle>
+      <!-- Títulos actualizados a minúsculas -->
+      <mat-card-title>{{ 'bpm-config.title' | translate }}</mat-card-title>
+      <mat-card-subtitle>{{ 'bpm-config.subtitle' | translate }}</mat-card-subtitle>
     </mat-card-header>
 
     <form [formGroup]="form" (ngSubmit)="onSave()" class="config-form">
@@ -10,26 +11,26 @@
         <div class="form-grid">
           <!-- Parameter Name -->
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Nombre del Parámetro</mat-label>
+            <mat-label>{{ 'bpm-config.fields.parameter' | translate }}</mat-label>
             <input matInput formControlName="parameterName" placeholder="E.g. Temperatura Interna">
             <mat-icon matSuffix>label</mat-icon>
           </mat-form-field>
 
           <!-- Min Value -->
           <mat-form-field appearance="outline">
-            <mat-label>Valor Mínimo</mat-label>
+            <mat-label>{{ 'bpm-config.fields.min' | translate }}</mat-label>
             <input matInput type="number" formControlName="minValue" placeholder="0.0">
           </mat-form-field>
 
           <!-- Max Value -->
           <mat-form-field appearance="outline">
-            <mat-label>Valor Máximo</mat-label>
+            <mat-label>{{ 'bpm-config.fields.max' | translate }}</mat-label>
             <input matInput type="number" formControlName="maxValue" placeholder="100.0">
           </mat-form-field>
 
           <!-- Unit -->
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Unidad de Medida</mat-label>
+            <mat-label>{{ 'bpm-config.fields.unit' | translate }}</mat-label>
             <input matInput formControlName="unit" placeholder="E.g. °C, %, bar, RPM">
           </mat-form-field>
         </div>
@@ -44,11 +45,11 @@
 
       <mat-card-actions align="end">
         <button mat-button type="button" [routerLink]="['/equipment/equipment-detail', equipmentId()]">
-          {{ 'COMMON.ACTIONS.CANCEL' | translate }}
+          {{ 'common.actions.cancel' | translate }}
         </button>
         <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || store.isLoading()">
           <mat-icon>settings_suggest</mat-icon>
-          Guardar Configuración
+          {{ 'common.actions.save' | translate }}
         </button>
       </mat-card-actions>
     </form>
