@@ -1,0 +1,51 @@
+<div class="release-form-container">
+  <header class="page-header">
+    <div class="header-content">
+      <button mat-icon-button routerLink="../../batch-list" color="primary">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div>
+        <h1>{{ 'batches.actions.release' | translate }}</h1>
+        <p>{{ 'ca-compliance.status.compliant' | translate }} - ID: {{ batchId }}</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="form-card mat-elevation-z3">
+    <form [formGroup]="releaseForm" (ngSubmit)="onSubmit()">
+
+      <!-- Release Date -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ 'maintenance-history.fields.date' | translate }}</mat-label>
+        <input matInput type="date" formControlName="releaseDate">
+        @if (releaseForm.get('releaseDate')?.hasError('required')) {
+          <mat-error>{{ 'common.required' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Quality Notes -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ 'maintenance-history.fields.description' | translate }} (BPM Notes)</mat-label>
+        <textarea matInput formControlName="notes" rows="4"
+                  placeholder="Ingrese las conclusiones del análisis de calidad..."></textarea>
+        @if (releaseForm.get('notes')?.hasError('required')) {
+          <mat-error>{{ 'common.required' | translate }}</mat-error>
+        }
+        @if (releaseForm.get('notes')?.hasError('minlength')) {
+          <mat-error>Debe ingresar al menos 10 caracteres para el reporte de liberación.</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="form-actions">
+        <button mat-button type="button" routerLink="../../batch-list">
+          {{ 'common.cancel' | translate }}
+        </button>
+        <button mat-raised-button class="release-btn" type="submit"
+                [disabled]="releaseForm.invalid || store.isLoading()">
+          <mat-icon>verified</mat-icon>
+          {{ 'batches.actions.release' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

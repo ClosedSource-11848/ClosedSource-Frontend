@@ -1,0 +1,64 @@
+<div class="batch-detail-container">
+  @if (store.isLoading()) {
+    <div class="loading-shade">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  }
+
+  <header class="page-header">
+    <div class="header-content">
+      <button mat-icon-button routerLink="../batch-list" color="primary">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1>{{ 'equipment-detail.title' | translate }}: {{ currentBatch?.batchNumber }}</h1>
+    </div>
+  </header>
+
+  <mat-tab-group dynamicHeight>
+    <!-- Pestaña 1: Información General -->
+    <mat-tab [label]="'equipment-detail.tabs.general' | translate">
+      <div class="tab-content">
+        <mat-card class="info-card mat-elevation-z2">
+          <mat-card-header>
+            <mat-card-title>{{ 'batches.fields.product' | translate }}</mat-card-title>
+            <mat-card-subtitle>{{ currentBatch?.productName }}</mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="label">{{ 'common.status' | translate }}</span>
+                <span class="value status-text" [ngClass]="currentBatch?.status?.toLowerCase() || ''">
+                  {{ 'batches.status.' + (currentBatch?.status?.toLowerCase() || 'unknown') | translate }}
+                </span>
+              </div>
+              <div class="info-item">
+                <span class="label">{{ 'batches.fields.quantity' | translate }}</span>
+                <span class="value">{{ currentBatch?.quantity }} {{ currentBatch?.unit }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">{{ 'maintenance-history.fields.date' | translate }}</span>
+                <span class="value">{{ currentBatch?.startDate | date:'mediumDate' }}</span>
+              </div>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="notes-section">
+              <h3>{{ 'maintenance-history.fields.description' | translate }}</h3>
+              <p>{{ currentBatch?.notes || ('batches.empty' | translate) }}</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+
+    <!-- Pestaña 2: Materias Primas Utilizadas -->
+    <mat-tab [label]="'raw-material-list.title' | translate">
+      <div class="tab-content">
+        <!-- Componente incrustado para gestionar insumos del lote -->
+        <app-raw-material-usage [batchId]="batchId"></app-raw-material-usage>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

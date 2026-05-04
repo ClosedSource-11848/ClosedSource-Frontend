@@ -21,7 +21,7 @@ export const environment = {
   equipmentMaintenanceEndpointPath: '/maintenance',
 
   // Batch
-  batchBatchesEndpointPath: '/batches',
+  batchEndpointPath: '/batches',
   batchRawMaterialUsageEndpointPath: '/raw-material-usages',
 
   // Tracking (IoT)

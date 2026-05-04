@@ -1,0 +1,45 @@
+.release-form-container {
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.header-content h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  color: #2ecc71; /* Color verde para liberación */
+}
+
+.form-card {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.release-btn {
+  background-color: #2ecc71 !important;
+  color: white !important;
+}
+
+.release-btn[disabled] {
+  background-color: #e0e0e0 !important;
+}

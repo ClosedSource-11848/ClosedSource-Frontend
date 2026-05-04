@@ -1,0 +1,117 @@
+.batch-list-container {
+  padding: 24px;
+  position: relative;
+  min-height: 400px;
+}
+
+/* Header Styling */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.header-content h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  color: #2c3e50;
+}
+
+.header-content p {
+  margin: 4px 0 0;
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Table Container */
+.table-container {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+}
+
+.bold-text {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+code {
+  background-color: #f4f7f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Consolas', monospace;
+  color: #e67e22;
+}
+
+/* Chips & Status Colors */
+.mat-mdc-chip {
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  font-size: 11px !important;
+}
+
+/* Estados específicos siguiendo la lógica de BPM */
+.pending {
+  background-color: #f1c40f !important; /* Amarillo */
+  color: #fff !important;
+}
+
+.in-progress {
+  background-color: #3498db !important; /* Azul */
+  color: #fff !important;
+}
+
+.released {
+  background-color: #2ecc71 !important; /* Verde */
+  color: #fff !important;
+}
+
+.rejected {
+  background-color: #e74c3c !important; /* Rojo */
+  color: #fff !important;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+/* Loading & Errors */
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-container {
+  background-color: #fdf2f2;
+  border: 1px solid #f8b4b4;
+  color: #9b1c1c;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}

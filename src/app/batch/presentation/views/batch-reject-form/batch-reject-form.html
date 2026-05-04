@@ -1,0 +1,54 @@
+<div class="reject-form-container">
+  <header class="page-header">
+    <div class="header-content">
+      <button mat-icon-button routerLink="../../batch-list" color="primary">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div>
+        <h1 class="critical-title">{{ 'batches.actions.reject' | translate }}</h1>
+        <p class="warning-text">
+          <mat-icon inline>report_problem</mat-icon>
+          {{ 'ca-compliance.status.non-compliant' | translate }} - ID: {{ batchId }}
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <div class="form-card mat-elevation-z3 border-top-danger">
+    <form [formGroup]="rejectForm" (ngSubmit)="onSubmit()">
+
+      <!-- Rejection Date -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ 'maintenance-history.fields.date' | translate }}</mat-label>
+        <input matInput type="date" formControlName="rejectionDate">
+        @if (rejectForm.get('rejectionDate')?.hasError('required')) {
+          <mat-error>{{ 'common.required' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Rejection Reason -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ 'ca-alerts.fields.description' | translate }} (Motivo de Rechazo)</mat-label>
+        <textarea matInput formControlName="reason" rows="5"
+                  placeholder="Describa detalladamente la desviación de calidad detectada..."></textarea>
+        @if (rejectForm.get('reason')?.hasError('required')) {
+          <mat-error>{{ 'common.required' | translate }}</mat-error>
+        }
+        @if (rejectForm.get('reason')?.hasError('minlength')) {
+          <mat-error>El motivo debe ser detallado (mínimo 15 caracteres) para auditorías.</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="form-actions">
+        <button mat-button type="button" routerLink="../../batch-list">
+          {{ 'common.cancel' | translate }}
+        </button>
+        <button mat-raised-button color="warn" type="submit"
+                [disabled]="rejectForm.invalid || store.isLoading()">
+          <mat-icon>block</mat-icon>
+          {{ 'batches.actions.reject' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
