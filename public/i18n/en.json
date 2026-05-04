@@ -55,6 +55,31 @@
     "reports": "Reports & KPIs",
     "laboratory": "Laboratory"
   },
+  "batches": {
+    "title": "Production Batches",
+    "subtitle": "Traceability and quality control of production cycles",
+    "add-button": "New Batch",
+    "empty": "No batches recorded in this cycle",
+    "fields": {
+      "number": "Batch Number",
+      "product": "Product",
+      "quantity": "Quantity",
+      "status": "Status",
+      "date": "Start Date"
+    },
+    "status": {
+      "pending": "Pending",
+      "in-progress": "In Progress",
+      "released": "Released",
+      "rejected": "Rejected",
+      "unknown": "Unknown"
+    },
+    "actions": {
+      "release": "Release Batch",
+      "reject": "Reject Batch",
+      "view": "View Traceability"
+    }
+  },
   "equipment-list": {
     "title": "Equipment Catalog",
     "subtitle": "Management and monitoring of industrial laboratory assets",
@@ -78,7 +103,7 @@
     }
   },
   "equipment-detail": {
-    "title": "Equipment Details",
+    "title": "Technical File",
     "tabs": {
       "general": "General Info",
       "bpm": "BPM Config",
@@ -163,7 +188,7 @@
     "empty": "No pharmaceutical products found."
   },
   "product-form": {
-    "title": "Register New Product",
+    "title": "Register New Product / Batch",
     "code": "Internal Product Code",
     "name": "Commercial Name",
     "description": "Therapeutic Description",
@@ -183,13 +208,13 @@
     "empty": "Inventory is currently empty."
   },
   "raw-material-form": {
-    "title": "Register Raw Material",
+    "title": "Register Raw Material Usage",
     "name": "Material Name",
     "code": "Internal Code",
     "supplier": "Supplier Name",
     "batchNumber": "Supplier Batch",
     "expirationDate": "Expiration Date",
-    "quantityInStock": "Initial Quantity",
+    "quantityInStock": "Initial Quantity / Usage",
     "unit": "Measurement Unit",
     "minimumStock": "Minimum Stock Threshold"
   },
