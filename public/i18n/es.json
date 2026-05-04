@@ -55,6 +55,31 @@
     "reports": "Reportes y Auditoría",
     "laboratory": "Laboratorio"
   },
+  "batches": {
+    "title": "Lotes de Producción",
+    "subtitle": "Trazabilidad y control de calidad de ciclos de producción",
+    "add-button": "Nuevo Lote",
+    "empty": "No hay lotes registrados en este ciclo",
+    "fields": {
+      "number": "Número de Lote",
+      "product": "Producto",
+      "quantity": "Cantidad",
+      "status": "Estado",
+      "date": "Fecha de Inicio"
+    },
+    "status": {
+      "pending": "Pendiente",
+      "in-progress": "En Progreso",
+      "released": "Liberado",
+      "rejected": "Rechazado",
+      "unknown": "Desconocido"
+    },
+    "actions": {
+      "release": "Liberar Lote",
+      "reject": "Rechazar Lote",
+      "view": "Ver Trazabilidad"
+    }
+  },
   "equipment-list": {
     "title": "Catálogo de Equipos",
     "subtitle": "Gestión y monitoreo de activos industriales del laboratorio",
@@ -78,7 +103,7 @@
     }
   },
   "equipment-detail": {
-    "title": "Detalles del Equipo",
+    "title": "Ficha Técnica",
     "tabs": {
       "general": "Información General",
       "bpm": "Configuración BPM",
@@ -163,7 +188,7 @@
     "empty": "No se encontraron productos farmacéuticos."
   },
   "product-form": {
-    "title": "Registrar Nuevo Producto",
+    "title": "Registrar Nuevo Producto / Lote",
     "code": "Código Interno de Producto",
     "name": "Nombre Comercial",
     "description": "Descripción Terapéutica",
@@ -183,13 +208,13 @@
     "empty": "El inventario está vacío."
   },
   "raw-material-form": {
-    "title": "Registrar Materia Prima",
+    "title": "Registrar Uso de Materia Prima",
     "name": "Nombre del Material",
     "code": "Código Interno",
     "supplier": "Nombre del Proveedor",
     "batchNumber": "Lote de Proveedor",
     "expirationDate": "Fecha de Vencimiento",
-    "quantityInStock": "Cantidad Inicial",
+    "quantityInStock": "Cantidad Inicial / Uso",
     "unit": "Unidad de Medida",
     "minimumStock": "Umbral de Stock Mínimo"
   },
