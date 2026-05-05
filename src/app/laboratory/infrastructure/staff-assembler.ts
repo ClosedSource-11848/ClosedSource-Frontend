@@ -1,13 +1,16 @@
 import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
-import { BaseResponse } from '../../shared/infrastructure/base-response';
 import { StaffMember } from '../domain/model/staff-member.entity';
-import { StaffMemberResource } from './laboratory-response';
+import { StaffMemberResource, StaffMembersResponse } from './staff-response';
 
 export class StaffAssembler implements BaseAssembler<
   StaffMember,
   StaffMemberResource,
-  BaseResponse
+  StaffMembersResponse
 > {
+  toEntitiesFromResponse(response: StaffMembersResponse): StaffMember[] {
+    return response.staffMembers.map((resource) => this.toEntityFromResource(resource));
+  }
+
   toEntityFromResource(resource: StaffMemberResource): StaffMember {
     return new StaffMember({
       id: resource.id,
@@ -30,9 +33,5 @@ export class StaffAssembler implements BaseAssembler<
       active: entity.active,
       createdAt: entity.createdAt,
     } as StaffMemberResource;
-  }
-
-  toEntitiesFromResponse(response: BaseResponse): StaffMember[] {
-    return [];
   }
 }

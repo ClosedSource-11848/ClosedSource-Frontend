@@ -1,13 +1,16 @@
 import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
-import { BaseResponse } from '../../shared/infrastructure/base-response';
 import { RawMaterial } from '../domain/model/raw-material.entity';
-import { RawMaterialResource } from './laboratory-response';
+import { RawMaterialResource, RawMaterialsResponse } from './raw-material-response';
 
 export class RawMaterialAssembler implements BaseAssembler<
   RawMaterial,
   RawMaterialResource,
-  BaseResponse
+  RawMaterialsResponse
 > {
+  toEntitiesFromResponse(response: RawMaterialsResponse): RawMaterial[] {
+    return response.rawMaterials.map((resource) => this.toEntityFromResource(resource));
+  }
+
   toEntityFromResource(resource: RawMaterialResource): RawMaterial {
     return new RawMaterial({
       id: resource.id,
@@ -38,9 +41,5 @@ export class RawMaterialAssembler implements BaseAssembler<
       minimumStock: entity.minimumStock,
       createdAt: entity.createdAt,
     } as RawMaterialResource;
-  }
-
-  toEntitiesFromResponse(response: BaseResponse): RawMaterial[] {
-    return [];
   }
 }

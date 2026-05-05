@@ -1,10 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, map } from 'rxjs';
 import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
-import { BaseResponse } from '../../shared/infrastructure/base-response';
 import { environment } from '../../../environments/environment';
 import { Laboratory } from '../domain/model/laboratory.entity';
-import { LaboratoryResource } from './laboratory-response';
+import { LaboratoryResource, LaboratoriesResponse } from './laboratory-response';
 import { LaboratoryAssembler } from './laboratory-assembler';
 import { UpdateLaboratoryRequest } from './laboratory.request';
 
@@ -13,7 +12,7 @@ const labEndpointUrl = `${environment.serverBasePath}${environment.laboratoryLab
 export class LaboratoryApiEndpoint extends BaseApiEndpoint<
   Laboratory,
   LaboratoryResource,
-  BaseResponse,
+  LaboratoriesResponse,
   LaboratoryAssembler
 > {
   constructor(http: HttpClient) {
