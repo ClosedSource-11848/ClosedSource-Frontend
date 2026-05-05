@@ -1,6 +1,7 @@
-import { BaseResource } from '../../shared/infrastructure/base-response';
+import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-response';
 
 export interface EquipmentResource extends BaseResource {
+  id: string;
   labId: string;
   name: string;
   type: string;
@@ -10,20 +11,6 @@ export interface EquipmentResource extends BaseResource {
   createdAt: string;
 }
 
-export interface BpmConfigResource extends BaseResource {
-  equipmentId: string;
-  parameterName: string;
-  minValue: number;
-  maxValue: number;
-  unit: string;
-  createdAt: string;
-}
-
-export interface MaintenanceResource extends BaseResource {
-  equipmentId: string;
-  maintenanceDate: string;
-  technicianName: string;
-  description: string;
-  type: string;
-  createdAt: string;
+export interface EquipmentsResponse extends BaseResponse {
+  equipments: EquipmentResource[];
 }

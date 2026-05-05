@@ -1,13 +1,16 @@
 import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
-import { BaseResponse } from '../../shared/infrastructure/base-response';
 import { MaintenanceRecord } from '../domain/model/maintenance-record.entity';
-import { MaintenanceResource } from './equipment-response';
+import { MaintenanceResource, MaintenancesResponse } from './maintenance-response';
 
 export class MaintenanceAssembler implements BaseAssembler<
   MaintenanceRecord,
   MaintenanceResource,
-  BaseResponse
+  MaintenancesResponse
 > {
+  toEntitiesFromResponse(response: MaintenancesResponse): MaintenanceRecord[] {
+    return response.maintenances.map((resource) => this.toEntityFromResource(resource));
+  }
+
   toEntityFromResource(resource: MaintenanceResource): MaintenanceRecord {
     return new MaintenanceRecord({
       id: resource.id,
@@ -30,9 +33,5 @@ export class MaintenanceAssembler implements BaseAssembler<
       type: entity.type,
       createdAt: entity.createdAt,
     } as MaintenanceResource;
-  }
-
-  toEntitiesFromResponse(response: BaseResponse): MaintenanceRecord[] {
-    return [];
   }
 }
