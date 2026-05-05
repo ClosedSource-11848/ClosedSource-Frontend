@@ -1,13 +1,16 @@
 import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
-import { BaseResponse } from '../../shared/infrastructure/base-response';
 import { RawMaterialUsage } from '../domain/model/raw-material-usage.entity';
-import { RawMaterialUsageResource } from './batch-response';
+import { RawMaterialUsageResource, RawMaterialUsagesResponse } from './raw-material-usage-response';
 
 export class RawMaterialUsageAssembler implements BaseAssembler<
   RawMaterialUsage,
   RawMaterialUsageResource,
-  BaseResponse
+  RawMaterialUsagesResponse
 > {
+  toEntitiesFromResponse(response: RawMaterialUsagesResponse): RawMaterialUsage[] {
+    return response.rawMaterialUsages.map((resource) => this.toEntityFromResource(resource));
+  }
+
   toEntityFromResource(resource: RawMaterialUsageResource): RawMaterialUsage {
     return new RawMaterialUsage({
       id: resource.id,
@@ -32,9 +35,5 @@ export class RawMaterialUsageAssembler implements BaseAssembler<
       usageDate: entity.usageDate,
       createdAt: entity.createdAt,
     } as RawMaterialUsageResource;
-  }
-
-  toEntitiesFromResponse(response: BaseResponse): RawMaterialUsage[] {
-    return [];
   }
 }
