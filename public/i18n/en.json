@@ -43,7 +43,9 @@
     "invalidEmail": "Please enter a valid email",
     "minZero": "Value must be at least 0",
     "actions": "Actions",
-    "status-loading": "Loading data..."
+    "status-loading": "Loading data...",
+    "all": "All",
+    "clear": "Clear Filters"
   },
   "nav": {
     "quality-management": "Quality Management",
@@ -54,6 +56,60 @@
     "alerts": "Compliance Alerts",
     "reports": "Reports & KPIs",
     "laboratory": "Laboratory"
+  },
+  "ca-alerts": {
+    "subtitle": "Real-time monitoring of BPM deviations",
+    "empty": "No compliance alerts found. Everything is within BPM parameters.",
+    "not-found": "Alert not found.",
+    "kpi": {
+      "unresolved": "Active Alerts (Unresolved)",
+      "critical": "Critical Deviations"
+    },
+    "fields": {
+      "timestamp": "Date / Time",
+      "parameter": "Deviated Parameter",
+      "severity": "Severity",
+      "equipment": "Equipment",
+      "recorded": "Recorded Value",
+      "threshold": "Threshold Limit",
+      "batch": "Batch",
+      "minimum-severity": "Minimum Severity"
+    },
+    "severity": {
+      "info": "Info",
+      "warning": "Warning",
+      "critical": "Critical"
+    },
+    "status": {
+      "unresolved": "Unresolved",
+      "resolved": "Resolved",
+      "ignored": "Ignored"
+    },
+    "actions": {
+      "settings": "Alert Settings",
+      "view-details": "View Details & Resolve",
+      "resolve": "Mark as Resolved"
+    },
+    "history": {
+      "title": "Alert History",
+      "subtitle": "Complete audit log of all quality deviations"
+    },
+    "detail": {
+      "title": "Deviation Details",
+      "subtitle": "Technical inspection of alert"
+    },
+    "settings": {
+      "title": "Notification Preferences",
+      "subtitle": "Configure how and when you receive system alerts",
+      "channels-title": "Communication Channels",
+      "channels-subtitle": "Select where you want to receive notifications",
+      "in-app": "In-App Notifications",
+      "email": "Email Notifications",
+      "sms": "SMS Alerts",
+      "threshold-title": "Alert Threshold",
+      "threshold-subtitle": "Minimum severity level required to trigger a notification",
+      "severity-hint": "Only alerts with this severity or higher will be sent"
+    }
   },
   "batches": {
     "title": "Production Batches",

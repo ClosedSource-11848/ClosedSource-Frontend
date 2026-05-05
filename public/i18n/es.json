@@ -43,7 +43,9 @@
     "invalidEmail": "Ingrese un correo válido",
     "minZero": "El valor debe ser al menos 0",
     "actions": "Acciones",
-    "status-loading": "Cargando datos..."
+    "status-loading": "Cargando datos...",
+    "all": "Todos",
+    "clear": "Limpiar Filtros"
   },
   "nav": {
     "quality-management": "Gestión de Calidad",
@@ -54,6 +56,60 @@
     "alerts": "Alertas de Cumplimiento",
     "reports": "Reportes y Auditoría",
     "laboratory": "Laboratorio"
+  },
+  "ca-alerts": {
+    "subtitle": "Monitoreo en tiempo real de desviaciones BPM",
+    "empty": "No se encontraron alertas de cumplimiento. Todo está dentro de los parámetros BPM.",
+    "not-found": "Alerta no encontrada.",
+    "kpi": {
+      "unresolved": "Alertas Activas (No Resueltas)",
+      "critical": "Desviaciones Críticas"
+    },
+    "fields": {
+      "timestamp": "Fecha / Hora",
+      "parameter": "Parámetro Desviado",
+      "severity": "Severidad",
+      "equipment": "Equipo",
+      "recorded": "Valor Registrado",
+      "threshold": "Límite Tolerado",
+      "batch": "Lote",
+      "minimum-severity": "Severidad Mínima"
+    },
+    "severity": {
+      "info": "Informativo",
+      "warning": "Advertencia",
+      "critical": "Crítico"
+    },
+    "status": {
+      "unresolved": "No Resuelto",
+      "resolved": "Resuelto",
+      "ignored": "Ignorado"
+    },
+    "actions": {
+      "settings": "Configurar Alertas",
+      "view-details": "Ver Detalles y Resolver",
+      "resolve": "Marcar como Resuelto"
+    },
+    "history": {
+      "title": "Historial de Alertas",
+      "subtitle": "Registro de auditoría completo de todas las desviaciones de calidad"
+    },
+    "detail": {
+      "title": "Detalles de la Desviación",
+      "subtitle": "Inspección técnica de la alerta"
+    },
+    "settings": {
+      "title": "Preferencias de Notificación",
+      "subtitle": "Configura cómo y cuándo recibir las alertas del sistema",
+      "channels-title": "Canales de Comunicación",
+      "channels-subtitle": "Selecciona dónde deseas recibir las notificaciones",
+      "in-app": "Notificaciones en la App",
+      "email": "Notificaciones por Correo",
+      "sms": "Alertas por SMS",
+      "threshold-title": "Umbral de Alerta",
+      "threshold-subtitle": "Nivel de severidad mínimo requerido para enviar una notificación",
+      "severity-hint": "Solo se enviarán alertas con esta severidad o superior"
+    }
   },
   "batches": {
     "title": "Lotes de Producción",
