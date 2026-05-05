@@ -63,7 +63,6 @@ export class Layout {
         { label: 'maintenance-form.title', link: '/equipment/maintenance-form' },
       ],
     },
-
     {
       label: 'nav.alerts',
       icon: 'warning',
@@ -75,8 +74,17 @@ export class Layout {
         { label: 'ca-alerts.settings.title', link: '/ca/notification-settings' },
       ],
     },
-
-    { label: 'nav.reports', icon: 'description', link: '/ra/kpis' },
+    {
+      label: 'nav.reports',
+      icon: 'description',
+      link: '/ra',
+      children: [
+        { label: 'kpi-dashboard.title', link: '/ra/kpi-dashboard' },
+        { label: 'deviation-trend.title', link: '/ra/deviation-trends' },
+        { label: 'report-generator.title', link: '/ra/report-generator' },
+        { label: 'audit-log.title', link: '/ra/audit-log' },
+      ],
+    },
     {
       label: 'nav.laboratory',
       icon: 'science',
