@@ -1,0 +1,162 @@
+<div class="generator-container">
+  <!-- Header de la sección -->
+  <div class="section-header">
+    <div class="title-group">
+      <mat-icon class="title-icon">description</mat-icon>
+      <h2>{{ 'report-generator.title' | translate }}</h2>
+    </div>
+  </div>
+
+  <!-- Alertas globales del Store -->
+  @if (store.error()) {
+    <div class="alert error-message">
+      <mat-icon>error_outline</mat-icon>
+      {{ store.error() }}
+      <button mat-icon-button (click)="store.clearMessages()"><mat-icon>close</mat-icon></button>
+    </div>
+  }
+
+  @if (store.successMsg()) {
+    <div class="alert success-message">
+      <mat-icon>check_circle</mat-icon>
+      {{ store.successMsg() }}
+      <button mat-icon-button (click)="store.clearMessages()"><mat-icon>close</mat-icon></button>
+    </div>
+  }
+
+  <!-- Overlay global de carga cuando un archivo se está generando -->
+  @if (store.isLoading()) {
+    <div class="loading-overlay">
+      <mat-spinner diameter="60"></mat-spinner>
+      <p>{{ 'report-generator.generating' | translate }}...</p>
+    </div>
+  }
+
+  <!-- Cuadrícula de Tarjetas de Reportes -->
+  <div class="reports-grid" [class.loading-blur]="store.isLoading()">
+
+    <!-- 1. BATCH REPORT CARD -->
+    <mat-card class="report-card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-icon-container bg-primary">
+          <mat-icon>inventory_2</mat-icon>
+        </div>
+        <mat-card-title>{{ 'report-generator.batch.title' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'report-generator.batch.desc' | translate }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content class="form-content">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'report-generator.batch.id-label' | translate }}</mat-label>
+          <input matInput [(ngModel)]="batchForm.batchId" placeholder="e.g. BATCH-2026-05A">
+        </mat-form-field>
+
+        <div class="checkbox-group">
+          <mat-checkbox [(ngModel)]="batchForm.includeTelemetry" color="primary">
+            {{ 'report-generator.batch.include-telemetry' | translate }}
+          </mat-checkbox>
+          <mat-checkbox [(ngModel)]="batchForm.includeDeviations" color="primary">
+            {{ 'report-generator.batch.include-deviations' | translate }}
+          </mat-checkbox>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'common.format' | translate }}</mat-label>
+          <mat-select [(ngModel)]="batchForm.format">
+            <mat-option value="PDF">PDF Document (.pdf)</mat-option>
+            <mat-option value="CSV">Data Export (.csv)</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button mat-flat-button color="primary" [disabled]="!batchForm.batchId || store.isLoading()" (click)="onGenerateBatchReport()">
+          <mat-icon>download</mat-icon>
+          {{ 'common.download' | translate }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- 2. COMPLIANCE REPORT CARD -->
+    <mat-card class="report-card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-icon-container bg-success">
+          <mat-icon>verified</mat-icon>
+        </div>
+        <mat-card-title>{{ 'report-generator.compliance.title' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'report-generator.compliance.desc' | translate }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content class="form-content">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'common.date-range' | translate }}</mat-label>
+          <mat-date-range-input [rangePicker]="compPicker">
+            <input matStartDate [(ngModel)]="complianceForm.startDate" placeholder="Start date">
+            <input matEndDate [(ngModel)]="complianceForm.endDate" placeholder="End date">
+          </mat-date-range-input>
+          <mat-datepicker-toggle matIconSuffix [for]="compPicker"></mat-datepicker-toggle>
+          <mat-date-range-picker #compPicker></mat-date-range-picker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'common.format' | translate }}</mat-label>
+          <mat-select [(ngModel)]="complianceForm.format">
+            <mat-option value="PDF">PDF Document (.pdf)</mat-option>
+            <mat-option value="CSV">Data Export (.csv)</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button mat-flat-button color="primary" [disabled]="!complianceForm.startDate || !complianceForm.endDate || store.isLoading()" (click)="onGenerateComplianceReport()">
+          <mat-icon>download</mat-icon>
+          {{ 'common.download' | translate }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- 3. EQUIPMENT LOG EXPORT CARD -->
+    <mat-card class="report-card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-icon-container bg-warning">
+          <mat-icon>precision_manufacturing</mat-icon>
+        </div>
+        <mat-card-title>{{ 'report-generator.equipment.title' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'report-generator.equipment.desc' | translate }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content class="form-content">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'report-generator.equipment.id-label' | translate }}</mat-label>
+          <input matInput [(ngModel)]="equipmentForm.equipmentId" placeholder="e.g. EQ-1005">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'common.date-range' | translate }}</mat-label>
+          <mat-date-range-input [rangePicker]="eqPicker">
+            <input matStartDate [(ngModel)]="equipmentForm.startDate" placeholder="Start date">
+            <input matEndDate [(ngModel)]="equipmentForm.endDate" placeholder="End date">
+          </mat-date-range-input>
+          <mat-datepicker-toggle matIconSuffix [for]="eqPicker"></mat-datepicker-toggle>
+          <mat-date-range-picker #eqPicker></mat-date-range-picker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'common.format' | translate }}</mat-label>
+          <mat-select [(ngModel)]="equipmentForm.format">
+            <mat-option value="CSV">Data Export (.csv)</mat-option>
+            <mat-option value="PDF">PDF Document (.pdf)</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button mat-flat-button color="primary" [disabled]="!equipmentForm.equipmentId || !equipmentForm.startDate || !equipmentForm.endDate || store.isLoading()" (click)="onExportEquipmentLog()">
+          <mat-icon>download</mat-icon>
+          {{ 'common.export' | translate }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+  </div>
+</div>
