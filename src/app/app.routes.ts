@@ -16,13 +16,12 @@ const equipmentRoutes = () =>
 
 const batchRoutes = () => import('./batch/presentation/batch-routes').then((m) => m.batchRoutes);
 
+const caRoutes = () => import('./ca/presentation/ca-routes').then((m) => m.caRoutes);
+
 /*
 // Módulos pendientes de implementación
 const trackingRoutes = () =>
   import('./tracking/presentation/tracking-routes').then((m) => m.trackingRoutes);
-
-const caRoutes = () =>
-  import('./ca/presentation/ca-routes').then((m) => m.caRoutes);
 
 const raRoutes = () =>
   import('./ra/presentation/ra-routes').then((m) => m.raRoutes);
@@ -37,10 +36,10 @@ export const routes: Routes = [
   { path: 'laboratory', loadChildren: laboratoryRoutes },
   { path: 'equipment', loadChildren: equipmentRoutes },
   { path: 'batch', loadChildren: batchRoutes },
+  { path: 'ca', loadChildren: caRoutes },
 
   /*
   { path: 'tracking', loadChildren: trackingRoutes },
-  { path: 'ca', loadChildren: caRoutes },
   { path: 'ra', loadChildren: raRoutes },
   */
 

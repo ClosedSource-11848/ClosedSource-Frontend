@@ -63,7 +63,19 @@ export class Layout {
         { label: 'maintenance-form.title', link: '/equipment/maintenance-form' },
       ],
     },
-    { label: 'nav.alerts', icon: 'warning', link: '/ca/alerts' },
+
+    {
+      label: 'nav.alerts',
+      icon: 'warning',
+      link: '/ca',
+      children: [
+        { label: 'nav.dashboard', link: '/ca/alert-dashboard' },
+        { label: 'ca-alerts.history.title', link: '/ca/alert-history' },
+        { label: 'ca-alerts.detail.title', link: '/ca/deviation-detail' },
+        { label: 'ca-alerts.settings.title', link: '/ca/notification-settings' },
+      ],
+    },
+
     { label: 'nav.reports', icon: 'description', link: '/ra/kpis' },
     {
       label: 'nav.laboratory',
