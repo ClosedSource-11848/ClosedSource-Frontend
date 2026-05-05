@@ -16,8 +16,3 @@ export interface RejectBatchRequest {
   rejectionDate: string;
   reason: string;
 }
-
-export interface LinkRawMaterialRequest {
-  rawMaterialId: string;
-  quantityUsed: number;
-}

@@ -1,6 +1,7 @@
-import { BaseResource } from '../../shared/infrastructure/base-response';
+import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-response';
 
 export interface BatchResource extends BaseResource {
+  id: string;
   labId: string;
   productId: string;
   productName: string;
@@ -14,12 +15,6 @@ export interface BatchResource extends BaseResource {
   createdAt: string;
 }
 
-export interface RawMaterialUsageResource extends BaseResource {
-  batchId: string;
-  rawMaterialId: string;
-  rawMaterialName: string;
-  quantityUsed: number;
-  unit: string;
-  usageDate: string;
-  createdAt: string;
+export interface BatchesResponse extends BaseResponse {
+  batches: BatchResource[];
 }

@@ -1,9 +1,12 @@
 import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
-import { BaseResponse } from '../../shared/infrastructure/base-response';
 import { Batch } from '../domain/model/batch.entity';
-import { BatchResource } from './batch-response';
+import { BatchResource, BatchesResponse } from './batch-response';
 
-export class BatchAssembler implements BaseAssembler<Batch, BatchResource, BaseResponse> {
+export class BatchAssembler implements BaseAssembler<Batch, BatchResource, BatchesResponse> {
+  toEntitiesFromResponse(response: BatchesResponse): Batch[] {
+    return response.batches.map((resource) => this.toEntityFromResource(resource));
+  }
+
   toEntityFromResource(resource: BatchResource): Batch {
     return new Batch({
       id: resource.id,
@@ -36,9 +39,5 @@ export class BatchAssembler implements BaseAssembler<Batch, BatchResource, BaseR
       notes: entity.notes,
       createdAt: entity.createdAt,
     } as BatchResource;
-  }
-
-  toEntitiesFromResponse(response: BaseResponse): Batch[] {
-    return [];
   }
 }
