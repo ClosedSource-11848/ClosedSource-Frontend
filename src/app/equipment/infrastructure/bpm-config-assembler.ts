@@ -1,13 +1,16 @@
 import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
-import { BaseResponse } from '../../shared/infrastructure/base-response';
 import { BpmParameterConfig } from '../domain/model/bpm-parameter-config.entity';
-import { BpmConfigResource } from './equipment-response';
+import { BpmConfigResource, BpmConfigsResponse } from './bpm-config-response';
 
 export class BpmConfigAssembler implements BaseAssembler<
   BpmParameterConfig,
   BpmConfigResource,
-  BaseResponse
+  BpmConfigsResponse
 > {
+  toEntitiesFromResponse(response: BpmConfigsResponse): BpmParameterConfig[] {
+    return response.bpmConfigs.map((resource) => this.toEntityFromResource(resource));
+  }
+
   toEntityFromResource(resource: BpmConfigResource): BpmParameterConfig {
     return new BpmParameterConfig({
       id: resource.id,
@@ -30,9 +33,5 @@ export class BpmConfigAssembler implements BaseAssembler<
       unit: entity.unit,
       createdAt: entity.createdAt,
     } as BpmConfigResource;
-  }
-
-  toEntitiesFromResponse(response: BaseResponse): BpmParameterConfig[] {
-    return [];
   }
 }

@@ -1,19 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, map } from 'rxjs';
 import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
-import { BaseResponse } from '../../shared/infrastructure/base-response';
 import { environment } from '../../../environments/environment';
 import { MaintenanceRecord } from '../domain/model/maintenance-record.entity';
-import { MaintenanceResource } from './equipment-response';
+import { MaintenanceResource, MaintenancesResponse } from './maintenance-response';
 import { MaintenanceAssembler } from './maintenance-assembler';
-import { RegisterMaintenanceRequest } from './equipment.request';
+import { RegisterMaintenanceRequest } from './maintenance.request';
 
 const equipmentEndpointUrl = `${environment.serverBasePath}${environment.equipmentEndpointPath}`;
 
 export class MaintenanceApiEndpoint extends BaseApiEndpoint<
   MaintenanceRecord,
   MaintenanceResource,
-  BaseResponse,
+  MaintenancesResponse,
   MaintenanceAssembler
 > {
   constructor(http: HttpClient) {
@@ -22,9 +21,9 @@ export class MaintenanceApiEndpoint extends BaseApiEndpoint<
 
   getMaintenanceHistory(equipmentId: string): Observable<MaintenanceRecord[]> {
     return this.http
-      .get<MaintenanceResource[]>(`${this.endpointUrl}/${equipmentId}/maintenance`)
+      .get<MaintenancesResponse>(`${this.endpointUrl}/${equipmentId}/maintenance`)
       .pipe(
-        map((resources) => resources.map((r) => this.assembler.toEntityFromResource(r))),
+        map((response) => this.assembler.toEntitiesFromResponse(response)),
         catchError(
           this.handleError(`Failed to fetch maintenance history for equipment ${equipmentId}`),
         ),

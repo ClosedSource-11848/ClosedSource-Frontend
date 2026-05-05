@@ -1,13 +1,16 @@
 import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
-import { BaseResponse } from '../../shared/infrastructure/base-response';
 import { Equipment } from '../domain/model/equipment.entity';
-import { EquipmentResource } from './equipment-response';
+import { EquipmentResource, EquipmentsResponse } from './equipment-response';
 
 export class EquipmentAssembler implements BaseAssembler<
   Equipment,
   EquipmentResource,
-  BaseResponse
+  EquipmentsResponse
 > {
+  toEntitiesFromResponse(response: EquipmentsResponse): Equipment[] {
+    return response.equipments.map((resource) => this.toEntityFromResource(resource));
+  }
+
   toEntityFromResource(resource: EquipmentResource): Equipment {
     return new Equipment({
       id: resource.id,
@@ -32,9 +35,5 @@ export class EquipmentAssembler implements BaseAssembler<
       status: entity.status,
       createdAt: entity.createdAt,
     } as EquipmentResource;
-  }
-
-  toEntitiesFromResponse(response: BaseResponse): Equipment[] {
-    return [];
   }
 }
