@@ -2,18 +2,21 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BaseApi } from '../../shared/infrastructure/base-api';
-import { LaboratoryApiEndpoint } from './laboratory-api-endpoint';
-import { StaffApiEndpoint } from './staff-api-endpoint';
-import { ProductApiEndpoint } from './product-api-endpoint';
-import { RawMaterialApiEndpoint } from './raw-material-api-endpoint';
+
 import { Laboratory } from '../domain/model/laboratory.entity';
 import { StaffMember } from '../domain/model/staff-member.entity';
 import { PharmaceuticalProduct } from '../domain/model/pharmaceutical-product.entity';
 import { RawMaterial } from '../domain/model/raw-material.entity';
+
+import { LaboratoryApiEndpoint } from './laboratory-api-endpoint';
+import { StaffApiEndpoint } from './staff-api-endpoint';
+import { ProductApiEndpoint } from './product-api-endpoint';
+import { RawMaterialApiEndpoint } from './raw-material-api-endpoint';
+
 import { UpdateLaboratoryRequest } from './laboratory.request';
-import { RegisterStaffRequest } from './laboratory.request';
-import { CreateProductRequest } from './laboratory.request';
-import { CreateRawMaterialRequest } from './laboratory.request';
+import { RegisterStaffRequest } from './staff.request';
+import { CreateProductRequest } from './product.request';
+import { CreateRawMaterialRequest } from './raw-material.request';
 
 @Injectable({ providedIn: 'root' })
 export class LaboratoryApi extends BaseApi {
@@ -30,8 +33,7 @@ export class LaboratoryApi extends BaseApi {
     this._materialsEndpoint = new RawMaterialApiEndpoint(http);
   }
 
-  // ── Laboratory ───────────────────────────────────────────────────────────
-
+  // ── Laboratory ────────────────────────────────────────────────────────────
   getLaboratory(labId: string): Observable<Laboratory> {
     return this._laboratoryEndpoint.getByLabId(labId);
   }
@@ -40,8 +42,7 @@ export class LaboratoryApi extends BaseApi {
     return this._laboratoryEndpoint.updateLaboratory(labId, request);
   }
 
-  // ── Staff ────────────────────────────────────────────────────────────────
-
+  // ── Staff ─────────────────────────────────────────────────────────────────
   getStaff(labId: string): Observable<StaffMember[]> {
     return this._staffEndpoint.getStaffByLab(labId);
   }
@@ -54,8 +55,7 @@ export class LaboratoryApi extends BaseApi {
     return this._staffEndpoint.deactivateStaff(labId, staffId);
   }
 
-  // ── Products ─────────────────────────────────────────────────────────────
-
+  // ── Products ──────────────────────────────────────────────────────────────
   getProducts(labId: string): Observable<PharmaceuticalProduct[]> {
     return this._productsEndpoint.getProductsByLab(labId);
   }
@@ -64,8 +64,7 @@ export class LaboratoryApi extends BaseApi {
     return this._productsEndpoint.createProduct(labId, request);
   }
 
-  // ── Raw Materials ────────────────────────────────────────────────────────
-
+  // ── Raw Materials ─────────────────────────────────────────────────────────
   getRawMaterials(labId: string): Observable<RawMaterial[]> {
     return this._materialsEndpoint.getRawMaterialsByLab(labId);
   }

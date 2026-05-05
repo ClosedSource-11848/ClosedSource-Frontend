@@ -1,13 +1,16 @@
 import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
-import { BaseResponse } from '../../shared/infrastructure/base-response';
 import { PharmaceuticalProduct } from '../domain/model/pharmaceutical-product.entity';
-import { PharmaceuticalProductResource } from './laboratory-response';
+import { PharmaceuticalProductResource, PharmaceuticalProductsResponse } from './product-response';
 
 export class ProductAssembler implements BaseAssembler<
   PharmaceuticalProduct,
   PharmaceuticalProductResource,
-  BaseResponse
+  PharmaceuticalProductsResponse
 > {
+  toEntitiesFromResponse(response: PharmaceuticalProductsResponse): PharmaceuticalProduct[] {
+    return response.products.map((resource) => this.toEntityFromResource(resource));
+  }
+
   toEntityFromResource(resource: PharmaceuticalProductResource): PharmaceuticalProduct {
     return new PharmaceuticalProduct({
       id: resource.id,
@@ -32,9 +35,5 @@ export class ProductAssembler implements BaseAssembler<
       active: entity.active,
       createdAt: entity.createdAt,
     } as PharmaceuticalProductResource;
-  }
-
-  toEntitiesFromResponse(response: BaseResponse): PharmaceuticalProduct[] {
-    return [];
   }
 }

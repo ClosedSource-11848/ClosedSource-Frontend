@@ -1,19 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, map } from 'rxjs';
 import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
-import { BaseResponse } from '../../shared/infrastructure/base-response';
 import { environment } from '../../../environments/environment';
 import { StaffMember } from '../domain/model/staff-member.entity';
-import { StaffMemberResource } from './laboratory-response';
+import { StaffMemberResource, StaffMembersResponse } from './staff-response';
 import { StaffAssembler } from './staff-assembler';
-import { RegisterStaffRequest } from './laboratory.request';
+import { RegisterStaffRequest } from './staff.request';
 
 const labEndpointUrl = `${environment.serverBasePath}${environment.laboratoryLabsEndpointPath}`;
 
 export class StaffApiEndpoint extends BaseApiEndpoint<
   StaffMember,
   StaffMemberResource,
-  BaseResponse,
+  StaffMembersResponse,
   StaffAssembler
 > {
   constructor(http: HttpClient) {
@@ -21,8 +20,8 @@ export class StaffApiEndpoint extends BaseApiEndpoint<
   }
 
   getStaffByLab(labId: string): Observable<StaffMember[]> {
-    return this.http.get<StaffMemberResource[]>(`${this.endpointUrl}/${labId}/staff`).pipe(
-      map((resources) => resources.map((r) => this.assembler.toEntityFromResource(r))),
+    return this.http.get<StaffMembersResponse>(`${this.endpointUrl}/${labId}/staff`).pipe(
+      map((response) => this.assembler.toEntitiesFromResponse(response)),
       catchError(this.handleError(`Failed to fetch staff for lab ${labId}`)),
     );
   }

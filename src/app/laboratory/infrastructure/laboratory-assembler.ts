@@ -1,13 +1,16 @@
 import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
-import { BaseResponse } from '../../shared/infrastructure/base-response';
 import { Laboratory } from '../domain/model/laboratory.entity';
-import { LaboratoryResource } from './laboratory-response';
+import { LaboratoryResource, LaboratoriesResponse } from './laboratory-response';
 
 export class LaboratoryAssembler implements BaseAssembler<
   Laboratory,
   LaboratoryResource,
-  BaseResponse
+  LaboratoriesResponse
 > {
+  toEntitiesFromResponse(response: LaboratoriesResponse): Laboratory[] {
+    return response.laboratories.map((resource) => this.toEntityFromResource(resource));
+  }
+
   toEntityFromResource(resource: LaboratoryResource): Laboratory {
     return new Laboratory({
       id: resource.id,
@@ -32,9 +35,5 @@ export class LaboratoryAssembler implements BaseAssembler<
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     } as LaboratoryResource;
-  }
-
-  toEntitiesFromResponse(response: BaseResponse): Laboratory[] {
-    return [];
   }
 }
