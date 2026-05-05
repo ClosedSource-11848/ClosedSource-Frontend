@@ -45,12 +45,28 @@
     "actions": "Actions",
     "status-loading": "Loading data...",
     "all": "All",
-    "clear": "Clear Filters"
+    "clear": "Clear Filters",
+    "refresh": "Refresh",
+    "download": "Download",
+    "export": "Export",
+    "format": "Format",
+    "date-range": "Date Range"
+  },
+  "status": {
+    "ON_TRACK": "On Track",
+    "AT_RISK": "At Risk",
+    "CRITICAL": "Critical",
+    "UNKNOWN": "Unknown"
+  },
+  "trend-direction": {
+    "INCREASING": "Increasing",
+    "DECREASING": "Decreasing",
+    "STABLE": "Stable"
   },
   "nav": {
     "quality-management": "Quality Management",
     "home": "Home",
-    "dashboard": "Telemetry Dashboard",
+    "dashboard": "Dashboard",
     "batches": "Batch Management",
     "equipment": "Equipment",
     "alerts": "Compliance Alerts",
@@ -273,6 +289,75 @@
     "quantityInStock": "Initial Quantity / Usage",
     "unit": "Measurement Unit",
     "minimumStock": "Minimum Stock Threshold"
+  },
+  "audit-log": {
+    "title": "System Audit Log",
+    "empty": "No audit records found for the selected criteria.",
+    "filters": {
+      "equipment": "Equipment ID",
+      "batch": "Batch ID"
+    },
+    "table": {
+      "timestamp": "Timestamp",
+      "action": "Action",
+      "entity": "Entity",
+      "performed-by": "Performed By",
+      "details": "Details"
+    }
+  },
+  "deviation-trend": {
+    "title": "Deviation Trends Analysis",
+    "parameter": "Parameter",
+    "equipment": "Equipment",
+    "direction": "Trend Direction",
+    "empty": "No deviation trends available for this equipment.",
+    "table": {
+      "timestamp": "Timestamp",
+      "value": "Recorded Value",
+      "min": "Lower Limit",
+      "max": "Upper Limit"
+    },
+    "status": {
+      "deviated": "Deviated",
+      "normal": "Normal"
+    }
+  },
+  "kpi-dashboard": {
+    "title": "Performance & KPI Dashboard",
+    "overall-health": "Overall Health Score",
+    "last-updated": "Last updated",
+    "at-risk-params": "At Risk Parameters",
+    "requires-attention": "Requires attention soon",
+    "critical-deviations": "Critical Deviations",
+    "immediate-action": "Immediate action required",
+    "detailed-parameters": "Detailed Parameters",
+    "empty": "No KPI metrics recorded for this laboratory.",
+    "table": {
+      "metric": "Quality Metric",
+      "current": "Current Value",
+      "target": "Target",
+      "recorded": "Recorded At"
+    }
+  },
+  "report-generator": {
+    "title": "Report & Document Generator",
+    "generating": "Generating document",
+    "batch": {
+      "title": "Batch Report",
+      "desc": "Complete quality and traceability document.",
+      "id-label": "Target Batch ID",
+      "include-telemetry": "Include telemetry logs",
+      "include-deviations": "Include deviation alerts"
+    },
+    "compliance": {
+      "title": "Compliance Report",
+      "desc": "Periodic laboratory performance summary."
+    },
+    "equipment": {
+      "title": "Equipment Log Export",
+      "desc": "Export technical and maintenance history.",
+      "id-label": "Target Equipment ID"
+    }
   },
   "page-not-found": {
     "title": "Page Not Found",

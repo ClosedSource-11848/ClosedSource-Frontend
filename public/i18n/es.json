@@ -45,12 +45,28 @@
     "actions": "Acciones",
     "status-loading": "Cargando datos...",
     "all": "Todos",
-    "clear": "Limpiar Filtros"
+    "clear": "Limpiar Filtros",
+    "refresh": "Actualizar",
+    "download": "Descargar",
+    "export": "Exportar",
+    "format": "Formato",
+    "date-range": "Rango de Fechas"
+  },
+  "status": {
+    "ON_TRACK": "En Camino",
+    "AT_RISK": "En Riesgo",
+    "CRITICAL": "Crítico",
+    "UNKNOWN": "Desconocido"
+  },
+  "trend-direction": {
+    "INCREASING": "En Aumento",
+    "DECREASING": "En Disminución",
+    "STABLE": "Estable"
   },
   "nav": {
     "quality-management": "Gestión de Calidad",
     "home": "Inicio",
-    "dashboard": "Panel de Telemetría",
+    "dashboard": "Panel de Control",
     "batches": "Gestión de Lotes",
     "equipment": "Equipos Industriales",
     "alerts": "Alertas de Cumplimiento",
@@ -273,6 +289,75 @@
     "quantityInStock": "Cantidad Inicial / Uso",
     "unit": "Unidad de Medida",
     "minimumStock": "Umbral de Stock Mínimo"
+  },
+  "audit-log": {
+    "title": "Registro de Auditoría",
+    "empty": "No se encontraron registros de auditoría para los filtros seleccionados.",
+    "filters": {
+      "equipment": "ID de Equipo",
+      "batch": "ID de Lote"
+    },
+    "table": {
+      "timestamp": "Fecha y Hora",
+      "action": "Acción",
+      "entity": "Entidad",
+      "performed-by": "Realizado Por",
+      "details": "Detalles"
+    }
+  },
+  "deviation-trend": {
+    "title": "Análisis de Tendencias",
+    "parameter": "Parámetro",
+    "equipment": "Equipo",
+    "direction": "Dirección de Tendencia",
+    "empty": "No hay tendencias de desviación disponibles para este equipo.",
+    "table": {
+      "timestamp": "Fecha y Hora",
+      "value": "Valor Registrado",
+      "min": "Límite Inferior",
+      "max": "Límite Superior"
+    },
+    "status": {
+      "deviated": "Desviado",
+      "normal": "Normal"
+    }
+  },
+  "kpi-dashboard": {
+    "title": "Panel de Rendimiento y KPIs",
+    "overall-health": "Puntuación de Salud",
+    "last-updated": "Última actualización",
+    "at-risk-params": "Parámetros en Riesgo",
+    "requires-attention": "Requiere atención pronto",
+    "critical-deviations": "Desviaciones Críticas",
+    "immediate-action": "Acción inmediata requerida",
+    "detailed-parameters": "Parámetros Detallados",
+    "empty": "No hay métricas KPI registradas para este laboratorio.",
+    "table": {
+      "metric": "Métrica de Calidad",
+      "current": "Valor Actual",
+      "target": "Objetivo",
+      "recorded": "Registrado En"
+    }
+  },
+  "report-generator": {
+    "title": "Generador de Reportes y Documentos",
+    "generating": "Generando documento",
+    "batch": {
+      "title": "Reporte de Lote",
+      "desc": "Documento completo de calidad y trazabilidad.",
+      "id-label": "ID de Lote",
+      "include-telemetry": "Incluir registros de telemetría",
+      "include-deviations": "Incluir alertas de desviación"
+    },
+    "compliance": {
+      "title": "Reporte de Cumplimiento",
+      "desc": "Resumen periódico del rendimiento del laboratorio."
+    },
+    "equipment": {
+      "title": "Bitácora de Equipo",
+      "desc": "Exportar historial técnico y de mantenimiento.",
+      "id-label": "ID de Equipo"
+    }
   },
   "page-not-found": {
     "title": "Página No Encontrada",
