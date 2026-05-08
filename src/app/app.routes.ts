@@ -20,12 +20,9 @@ const caRoutes = () => import('./ca/presentation/ca-routes').then((m) => m.caRou
 
 const raRoutes = () => import('./ra/presentation/ra-routes').then((m) => m.raRoutes);
 
-/*
-// Módulos pendientes de implementación
 const trackingRoutes = () =>
   import('./tracking/presentation/tracking-routes').then((m) => m.trackingRoutes);
 
-*/
 
 const baseTitle = 'QualiTrack';
 
@@ -38,10 +35,7 @@ export const routes: Routes = [
   { path: 'batch', loadChildren: batchRoutes },
   { path: 'ca', loadChildren: caRoutes },
   { path: 'ra', loadChildren: raRoutes },
-
-  /*
   { path: 'tracking', loadChildren: trackingRoutes },
-  */
 
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', loadComponent: pageNotFound, title: `Page Not Found - ${baseTitle}` },
