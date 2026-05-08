@@ -37,7 +37,16 @@ export class Layout {
   sidenavOpened = true;
 
   options = [
-    { label: 'nav.dashboard', icon: 'analytics', link: '/tracking/dashboard' },
+    {
+      label: 'nav.dashboard',
+      icon: 'cast_connected',
+      link: '/tracking',
+      children: [
+        { label: 'tracking.dashboard.title', link: '/tracking/dashboard' },
+        { label: 'tracking.analysis.title', link: '/tracking/analysis' },
+        { label: 'tracking.history.title', link: '/tracking/history' },
+      ],
+    },
     {
       label: 'nav.batches',
       icon: 'inventory_2',
