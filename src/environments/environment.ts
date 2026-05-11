@@ -5,9 +5,9 @@ export const environment = {
   serverBasePath: 'http://localhost:8080/api/v1',
 
   // IAM (Identity and Access Management)
-  iamSignInEndpointPath: '/auth/sign-in',
-  iamSignUpEndpointPath: '/auth/sign-up',
-  iamRecoverPasswordEndpointPath: '/auth/recover-password',
+  iamSignInEndpointPath: '/authentication/sign-in',
+  iamSignUpEndpointPath: '/authentication/sign-up',
+  iamRecoverPasswordEndpointPath: '/authentication/recover-password',
 
   // Laboratory
   laboratoryLabsEndpointPath: '/labs',
@@ -16,7 +16,7 @@ export const environment = {
   laboratoryRawMaterialsEndpointPath: '/raw-materials',
 
   // Equipment
-  equipmentEndpointPath: '/equipment',
+  equipmentEndpointPath: '/equipments',
   equipmentBpmConfigEndpointPath: '/bpm-config',
   equipmentMaintenanceEndpointPath: '/maintenance',
 

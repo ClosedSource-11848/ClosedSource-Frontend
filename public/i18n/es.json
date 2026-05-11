@@ -367,5 +367,46 @@
   "about": {
     "title": "Acerca de QualiTrack",
     "content": "QualiTrack es un sistema integral de gestión de calidad farmacéutica con integración IoT."
+  },
+  "tracking": {
+    "status": {
+      "OPERATIONAL": "Operativo",
+      "WARNING": "Advertencia",
+      "CRITICAL": "Crítico",
+      "OFFLINE": "Desconectado"
+    },
+    "dashboard": {
+      "title": "Panel de Telemetría",
+      "select-equipment": "Seleccionar Equipo",
+      "connection-status": "Estado de Conexión",
+      "anomalies": "Anomalías Detectadas",
+      "events": "Eventos",
+      "live-stream": "Flujo de Telemetría en Vivo",
+      "stream-desc": "Monitoreando datos sensoriales en tiempo real para",
+      "empty-chart": "No hay datos de telemetría disponibles para este equipo.",
+      "current-readings": "Lecturas Actuales de Sensores",
+      "updated": "Actualizado",
+      "empty-sensors": "Esperando datos del sensor...",
+      "chart-label": "Rastreo de Parámetro en Vivo"
+    },
+    "analysis": {
+      "title": "Análisis Histórico de Telemetría",
+      "analyze-btn": "Analizar Datos",
+      "chart-title": "Gráfico Analítico",
+      "displaying": "Mostrando",
+      "points-for": "puntos de datos para",
+      "value": "Valor"
+    },
+    "history": {
+      "title": "Registro de Datos Crudos (Telemetría)",
+      "timestamp": "Fecha y Hora",
+      "parameter": "Parámetro",
+      "value": "Valor Registrado",
+      "empty": "No se encontraron registros telemétricos para los criterios seleccionados.",
+      "status": {
+        "deviated": "Desviación BPM",
+        "normal": "Normal"
+      }
+    }
   }
 }
