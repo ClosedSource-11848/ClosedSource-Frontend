@@ -367,5 +367,46 @@
   "about": {
     "title": "About QualiTrack",
     "content": "QualiTrack is a comprehensive pharmaceutical quality management system with IoT integration."
+  },
+  "tracking": {
+    "status": {
+      "OPERATIONAL": "Operational",
+      "WARNING": "Warning",
+      "CRITICAL": "Critical",
+      "OFFLINE": "Offline"
+    },
+    "dashboard": {
+      "title": "Telemetry Dashboard",
+      "select-equipment": "Select Equipment",
+      "connection-status": "Connection Status",
+      "anomalies": "Detected Anomalies",
+      "events": "Events",
+      "live-stream": "Live Telemetry Stream",
+      "stream-desc": "Monitoring real-time sensory data for",
+      "empty-chart": "No telemetry data available for this equipment.",
+      "current-readings": "Current Sensor Readings",
+      "updated": "Updated",
+      "empty-sensors": "Awaiting sensor data...",
+      "chart-label": "Live Parameter Tracking"
+    },
+    "analysis": {
+      "title": "Historical Telemetry Analysis",
+      "analyze-btn": "Analyze Data",
+      "chart-title": "Telemetry Analysis Chart",
+      "displaying": "Displaying",
+      "points-for": "data points for",
+      "value": "Value"
+    },
+    "history": {
+      "title": "Raw Telemetry Data Log",
+      "timestamp": "Timestamp",
+      "parameter": "Parameter",
+      "value": "Recorded Value",
+      "empty": "No telemetry records found for the selected criteria.",
+      "status": {
+        "deviated": "BPM Deviation",
+        "normal": "Normal"
+      }
+    }
   }
 }
