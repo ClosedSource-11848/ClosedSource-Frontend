@@ -23,7 +23,7 @@ const maintenanceForm = () =>
 const equipmentRoutes: Routes = [
   {
     path: '',
-    component: Layout, // Se integra con el Layout principal de la aplicación
+    component: Layout,
     children: [
       { path: 'equipment-list', loadComponent: equipmentList },
       { path: 'register-equipment', loadComponent: equipmentForm },

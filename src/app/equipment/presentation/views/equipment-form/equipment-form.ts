@@ -38,7 +38,6 @@ export class EquipmentForm {
   protected readonly store = inject(EquipmentStore);
   private readonly iamStore = inject(IamStore);
 
-  // Opciones predefinidas para el tipo de equipo
   protected readonly equipmentTypes = [
     'Autoclave',
     'Centrifuge',

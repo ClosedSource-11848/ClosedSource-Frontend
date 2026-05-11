@@ -37,13 +37,11 @@ export class EquipmentDetail implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.equipmentId.set(id);
-      // Carga coordinada de datos relacionados
       this.store.loadBpmConfig(id);
       this.store.loadMaintenanceHistory(id);
     }
   }
 
-  // Helper para encontrar el equipo actual en la lista del store
   protected get currentEquipment() {
     return this.store.equipmentList().find((e) => e.id === this.equipmentId());
   }

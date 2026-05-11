@@ -69,7 +69,6 @@ export class MaintenanceForm implements OnInit {
       technicianName: formValue.technicianName,
       type: formValue.type,
       description: formValue.description,
-      // Convertimos la fecha a string ISO para el backend[cite: 7, 11]
       maintenanceDate: formValue.maintenanceDate.toISOString(),
     };
 
