@@ -11,6 +11,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { BatchStore } from '../../../application/batch.store';
 import { LaboratoryStore } from '../../../../laboratory/application/laboratory.store';
+import { IamStore } from '../../../../iam/application/iam.store';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
 
 @Component({
@@ -40,13 +41,17 @@ export class RawMaterialUsageComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   protected readonly store = inject(BatchStore);
   protected readonly labStore = inject(LaboratoryStore);
+  protected readonly iamStore = inject(IamStore);
 
   usageForm!: FormGroup;
   displayedColumns: string[] = ['material', 'quantity', 'date'];
 
+  private get currentLabId(): string {
+    return this.iamStore.currentUserId() || 'LAB-001';
+  }
+
   ngOnInit(): void {
-    const labId = 'LAB-001';
-    this.labStore.loadRawMaterials(labId);
+    this.labStore.loadRawMaterials(this.currentLabId);
 
     this.usageForm = this.fb.group({
       rawMaterialId: ['', Validators.required],

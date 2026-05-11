@@ -10,6 +10,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { BatchStore } from '../../../application/batch.store';
+// 1. Importamos el Store de IAM (Seguridad/Sesión)
+import { IamStore } from '../../../../iam/application/iam.store';
 
 @Component({
   selector: 'app-batch-list',
@@ -30,6 +32,8 @@ import { BatchStore } from '../../../application/batch.store';
 })
 export class BatchList implements OnInit {
   protected readonly store = inject(BatchStore);
+  // 2. Inyectamos el IAM Store
+  protected readonly iamStore = inject(IamStore);
 
   displayedColumns: string[] = [
     'batchNumber',
@@ -40,14 +44,16 @@ export class BatchList implements OnInit {
     'actions',
   ];
 
+  private get currentLabId(): string {
+    return this.iamStore.currentUserId() || 'LAB-001';
+  }
+
   ngOnInit(): void {
-    const labId = 'LAB-001';
-    this.store.loadBatches(labId);
+    this.store.loadBatches(this.currentLabId);
   }
 
   onRefresh(): void {
-    const labId = 'LAB-001';
-    this.store.loadBatches(labId);
+    this.store.loadBatches(this.currentLabId);
   }
 
   getStatusClass(status: string): string {
