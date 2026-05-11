@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -16,7 +16,7 @@ import { MatIcon } from '@angular/material/icon';
   selector: 'app-product-catalog',
   standalone: true,
   imports: [
-    TranslatePipe,
+    TranslateModule,
     MatTableModule,
     MatButtonModule,
     MatInputModule,
@@ -34,7 +34,7 @@ export class ProductCatalog implements OnInit {
   private readonly router = inject(Router);
 
   private get currentLabId(): string {
-    return this.iamStore.currentUserId() || 'DEFAULT_LAB_ID';
+    return this.iamStore.currentUserId() || 'LAB-001';
   }
 
   protected searchTerm = signal('');
@@ -52,6 +52,6 @@ export class ProductCatalog implements OnInit {
   }
 
   protected onAdd(): void {
-    this.router.navigate(['/laboratory/product-form']);
+    this.router.navigate(['/laboratories/product-form']);
   }
 }

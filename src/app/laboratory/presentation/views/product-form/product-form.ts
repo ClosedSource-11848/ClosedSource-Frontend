@@ -1,14 +1,20 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LaboratoryStore } from '../../../application/laboratory.store';
 import { IamStore } from '../../../../iam/application/iam.store';
-import { MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
+import {
+  MatCard,
+  MatCardContent,
+  MatCardHeader,
+  MatCardSubtitle,
+  MatCardTitle,
+} from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
@@ -16,7 +22,7 @@ import { MatIcon } from '@angular/material/icon';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    TranslatePipe,
+    TranslateModule,
     MatFormFieldModule,
     MatInputModule,
     MatCard,
@@ -38,7 +44,7 @@ export class ProductForm {
   private readonly router = inject(Router);
 
   private get currentLabId(): string {
-    return this.iamStore.currentUserId() || 'DEFAULT_LAB_ID';
+    return this.iamStore.currentUserId() || 'LAB-001';
   }
 
   protected form: FormGroup = this.fb.group({
@@ -56,10 +62,10 @@ export class ProductForm {
       ...this.form.getRawValue(),
     });
 
-    this.router.navigate(['/laboratory/product-catalog']);
+    this.router.navigate(['/laboratories/product-catalog']);
   }
 
   protected onCancel(): void {
-    this.router.navigate(['/laboratory/product-catalog']);
+    this.router.navigate(['/laboratories/product-catalog']);
   }
 }

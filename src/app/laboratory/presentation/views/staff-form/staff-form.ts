@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,7 +23,7 @@ import { MatIcon } from '@angular/material/icon';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    TranslatePipe,
+    TranslateModule,
     MatFormFieldModule,
     MatCard,
     MatCardHeader,
@@ -48,7 +48,7 @@ export class StaffForm {
   protected readonly roles = ['QA_MANAGER', 'LAB_OPERATOR', 'AUDITOR'];
 
   private get currentLabId(): string {
-    return this.iamStore.currentUserId() || 'DEFAULT_LAB_ID';
+    return this.iamStore.currentUserId() || 'LAB-001';
   }
 
   protected form: FormGroup = this.fb.group({
@@ -63,10 +63,10 @@ export class StaffForm {
       labId: this.currentLabId,
       ...this.form.getRawValue(),
     });
-    this.router.navigate(['/laboratory/staff-list']);
+    this.router.navigate(['/laboratories/staff-list']);
   }
 
   protected onCancel(): void {
-    this.router.navigate(['/laboratory/staff-list']);
+    this.router.navigate(['/laboratories/staff-list']);
   }
 }
