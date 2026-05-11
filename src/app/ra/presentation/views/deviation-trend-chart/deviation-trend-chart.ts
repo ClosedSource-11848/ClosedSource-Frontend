@@ -1,6 +1,6 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,7 +14,7 @@ import { RaStore } from '../../../application/ra.store';
   standalone: true,
   imports: [
     CommonModule,
-    TranslatePipe,
+    TranslateModule,
     MatCardModule,
     MatTableModule,
     MatIconModule,
@@ -27,7 +27,6 @@ import { RaStore } from '../../../application/ra.store';
 export class DeviationTrendChartComponent implements OnInit {
   protected readonly store = inject(RaStore);
 
-  // Columnas para la tabla de puntos de datos
   protected readonly displayedColumns = [
     'timestamp',
     'recordedValue',
@@ -36,10 +35,12 @@ export class DeviationTrendChartComponent implements OnInit {
     'status',
   ];
 
-  // Simulación de un ID de equipo seleccionado (en producción vendría por @Input o Router Params)
-  protected selectedEquipmentId = signal<string>('EQ-1001');
+  @Input() equipmentId: string = 'EQ-1001';
+
+  protected selectedEquipmentId = signal<string>('');
 
   ngOnInit(): void {
+    this.selectedEquipmentId.set(this.equipmentId);
     this.loadTrends();
   }
 
@@ -47,7 +48,6 @@ export class DeviationTrendChartComponent implements OnInit {
     this.store.loadDeviationTrends(this.selectedEquipmentId());
   }
 
-  // Helpers para la UI
   getTrendIcon(direction: string): string {
     switch (direction) {
       case 'INCREASING':
