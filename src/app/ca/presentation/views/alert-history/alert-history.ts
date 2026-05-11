@@ -82,6 +82,6 @@ export class AlertHistory implements OnInit {
   }
 
   viewDetails(alertId: string): void {
-    this.router.navigate(['/ca/deviation-detail', alertId]);
+    this.router.navigate(['/alerts/deviation-detail', alertId]);
   }
 }

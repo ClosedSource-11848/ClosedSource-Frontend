@@ -14,6 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { CaStore } from '../../../application/ca.store';
 import { UpdateNotificationPreferenceRequest } from '../../../infrastructure/notification-preference.request';
 import { MatDivider } from '@angular/material/list';
+import { IamStore } from '../../../../iam/application/iam.store';
 
 @Component({
   selector: 'app-notification-settings',
@@ -38,10 +39,13 @@ import { MatDivider } from '@angular/material/list';
 export class NotificationSettings implements OnInit {
   protected readonly store = inject(CaStore);
   private readonly fb = inject(FormBuilder);
+  protected readonly iamStore = inject(IamStore);
 
   settingsForm!: FormGroup;
 
-  private readonly currentUserId = 'user-123';
+  private get currentUserId(): string {
+    return this.iamStore.currentUserId() || 'user-123';
+  }
 
   constructor() {
     this.initForm();
