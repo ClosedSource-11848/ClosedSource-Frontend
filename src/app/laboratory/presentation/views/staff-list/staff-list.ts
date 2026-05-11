@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,7 +13,7 @@ import { IamStore } from '../../../../iam/application/iam.store';
   selector: 'app-staff-list',
   standalone: true,
   imports: [
-    TranslatePipe,
+    TranslateModule,
     MatTableModule,
     MatButtonModule,
     MatIconModule,
@@ -29,7 +29,7 @@ export class StaffList implements OnInit {
   private readonly router = inject(Router);
 
   private get currentLabId(): string {
-    return this.iamStore.currentUserId() || 'DEFAULT_LAB_ID';
+    return this.iamStore.currentUserId() || 'LAB-001';
   }
 
   protected readonly displayedColumns = ['fullName', 'role', 'email', 'active', 'actions'];
@@ -39,7 +39,7 @@ export class StaffList implements OnInit {
   }
 
   protected onRegister(): void {
-    this.router.navigate(['/laboratory/staff-form']);
+    this.router.navigate(['/laboratories/staff-form']);
   }
 
   protected onDeactivate(staffId: string): void {

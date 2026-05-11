@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,14 +18,14 @@ import {
   MatCardTitle,
 } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
-import { MatProgressSpinnerModule, MatSpinner } from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-raw-material-form',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    TranslatePipe,
+    TranslateModule,
     MatFormFieldModule,
     MatInputModule,
     MatCard,
@@ -52,7 +52,7 @@ export class RawMaterialForm {
   protected readonly units = ['kg', 'g', 'L', 'mL', 'units'];
 
   private get currentLabId(): string {
-    return this.iamStore.currentUserId() || 'DEFAULT_LAB_ID';
+    return this.iamStore.currentUserId() || 'LAB-001';
   }
 
   protected form: FormGroup = this.fb.group({
@@ -74,10 +74,10 @@ export class RawMaterialForm {
       ...value,
       expirationDate: new Date(value.expirationDate).toISOString().split('T')[0],
     });
-    this.router.navigate(['/laboratory/raw-material-list']);
+    this.router.navigate(['/laboratories/raw-material-list']);
   }
 
   protected onCancel(): void {
-    this.router.navigate(['/laboratory/raw-material-list']);
+    this.router.navigate(['/laboratories/raw-material-list']);
   }
 }
