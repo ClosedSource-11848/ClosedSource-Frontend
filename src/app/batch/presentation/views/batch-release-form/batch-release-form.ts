@@ -53,7 +53,7 @@ export class BatchReleaseForm implements OnInit {
       };
 
       this.store.releaseBatch(this.batchId, command);
-      this.router.navigate(['/equipment/batch-list']);
+      this.router.navigate(['/batches/batch-list']);
     }
   }
 }

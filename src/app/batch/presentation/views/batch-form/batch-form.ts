@@ -11,6 +11,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { BatchStore } from '../../../application/batch.store';
 import { LaboratoryStore } from '../../../../laboratory/application/laboratory.store';
+import { IamStore } from '../../../../iam/application/iam.store';
 
 @Component({
   selector: 'app-batch-form',
@@ -34,12 +35,17 @@ export class BatchForm implements OnInit {
   private readonly router = inject(Router);
   protected readonly store = inject(BatchStore);
   protected readonly labStore = inject(LaboratoryStore);
+  // 2. Inyectamos el IAM Store
+  protected readonly iamStore = inject(IamStore);
 
   batchForm!: FormGroup;
 
+  private get currentLabId(): string {
+    return this.iamStore.currentUserId() || 'LAB-001';
+  }
+
   ngOnInit(): void {
-    const labId = 'LAB-001';
-    this.labStore.loadProducts(labId);
+    this.labStore.loadProducts(this.currentLabId);
 
     this.batchForm = this.fb.group({
       productId: ['', Validators.required],
@@ -54,11 +60,11 @@ export class BatchForm implements OnInit {
     if (this.batchForm.valid) {
       const command = {
         ...this.batchForm.value,
-        labId: 'LAB-001',
+        labId: this.currentLabId,
       };
       this.store.createBatch(command);
 
-      this.router.navigate(['/equipment/batch-list']);
+      this.router.navigate(['/batches/batch-list']);
     }
   }
 }

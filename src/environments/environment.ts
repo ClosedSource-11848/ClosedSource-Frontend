@@ -2,7 +2,7 @@ export const environment = {
   production: true,
 
   // Base API URL
-  serverBasePath: 'http://localhost:8080/api/v1',
+  serverBasePath: 'https://qualitrack.free.beeceptor.com/api/v1',
 
   // IAM (Identity and Access Management)
   iamSignInEndpointPath: '/authentication/sign-in',
