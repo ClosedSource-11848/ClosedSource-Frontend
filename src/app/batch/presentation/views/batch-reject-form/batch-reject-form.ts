@@ -11,6 +11,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BatchStore } from '../../../application/batch.store';
 import { RejectBatchCommand } from '../../../domain/model/reject-batch.command';
 
+/**
+ * Component responsible for managing the batch rejection process.
+ */
 @Component({
   selector: 'app-batch-reject-form',
   standalone: true,
@@ -33,9 +36,19 @@ export class BatchRejectForm implements OnInit {
   private readonly router = inject(Router);
   protected readonly store = inject(BatchStore);
 
+  /**
+   * Reactive form group for batch rejection data.
+   */
   rejectForm!: FormGroup;
+
+  /**
+   * The unique identifier of the batch to be rejected.
+   */
   batchId!: string;
 
+  /**
+   * Initializes the component and sets up the rejection form.
+   */
   ngOnInit(): void {
     this.batchId = this.route.snapshot.paramMap.get('id') || '';
 
@@ -45,6 +58,9 @@ export class BatchRejectForm implements OnInit {
     });
   }
 
+  /**
+   * Processes the form submission to reject the batch.
+   */
   onSubmit(): void {
     if (this.rejectForm.valid && this.batchId) {
       const command: RejectBatchCommand = {
@@ -53,7 +69,7 @@ export class BatchRejectForm implements OnInit {
       };
 
       this.store.rejectBatch(this.batchId, command);
-      this.router.navigate(['/batches/batch-list']);
+      this.router.navigate(['/batches/batch-list']).then();
     }
   }
 }
