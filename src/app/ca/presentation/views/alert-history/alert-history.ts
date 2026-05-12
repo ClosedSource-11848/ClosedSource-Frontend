@@ -37,11 +37,29 @@ import { CaStore } from '../../../application/ca.store';
   styleUrl: './alert-history.css',
 })
 export class AlertHistory implements OnInit {
+  /**
+   * The application store instance for Compliance and Alerts.
+   */
   protected readonly store = inject(CaStore);
+
+  /**
+   * Angular Router for handling navigation to alert details.
+   */
   private readonly router = inject(Router);
+
+  /**
+   * Form builder service to create the reactive filter form.
+   */
   private readonly fb = inject(FormBuilder);
 
+  /**
+   * Form group for managing alert search filters.
+   */
   filterForm!: FormGroup;
+
+  /**
+   * Configuration for the columns to be displayed in the history table.
+   */
   displayedColumns: string[] = [
     'timestamp',
     'equipmentId',
@@ -51,14 +69,24 @@ export class AlertHistory implements OnInit {
     'actions',
   ];
 
+  /**
+   * Creates an instance of AlertHistory and initializes the filter form structure.
+   */
   constructor() {
     this.initFilterForm();
   }
 
+  /**
+   * Initializes the component by loading the initial set of alerts.
+   */
   ngOnInit(): void {
     this.store.loadAlerts();
   }
 
+  /**
+   * Defines the structure and initial values of the filter form.
+   * @private
+   */
   private initFilterForm(): void {
     this.filterForm = this.fb.group({
       status: [''],
@@ -67,6 +95,13 @@ export class AlertHistory implements OnInit {
     });
   }
 
+  /**
+   * Processes the form values and triggers a filtered data load in the store.
+   *
+   * @remarks
+   * Filters out null or empty values before dispatching the load action
+   * to ensure clean query parameters are sent to the API.
+   */
   applyFilters(): void {
     const rawFilters = this.filterForm.value;
     const cleanFilters = Object.fromEntries(
@@ -76,11 +111,19 @@ export class AlertHistory implements OnInit {
     this.store.loadAlerts(cleanFilters);
   }
 
+  /**
+   * Resets the filter form and reloads the complete alerts list.
+   */
   clearFilters(): void {
     this.filterForm.reset({ status: '', severity: '', equipmentId: '' });
     this.store.loadAlerts();
   }
 
+  /**
+   * Navigates to the detailed information view of a specific alert.
+   *
+   * @param alertId - The unique identifier of the deviation alert.
+   */
   viewDetails(alertId: string): void {
     this.router.navigate(['/alerts/deviation-detail', alertId]);
   }
