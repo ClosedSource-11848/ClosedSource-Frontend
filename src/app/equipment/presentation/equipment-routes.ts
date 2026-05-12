@@ -94,6 +94,7 @@ const maintenanceForm = () =>
  *
  * const routes: Routes = [
  *   ...equipmentRoutes
+ *
  * ];
  * ```
  */
