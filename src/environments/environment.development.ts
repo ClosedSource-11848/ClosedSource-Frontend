@@ -2,7 +2,6 @@ export const environment = {
   production: false,
 
   // Base API URL
-  serverBasePath: 'https://qualitrack-v1.free.beeceptor.com/api/v1',
 
   // IAM (Identity and Access Management)
   iamSignInEndpointPath: '/authentication/sign-in',
@@ -25,8 +24,7 @@ export const environment = {
   batchRawMaterialUsageEndpointPath: '/raw-material-usages',
 
   // Tracking (IoT)
-  trackingTelemetryEndpointPath: 'https://qt-telemetry-v3.free.beeceptor.com',
-  //trackingTelemetryEndpointPath: '/telemetry',
+  trackingTelemetryEndpointPath: '/telemetry',
   trackingDeviceBindingsEndpointPath: '/device-bindings',
 
   // CA (Compliance & Alerting)

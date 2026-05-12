@@ -25,8 +25,7 @@ export const environment = {
   batchRawMaterialUsageEndpointPath: '/raw-material-usages',
 
   // Tracking (IoT)
-  trackingTelemetryEndpointPath: 'https://qt-telemetry-v3.free.beeceptor.com',
-  //trackingTelemetryEndpointPath: '/telemetry',
+  trackingTelemetryEndpointPath: '/telemetry',
   trackingDeviceBindingsEndpointPath: '/device-bindings',
 
   // CA (Compliance & Alerting)
