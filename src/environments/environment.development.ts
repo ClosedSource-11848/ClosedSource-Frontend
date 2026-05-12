@@ -1,5 +1,5 @@
 export const environment = {
-  production: true,
+  production: false,
 
   // Base API URL
   serverBasePath: 'https://qualitrack2.free.beeceptor.com/api/v1',
