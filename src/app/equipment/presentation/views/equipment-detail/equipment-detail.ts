@@ -10,6 +10,27 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TranslatePipe } from '@ngx-translate/core';
 import { EquipmentStore } from '../../../application/equipment.store';
 
+/**
+ * Component responsible for displaying detailed information about a specific equipment.
+ *
+ * @remarks
+ * This standalone Angular component shows the detail view of an equipment item.
+ * It obtains the equipment identifier from the route, loads the related BPM
+ * configuration, and retrieves the maintenance history associated with that
+ * equipment.
+ *
+ * The component interacts with the EquipmentStore to access equipment state,
+ * BPM parameter configurations, maintenance records, loading state, and other
+ * related data. It does not communicate directly with the API.
+ *
+ * Angular Material modules are used to organize the detail view with tabs,
+ * cards, buttons, icons, dividers, and progress indicators.
+ *
+ * @example
+ * ```html
+ * <app-equipment-detail></app-equipment-detail>
+ * ```
+ */
 @Component({
   selector: 'app-equipment-detail',
   standalone: true,
@@ -28,11 +49,41 @@ import { EquipmentStore } from '../../../application/equipment.store';
   styleUrl: './equipment-detail.css',
 })
 export class EquipmentDetail implements OnInit {
+  /**
+   * ActivatedRoute instance used to access route parameters.
+   *
+   * @remarks
+   * This component uses the current route to obtain the equipment identifier
+   * from the URL parameter named id.
+   */
   private readonly route = inject(ActivatedRoute);
+
+  /**
+   * Store responsible for equipment-related state and operations.
+   *
+   * @remarks
+   * The store provides access to the equipment list, BPM configurations,
+   * maintenance history, loading state, error messages, and success messages.
+   */
   protected readonly store = inject(EquipmentStore);
 
+  /**
+   * Signal that stores the current equipment identifier.
+   *
+   * @remarks
+   * The value is initialized from the route parameter during component startup.
+   * It remains null if the route does not contain a valid equipment identifier.
+   */
   protected readonly equipmentId = signal<string | null>(null);
 
+  /**
+   * Initializes the component and loads related equipment information.
+   *
+   * @remarks
+   * During initialization, this method reads the equipment id from the route.
+   * If the id exists, it stores the value in the equipmentId signal and then
+   * loads the BPM configuration and maintenance history for that equipment.
+   */
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -42,6 +93,17 @@ export class EquipmentDetail implements OnInit {
     }
   }
 
+  /**
+   * Gets the equipment entity currently associated with this detail view.
+   *
+   * @returns The matching equipment entity if found; otherwise, undefined.
+   *
+   * @remarks
+   * This getter searches the equipment list from the store and returns the
+   * equipment whose identifier matches the current equipmentId signal.
+   *
+   * It is useful for displaying the selected equipment data in the template.
+   */
   protected get currentEquipment() {
     return this.store.equipmentList().find((e) => e.id === this.equipmentId());
   }
