@@ -13,6 +13,9 @@ import { BatchStore } from '../../../application/batch.store';
 import { LaboratoryStore } from '../../../../laboratory/application/laboratory.store';
 import { IamStore } from '../../../../iam/application/iam.store';
 
+/**
+ * Component responsible for the creation of new production batches.
+ */
 @Component({
   selector: 'app-batch-form',
   standalone: true,
@@ -35,15 +38,23 @@ export class BatchForm implements OnInit {
   private readonly router = inject(Router);
   protected readonly store = inject(BatchStore);
   protected readonly labStore = inject(LaboratoryStore);
-  // 2. Inyectamos el IAM Store
   protected readonly iamStore = inject(IamStore);
 
+  /**
+   * Reactive form group for batch data.
+   */
   batchForm!: FormGroup;
 
+  /**
+   * Gets the current laboratory identifier from the IAM context.
+   */
   private get currentLabId(): string {
     return this.iamStore.currentUserId() || 'LAB-001';
   }
 
+  /**
+   * Initializes the component and preloads product data.
+   */
   ngOnInit(): void {
     this.labStore.loadProducts(this.currentLabId);
 
@@ -56,6 +67,9 @@ export class BatchForm implements OnInit {
     });
   }
 
+  /**
+   * Processes the form submission to create a new batch.
+   */
   onSubmit(): void {
     if (this.batchForm.valid) {
       const command = {
@@ -64,7 +78,7 @@ export class BatchForm implements OnInit {
       };
       this.store.createBatch(command);
 
-      this.router.navigate(['/batches/batch-list']);
+      this.router.navigate(['/batches/batch-list']).then();
     }
   }
 }

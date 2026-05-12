@@ -10,8 +10,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { BatchStore } from '../../../application/batch.store';
-import { RawMaterialUsageComponent, } from '../raw-material-usage/raw-material-usage';
+import { RawMaterialUsageComponent } from '../raw-material-usage/raw-material-usage';
 
+/**
+ * Component for displaying the detailed information and management of a specific batch.
+ */
 @Component({
   selector: 'app-batch-detail',
   standalone: true,
@@ -34,8 +37,14 @@ export class BatchDetail implements OnInit {
   private readonly route = inject(ActivatedRoute);
   protected readonly store = inject(BatchStore);
 
+  /**
+   * The unique identifier of the batch currently being viewed.
+   */
   batchId!: string;
 
+  /**
+   * Lifecycle hook to initialize the component and load batch usage data.
+   */
   ngOnInit(): void {
     this.batchId = this.route.snapshot.paramMap.get('id') || '';
     if (this.batchId) {
@@ -43,6 +52,10 @@ export class BatchDetail implements OnInit {
     }
   }
 
+  /**
+   * Retrieves the current batch entity from the store.
+   * @returns The Batch domain entity or undefined.
+   */
   get currentBatch() {
     return this.store.batches().find((b) => b.id === this.batchId);
   }

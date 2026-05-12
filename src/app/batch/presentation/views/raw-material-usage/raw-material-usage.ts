@@ -14,6 +14,9 @@ import { LaboratoryStore } from '../../../../laboratory/application/laboratory.s
 import { IamStore } from '../../../../iam/application/iam.store';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
 
+/**
+ * Component for managing and displaying raw material consumption within a batch.
+ */
 @Component({
   selector: 'app-raw-material-usage',
   standalone: true,
@@ -36,6 +39,9 @@ import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/m
   styleUrl: './raw-material-usage.css',
 })
 export class RawMaterialUsageComponent implements OnInit {
+  /**
+   * The identifier of the production batch to which materials are linked.
+   */
   @Input() batchId!: string;
 
   private readonly fb = inject(FormBuilder);
@@ -43,13 +49,26 @@ export class RawMaterialUsageComponent implements OnInit {
   protected readonly labStore = inject(LaboratoryStore);
   protected readonly iamStore = inject(IamStore);
 
+  /**
+   * Reactive form group for linking new raw materials.
+   */
   usageForm!: FormGroup;
+
+  /**
+   * Columns to be rendered in the material usage table.
+   */
   displayedColumns: string[] = ['material', 'quantity', 'date'];
 
+  /**
+   * Gets the active laboratory ID from the security context.
+   */
   private get currentLabId(): string {
     return this.iamStore.currentUserId() || 'LAB-001';
   }
 
+  /**
+   * Initializes the component and loads available raw materials for the laboratory.
+   */
   ngOnInit(): void {
     this.labStore.loadRawMaterials(this.currentLabId);
 
@@ -59,6 +78,9 @@ export class RawMaterialUsageComponent implements OnInit {
     });
   }
 
+  /**
+   * Processes the form submission to link a raw material to the current batch.
+   */
   onAddMaterial(): void {
     if (this.usageForm.valid && this.batchId) {
       const command = {

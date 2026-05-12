@@ -11,6 +11,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BatchStore } from '../../../application/batch.store';
 import { ReleaseBatchCommand } from '../../../domain/model/release-batch.command';
 
+/**
+ * Component responsible for managing the batch release process.
+ */
 @Component({
   selector: 'app-batch-release-form',
   standalone: true,
@@ -33,9 +36,19 @@ export class BatchReleaseForm implements OnInit {
   private readonly router = inject(Router);
   protected readonly store = inject(BatchStore);
 
+  /**
+   * Reactive form group for batch release data.
+   */
   releaseForm!: FormGroup;
+
+  /**
+   * The unique identifier of the batch to be released.
+   */
   batchId!: string;
 
+  /**
+   * Initializes the component and sets up the release form.
+   */
   ngOnInit(): void {
     this.batchId = this.route.snapshot.paramMap.get('id') || '';
 
@@ -45,6 +58,9 @@ export class BatchReleaseForm implements OnInit {
     });
   }
 
+  /**
+   * Processes the form submission to release the batch.
+   */
   onSubmit(): void {
     if (this.releaseForm.valid && this.batchId) {
       const command: ReleaseBatchCommand = {
@@ -53,7 +69,7 @@ export class BatchReleaseForm implements OnInit {
       };
 
       this.store.releaseBatch(this.batchId, command);
-      this.router.navigate(['/batches/batch-list']);
+      this.router.navigate(['/batches/batch-list']).then();
     }
   }
 }
