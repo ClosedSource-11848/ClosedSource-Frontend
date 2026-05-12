@@ -8,7 +8,7 @@
  * through the store or application services.
  *
  * @example
- * ```typescript
+ * ```TypesSript
  * const command: UpdateNotificationPreferenceCommand = {
  *   emailEnabled: true,
  *   smsEnabled: false,
