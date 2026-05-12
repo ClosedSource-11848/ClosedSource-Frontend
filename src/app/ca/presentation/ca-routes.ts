@@ -13,6 +13,9 @@ const deviationDetail = () =>
 const notificationSettings = () =>
   import('./views/notification-settings/notification-settings').then((m) => m.NotificationSettings);
 
+/**
+ * Route tree for learning presentation views.
+ */
 const caRoutes: Routes = [
   {
     path: '',
