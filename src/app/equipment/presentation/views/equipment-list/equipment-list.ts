@@ -12,6 +12,26 @@ import { EquipmentStore } from '../../../application/equipment.store';
 import { IamStore } from '../../../../iam/application/iam.store';
 import { CalibrationAlert } from '../calibration-alert/calibration-alert';
 
+/**
+ * Component responsible for displaying the equipment list.
+ *
+ * @remarks
+ * This standalone Angular component shows the equipment registered for the
+ * current laboratory or authenticated user context.
+ *
+ * It uses EquipmentStore to load and expose equipment data, IamStore to obtain
+ * the current user identifier used as the laboratory identifier, and Angular
+ * Material components to render the information in a table with actions,
+ * chips, tooltips, icons, and loading indicators.
+ *
+ * The component also includes CalibrationAlert to display equipment that may
+ * require maintenance or calibration attention.
+ *
+ * @example
+ * ```html
+ * <app-equipment-list></app-equipment-list>
+ * ```
+ */
 @Component({
   selector: 'app-equipment-list',
   standalone: true,
@@ -31,9 +51,34 @@ import { CalibrationAlert } from '../calibration-alert/calibration-alert';
   styleUrl: './equipment-list.css',
 })
 export class EquipmentList implements OnInit {
+  /**
+   * Store responsible for equipment-related state and operations.
+   *
+   * @remarks
+   * This store provides access to the equipment list, loading state, errors,
+   * success messages, and computed selectors related to operational or
+   * maintenance-required equipment.
+   */
   protected readonly store = inject(EquipmentStore);
+
+  /**
+   * Store responsible for identity and access management state.
+   *
+   * @remarks
+   * This store is used to obtain the current user identifier. In this component,
+   * the current user identifier is used as the laboratory identifier to load
+   * the corresponding equipment records.
+   */
   private readonly iamStore = inject(IamStore);
 
+  /**
+   * Columns displayed in the equipment table.
+   *
+   * @remarks
+   * These values define the order and identifiers of the columns rendered
+   * in the Angular Material table. Each column corresponds to equipment
+   * information or available row actions.
+   */
   protected readonly displayedColumns: string[] = [
     'name',
     'type',
@@ -43,6 +88,13 @@ export class EquipmentList implements OnInit {
     'actions',
   ];
 
+  /**
+   * Initializes the component and loads the equipment list.
+   *
+   * @remarks
+   * During initialization, this method obtains the current labId from IamStore.
+   * If the labId exists, it requests the equipment list through EquipmentStore.
+   */
   ngOnInit(): void {
     const labId = this.iamStore.currentUserId();
     if (labId) {
@@ -50,6 +102,14 @@ export class EquipmentList implements OnInit {
     }
   }
 
+  /**
+   * Refreshes the equipment list.
+   *
+   * @remarks
+   * This method reloads the equipment records associated with the current labId.
+   * It is commonly triggered from the UI when the user wants to manually update
+   * the displayed equipment table.
+   */
   protected onRefresh(): void {
     const labId = this.iamStore.currentUserId();
     if (labId) this.store.loadEquipment(labId);

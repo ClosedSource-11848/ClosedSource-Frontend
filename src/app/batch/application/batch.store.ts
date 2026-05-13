@@ -8,34 +8,96 @@ import { ReleaseBatchCommand } from '../domain/model/release-batch.command';
 import { RejectBatchCommand } from '../domain/model/reject-batch.command';
 import { LinkRawMaterialCommand } from '../domain/model/link-raw-material.command';
 
+/**
+ * Global state management for the Batch manufacturing domain using Angular Signals.
+ *
+ * @remarks
+ * In a Domain-Driven Design (DDD) architecture, this store acts as an application service
+ * that orchestrates the flow of data between the presentation layer and the
+ * infrastructure layer ({@link BatchApi}). It maintains the reactive state of batches
+ * and material usage, ensuring the UI stays synchronized with domain changes.
+ *
+ * It manages:
+ * - Reactive lists of production batches and raw material consumption.
+ * - Loading, error, and success states for user feedback.
+ * - Complex domain filtering via computed signals.
+ *
+ * @author Qualitrack
+ */
 @Injectable({ providedIn: 'root' })
 export class BatchStore {
+  /**
+   * Infrastructure service for HTTP communication.
+   */
   private readonly api = inject(BatchApi);
 
-  // ── State ────────────────────────────────────────────────────────────────
+  // ── State (Private Signals) ────────────────────────────────────────────────
+
+  /**
+   * Internal list of all fetched batches.
+   */
   private readonly _batches = signal<Batch[]>([]);
+
+  /**
+   * Internal list of material usage records for the currently selected batch.
+   */
   private readonly _currentBatchUsage = signal<RawMaterialUsage[]>([]);
+
+  /**
+   * Flag indicating if an asynchronous operation is in progress.
+   */
   private readonly _isLoading = signal<boolean>(false);
+
+  /**
+   * Stores current error messages for the UI.
+   */
   private readonly _error = signal<string | null>(null);
+
+  /**
+   * Stores temporary success feedback messages.
+   */
   private readonly _successMsg = signal<string | null>(null);
 
-  // ── Selectors (readonly) ─────────────────────────────────────────────────
+  // ── Selectors (Readonly Public Signals) ─────────────────────────────────────
+
+  /** Exposed readonly signal of the batches list. */
   readonly batches = this._batches.asReadonly();
+
+  /** Exposed readonly signal of current material usage records. */
   readonly currentBatchUsage = this._currentBatchUsage.asReadonly();
+
+  /** Exposed readonly signal for loading state. */
   readonly isLoading = this._isLoading.asReadonly();
+
+  /** Exposed readonly signal for error feedback. */
   readonly error = this._error.asReadonly();
+
+  /** Exposed readonly signal for success feedback. */
   readonly successMsg = this._successMsg.asReadonly();
 
-  // Selectores Computados
+  /**
+   * Computed selector for batches that are active in the production cycle.
+   * Filters by statuses 'PENDING' and 'IN_PROGRESS'.
+   */
   readonly pendingBatches = computed(() =>
     this._batches().filter((b) => b.status === 'PENDING' || b.status === 'IN_PROGRESS'),
   );
+
+  /**
+   * Computed selector for batches that have finished their lifecycle.
+   * Filters by statuses 'RELEASED' and 'REJECTED'.
+   */
   readonly finishedBatches = computed(() =>
     this._batches().filter((b) => b.status === 'RELEASED' || b.status === 'REJECTED'),
   );
 
   // ── Batch Management ─────────────────────────────────────────────────────
 
+  /**
+   * Fetches the list of batches from the API for a specific laboratory.
+   *
+   * @param labId - The unique identifier of the laboratory.
+   */
   loadBatches(labId: string): void {
     this._isLoading.set(true);
     this._error.set(null);
@@ -54,6 +116,11 @@ export class BatchStore {
       });
   }
 
+  /**
+   * Triggers the creation of a new batch using an application command.
+   *
+   * @param command - The domain intent and data for the new batch.
+   */
   createBatch(command: CreateBatchCommand): void {
     this._isLoading.set(true);
     this._error.set(null);
@@ -73,6 +140,12 @@ export class BatchStore {
       });
   }
 
+  /**
+   * Finalizes and releases a batch into the distribution phase.
+   *
+   * @param batchId - Identifier of the batch to update.
+   * @param command - The release details and quality remarks.
+   */
   releaseBatch(batchId: string, command: ReleaseBatchCommand): void {
     this._isLoading.set(true);
     this._error.set(null);
@@ -92,6 +165,12 @@ export class BatchStore {
       });
   }
 
+  /**
+   * Marks a batch as rejected due to non-compliance.
+   *
+   * @param batchId - Identifier of the batch to update.
+   * @param command - The rejection justification and date.
+   */
   rejectBatch(batchId: string, command: RejectBatchCommand): void {
     this._isLoading.set(true);
     this._error.set(null);
@@ -113,6 +192,11 @@ export class BatchStore {
 
   // ── Raw Material Usage ───────────────────────────────────────────────────
 
+  /**
+   * Loads the genealogy of raw materials used in a specific batch.
+   *
+   * @param batchId - The target batch identifier.
+   */
   loadBatchUsage(batchId: string): void {
     this._isLoading.set(true);
     this._error.set(null);
@@ -131,6 +215,12 @@ export class BatchStore {
       });
   }
 
+  /**
+   * Links a specific amount of raw material to the batch record.
+   *
+   * @param batchId - The identifier of the consuming batch.
+   * @param command - The material ID and quantity used.
+   */
   linkMaterial(batchId: string, command: LinkRawMaterialCommand): void {
     this._isLoading.set(true);
     this._error.set(null);
@@ -152,11 +242,21 @@ export class BatchStore {
 
   // ── Helpers ──────────────────────────────────────────────────────────────
 
+  /**
+   * Resets the error and success messages in the state.
+   */
   clearMessages(): void {
     this._error.set(null);
     this._successMsg.set(null);
   }
 
+  /**
+   * Internal helper to normalize domain and infrastructure errors.
+   *
+   * @param error - The raw error object.
+   * @param fallback - Default message if parsing fails.
+   * @returns A user-friendly error string.
+   */
   private formatError(error: any, fallback: string): string {
     if (error instanceof Error) {
       return error.message.includes('Resource not found')

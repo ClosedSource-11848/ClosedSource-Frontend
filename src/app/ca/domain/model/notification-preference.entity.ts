@@ -1,14 +1,83 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
 
+/**
+ * Represents a user's notification settings within the Communication domain.
+ *
+ * @remarks
+ * In Domain-Driven Design, NotificationPreference is an entity that defines how
+ * and when a user chooses to receive information. It acts as a configuration
+ * layer between domain events and the delivery services.
+ *
+ * This entity ensures that communication remains relevant to the user's
+ * preferences, filtering messages by channel and urgency levels.
+ *
+ * @example
+ * ```typescript
+ * const userPrefs = new NotificationPreference({
+ *   id: 'pref-552',
+ *   userId: 'user-001',
+ *   emailEnabled: true,
+ *   smsEnabled: false,
+ *   inAppEnabled: true,
+ *   minimumSeverity: 'HIGH',
+ *   createdAt: '2026-05-12T11:28:14Z'
+ * });
+ *
+ * console.log(userPrefs.emailEnabled); // true
+ * ```
+ */
 export class NotificationPreference implements BaseEntity {
+  /**
+   * The unique identifier for this preference record.
+   */
   id: string;
+
+  /**
+   * The identifier of the user to whom these preferences belong.
+   */
   userId: string;
+
+  /**
+   * Indicates if the user wants to receive notifications via email.
+   */
   emailEnabled: boolean;
+
+  /**
+   * Indicates if the user wants to receive notifications via SMS.
+   */
   smsEnabled: boolean;
+
+  /**
+   * Indicates if the user wants to receive notifications within the application UI.
+   */
   inAppEnabled: boolean;
+
+  /**
+   * The threshold of severity required to trigger a notification (e.g., 'LOW', 'CRITICAL').
+   */
   minimumSeverity: string;
+
+  /**
+   * The timestamp indicating when the preference profile was created.
+   */
   createdAt: string;
 
+  /**
+   * Creates a new NotificationPreference entity.
+   *
+   * @param params - Initialization properties
+   * @param params.id - The unique identifier for the preference settings
+   * @param params.userId - ID of the owner of these preferences
+   * @param params.emailEnabled - Toggle for email delivery
+   * @param params.smsEnabled - Toggle for SMS delivery
+   * @param params.inAppEnabled - Toggle for in-app delivery
+   * @param params.minimumSeverity - Minimum severity level to notify
+   * @param params.createdAt - Record creation timestamp
+   *
+   * @remarks
+   * The constructor initializes the notification profile. Identity is tied to
+   * the ID, while the behavior focuses on the state of delivery channels.
+   */
   constructor(params: {
     id: string;
     userId: string;

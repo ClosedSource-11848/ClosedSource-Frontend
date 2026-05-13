@@ -10,9 +10,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { BatchStore } from '../../../application/batch.store';
-// 1. Importamos el Store de IAM (Seguridad/Sesión)
 import { IamStore } from '../../../../iam/application/iam.store';
 
+/**
+ * Displays the collection of manufacturing batches in a table.
+ */
 @Component({
   selector: 'app-batch-list',
   standalone: true,
@@ -32,9 +34,11 @@ import { IamStore } from '../../../../iam/application/iam.store';
 })
 export class BatchList implements OnInit {
   protected readonly store = inject(BatchStore);
-  // 2. Inyectamos el IAM Store
   protected readonly iamStore = inject(IamStore);
 
+  /**
+   * Columns to be rendered in the batches table.
+   */
   displayedColumns: string[] = [
     'batchNumber',
     'productName',
@@ -44,18 +48,31 @@ export class BatchList implements OnInit {
     'actions',
   ];
 
+  /**
+   * Gets the active laboratory ID from the security context.
+   */
   private get currentLabId(): string {
     return this.iamStore.currentUserId() || 'LAB-001';
   }
 
+  /**
+   * Lifecycle hook to initialize the batch collection.
+   */
   ngOnInit(): void {
     this.store.loadBatches(this.currentLabId);
   }
 
+  /**
+   * Reloads the batch list from the server.
+   */
   onRefresh(): void {
     this.store.loadBatches(this.currentLabId);
   }
 
+  /**
+   * Maps the batch status to a CSS class for styling.
+   * @param status - The current status of the batch.
+   */
   getStatusClass(status: string): string {
     return status ? status.toLowerCase().replace('_', '-') : 'pending';
   }

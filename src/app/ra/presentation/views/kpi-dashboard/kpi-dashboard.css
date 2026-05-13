@@ -95,6 +95,43 @@
 .critical-card .stat-value { color: #b91c1c; }
 .critical-card p { color: #dc2626; margin: 0; font-size: 0.875rem; }
 
+/* ========================================== */
+/* Chart Section (ng2-charts)                 */
+/* ========================================== */
+.chart-section {
+  margin-top: 24px;
+  margin-bottom: 32px;
+}
+
+.chart-section mat-card {
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.chart-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a3a5c;
+}
+
+.chart-container {
+  position: relative;
+  display: block;
+  height: 350px; /* Altura ideal para que las barras se vean bien */
+  width: 100%;
+}
+/* ========================================== */
+
 /* Table */
 .table-header h3 {
   color: #1a3a5c;
