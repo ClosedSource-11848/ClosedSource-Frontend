@@ -9,7 +9,8 @@ import {
 } from './telemetry-history-response';
 import { TelemetryHistoryAssembler } from './telemetry-history-assembler';
 
-const endpointUrl = `${environment.serverBasePath}${environment.trackingTelemetryEndpointPath}/history`;
+//const endpointUrl = `${environment.serverBasePath}${environment.trackingTelemetryEndpointPath}/history`;
+const endpointUrl = `${environment.trackingTelemetryEndpointPath}/history`;
 
 export class TelemetryHistoryApiEndpoint extends BaseApiEndpoint<
   TelemetryHistoryPoint,

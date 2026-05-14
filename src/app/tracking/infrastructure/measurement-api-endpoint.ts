@@ -5,7 +5,9 @@ import { Measurement } from '../domain/model/measurement.entity';
 import { MeasurementResource, MeasurementsResponse } from './measurement-response';
 import { MeasurementAssembler } from './measurement-assembler';
 
-const endpointUrl = `${environment.serverBasePath}${environment.trackingTelemetryEndpointPath}/measurements`;
+//const endpointUrl = `${environment.serverBasePath}${environment.trackingTelemetryEndpointPath}/measurements`;
+const endpointUrl = `${environment.trackingTelemetryEndpointPath}/measurements`;
+
 
 export class MeasurementApiEndpoint extends BaseApiEndpoint<
   Measurement,
