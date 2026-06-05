@@ -5,5 +5,12 @@
  * @author QualiTrack
  */
 export interface BaseEntity {
-  id: string;
+  /**
+   * The unique identifier for this entity.
+   *
+   * @remarks
+   * This ID is immutable and persists throughout the entity's lifecycle.
+   * It uniquely identifies this entity within its bounded context.
+   */
+  id: number;
 }
