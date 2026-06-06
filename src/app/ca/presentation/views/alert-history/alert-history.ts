@@ -100,12 +100,15 @@ export class AlertHistory implements OnInit {
    *
    * @remarks
    * Filters out null or empty values before dispatching the load action
-   * to ensure clean query parameters are sent to the API.
+   * to ensure clean query parameters are sent to the API. It also ensures
+   * numeric identifiers are correctly typed.
    */
   applyFilters(): void {
     const rawFilters = this.filterForm.value;
     const cleanFilters = Object.fromEntries(
-      Object.entries(rawFilters).filter(([_, v]) => v !== null && v !== ''),
+      Object.entries(rawFilters)
+        .filter(([_, v]) => v !== null && v !== '')
+        .map(([k, v]) => [k, k === 'equipmentId' ? Number(v) : v]),
     );
 
     this.store.loadAlerts(cleanFilters);
@@ -122,9 +125,9 @@ export class AlertHistory implements OnInit {
   /**
    * Navigates to the detailed information view of a specific alert.
    *
-   * @param alertId - The unique identifier of the deviation alert.
+   * @param alertId - The unique numeric identifier of the deviation alert.
    */
-  viewDetails(alertId: string): void {
+  viewDetails(alertId: number): void {
     this.router.navigate(['/alerts/deviation-detail', alertId]);
   }
 }

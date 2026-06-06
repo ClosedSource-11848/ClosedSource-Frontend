@@ -14,16 +14,16 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  * @example
  * ```typescript
  * const temperatureAlert = new DeviationAlert({
- *   id: 'alt-990',
- *   equipmentId: 're-202',
- *   parameterName: 'Temperature',
- *   recordedValue: 85.5,
- *   thresholdValue: 80.0,
- *   unit: '°C',
- *   timestamp: '2026-05-12T11:00:00Z',
- *   severity: 'CRITICAL',
- *   status: 'OPEN',
- *   createdAt: '2026-05-12T11:05:00Z'
+ * id: 1,
+ * equipmentId: 202,
+ * parameterName: 'Temperature',
+ * recordedValue: 85.5,
+ * thresholdValue: 80.0,
+ * unit: '°C',
+ * timestamp: '2026-05-12T11:00:00Z',
+ * severity: 'CRITICAL',
+ * status: 'OPEN',
+ * createdAt: '2026-05-12T11:05:00Z'
  * });
  *
  * console.log(temperatureAlert.severity); // 'CRITICAL'
@@ -31,19 +31,19 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  */
 export class DeviationAlert implements BaseEntity {
   /**
-   * The unique identifier for this deviation alert.
+   * The unique numeric identifier for this deviation alert.
    */
-  id: string;
+  id: number;
 
   /**
-   * The identifier of the equipment where the deviation was detected.
+   * The numeric identifier of the equipment where the deviation was detected.
    */
-  equipmentId: string;
+  equipmentId: number;
 
   /**
-   * The identifier of the production batch associated with the alert, if applicable.
+   * The numeric identifier of the production batch associated with the alert, if applicable.
    */
-  batchId?: string;
+  batchId?: number;
 
   /**
    * The name of the process parameter that deviated (e.g., Pressure, Temperature).
@@ -89,9 +89,9 @@ export class DeviationAlert implements BaseEntity {
    * Creates a new DeviationAlert entity.
    *
    * @param params - Initialization properties
-   * @param params.id - The unique identifier for the alert
-   * @param params.equipmentId - ID of the source equipment
-   * @param params.batchId - (Optional) ID of the production batch
+   * @param params.id - The unique numeric identifier for the alert
+   * @param params.equipmentId - Numeric ID of the source equipment
+   * @param params.batchId - (Optional) Numeric ID of the production batch
    * @param params.parameterName - Name of the monitored variable
    * @param params.recordedValue - The out-of-range value measured
    * @param params.thresholdValue - The limit that was exceeded
@@ -106,9 +106,9 @@ export class DeviationAlert implements BaseEntity {
    * contextual data required to analyze a process deviation.
    */
   constructor(params: {
-    id: string;
-    equipmentId: string;
-    batchId?: string;
+    id: number;
+    equipmentId: number;
+    batchId?: number;
     parameterName: string;
     recordedValue: number;
     thresholdValue: number;

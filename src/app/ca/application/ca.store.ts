@@ -85,23 +85,23 @@ export class CaStore {
   constructor(private caApi: CaApi) {}
 
   /**
-   * Retrieves a specific alert by its unique identifier.
+   * Retrieves a specific alert by its unique numeric identifier.
    *
-   * @param id - The unique identifier of the deviation alert.
+   * @param id - The unique numeric identifier of the deviation alert.
    * @returns A computed signal that evaluates to the found alert or undefined.
    */
-  getAlertById(id: string): Signal<DeviationAlert | undefined> {
+  getAlertById(id: number): Signal<DeviationAlert | undefined> {
     return computed(() => (id ? this.alerts().find((alert) => alert.id === id) : undefined));
   }
 
   /**
    * Fetches deviation alerts from the API based on optional filters.
    *
-   * @param filters - Optional criteria to filter alerts (equipment, batch, status, severity).
+   * @param filters - Optional criteria to filter alerts (numeric equipment, numeric batch, status, severity).
    */
   loadAlerts(filters?: {
-    equipmentId?: string;
-    batchId?: string;
+    equipmentId?: number;
+    batchId?: number;
     status?: string;
     severity?: string;
   }): void {
@@ -126,9 +126,9 @@ export class CaStore {
   /**
    * Fetches compliance events related to a specific domain entity.
    *
-   * @param entityId - The unique identifier of the entity to audit.
+   * @param entityId - The unique numeric identifier of the entity to audit.
    */
-  loadComplianceEvents(entityId: string): void {
+  loadComplianceEvents(entityId: number): void {
     this._loadingSignal.set(true);
     this._errorSignal.set(null);
 
@@ -152,9 +152,9 @@ export class CaStore {
   /**
    * Fetches notification preferences for a specific user.
    *
-   * @param userId - The unique identifier of the user.
+   * @param userId - The unique numeric identifier of the user.
    */
-  loadNotificationPreferences(userId: string): void {
+  loadNotificationPreferences(userId: number): void {
     this._loadingSignal.set(true);
     this._errorSignal.set(null);
 
@@ -176,11 +176,11 @@ export class CaStore {
   /**
    * Updates notification preferences and refreshes the local state.
    *
-   * @param userId - The unique identifier of the user.
+   * @param userId - The unique numeric identifier of the user.
    * @param request - DTO containing the updated preference values.
    */
   updateNotificationPreferences(
-    userId: string,
+    userId: number,
     request: UpdateNotificationPreferenceRequest,
   ): void {
     this._loadingSignal.set(true);

@@ -71,9 +71,9 @@ export class AlertDashboard implements OnInit {
   /**
    * Navigates to the detailed view of a specific deviation alert.
    *
-   * @param alertId - The unique identifier of the alert to be viewed.
+   * @param alertId - The unique numeric identifier of the alert to be viewed.
    */
-  viewDetails(alertId: string): void {
+  viewDetails(alertId: number): void {
     this.router.navigate(['/alerts/deviation-detail', alertId]);
   }
 }

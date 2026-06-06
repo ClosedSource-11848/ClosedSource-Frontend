@@ -43,8 +43,9 @@ export class NotificationSettings implements OnInit {
 
   settingsForm!: FormGroup;
 
-  private get currentUserId(): string {
-    return this.iamStore.currentUserId() || 'user-123';
+  private get currentUserId(): number {
+    const id = this.iamStore.currentUserId();
+    return id ? Number(id) : 123;
   }
 
   constructor() {

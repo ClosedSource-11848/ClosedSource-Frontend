@@ -11,19 +11,19 @@ import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-res
  */
 export interface AlertResource extends BaseResource {
   /**
-   * The unique identifier for the alert resource.
+   * The unique numeric identifier for the alert resource.
    */
-  id: string;
+  id: number;
 
   /**
-   * The identifier of the equipment that generated the alert.
+   * The numeric identifier of the equipment that generated the alert.
    */
-  equipmentId: string;
+  equipmentId: number;
 
   /**
-   * The identifier of the production batch, if applicable.
+   * The numeric identifier of the production batch, if applicable.
    */
-  batchId?: string;
+  batchId?: number;
 
   /**
    * The name of the monitored process parameter.
