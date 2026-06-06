@@ -13,22 +13,22 @@
  * @example
  * ```typescript
  * const command: RegisterEquipmentCommand = {
- *   labId: 'lab-001',
- *   name: 'Centrifuge',
- *   type: 'Laboratory Equipment',
- *   model: 'CF-3000',
- *   serialNumber: 'SN-2026-001'
+ * labId: 101,
+ * name: 'Centrifuge',
+ * type: 'Laboratory Equipment',
+ * model: 'CF-3000',
+ * serialNumber: 'SN-2026-001'
  * };
  * ```
  */
 export interface RegisterEquipmentCommand {
   /**
-   * The identifier of the laboratory where the equipment will be registered.
+   * The numeric identifier of the laboratory where the equipment will be registered.
    *
    * @remarks
    * This value links the equipment to a specific laboratory within the system.
    */
-  labId: string;
+  labId: number;
 
   /**
    * The display name of the equipment.

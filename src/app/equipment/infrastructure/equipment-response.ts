@@ -14,31 +14,31 @@ import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-res
  * @example
  * ```typescript
  * const resource: EquipmentResource = {
- *   id: 'equipment-001',
- *   labId: 'lab-001',
- *   name: 'Centrifuge',
- *   type: 'Laboratory Equipment',
- *   model: 'CF-3000',
- *   serialNumber: 'SN-2026-001',
- *   status: 'OPERATIONAL',
- *   createdAt: '2026-05-12T10:00:00Z'
+ * id: 1,
+ * labId: 101,
+ * name: 'Centrifuge',
+ * type: 'Laboratory Equipment',
+ * model: 'CF-3000',
+ * serialNumber: 'SN-2026-001',
+ * status: 'OPERATIONAL',
+ * createdAt: '2026-05-12T10:00:00Z'
  * };
  * ```
  */
 export interface EquipmentResource extends BaseResource {
   /**
-   * The unique identifier of the equipment resource.
+   * The unique numeric identifier of the equipment resource.
    */
-  id: string;
+  id: number;
 
   /**
-   * The identifier of the laboratory associated with the equipment.
+   * The numeric identifier of the laboratory associated with the equipment.
    *
    * @remarks
    * This value links the equipment to a specific laboratory registered
    * in the system.
    */
-  labId: string;
+  labId: number;
 
   /**
    * The display name of the equipment.
@@ -106,18 +106,18 @@ export interface EquipmentResource extends BaseResource {
  * @example
  * ```typescript
  * const response: EquipmentsResponse = {
- *   equipments: [
- *     {
- *       id: 'equipment-001',
- *       labId: 'lab-001',
- *       name: 'Centrifuge',
- *       type: 'Laboratory Equipment',
- *       model: 'CF-3000',
- *       serialNumber: 'SN-2026-001',
- *       status: 'OPERATIONAL',
- *       createdAt: '2026-05-12T10:00:00Z'
- *     }
- *   ]
+ * equipments: [
+ * {
+ * id: 1,
+ * labId: 101,
+ * name: 'Centrifuge',
+ * type: 'Laboratory Equipment',
+ * model: 'CF-3000',
+ * serialNumber: 'SN-2026-001',
+ * status: 'OPERATIONAL',
+ * createdAt: '2026-05-12T10:00:00Z'
+ * }
+ * ]
  * };
  * ```
  */

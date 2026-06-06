@@ -75,7 +75,7 @@ export class EquipmentForm {
    * Store responsible for identity and access management state.
    *
    * @remarks
-   * This store is used to obtain the current user identifier, which is treated
+   * This store is used to obtain the current numeric user identifier, which is treated
    * as the laboratory identifier when registering equipment.
    */
   private readonly iamStore = inject(IamStore);
@@ -131,7 +131,7 @@ export class EquipmentForm {
 
     const command: RegisterEquipmentCommand = {
       ...this.form.value,
-      labId: labId,
+      labId: Number(labId),
     };
 
     this.store.registerEquipment(command);

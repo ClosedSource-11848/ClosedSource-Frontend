@@ -20,7 +20,7 @@ import { CalibrationAlert } from '../calibration-alert/calibration-alert';
  * current laboratory or authenticated user context.
  *
  * It uses EquipmentStore to load and expose equipment data, IamStore to obtain
- * the current user identifier used as the laboratory identifier, and Angular
+ * the current numeric user identifier used as the laboratory identifier, and Angular
  * Material components to render the information in a table with actions,
  * chips, tooltips, icons, and loading indicators.
  *
@@ -66,7 +66,7 @@ export class EquipmentList implements OnInit {
    *
    * @remarks
    * This store is used to obtain the current user identifier. In this component,
-   * the current user identifier is used as the laboratory identifier to load
+   * the current numeric user identifier is used as the laboratory identifier to load
    * the corresponding equipment records.
    */
   private readonly iamStore = inject(IamStore);
@@ -92,13 +92,13 @@ export class EquipmentList implements OnInit {
    * Initializes the component and loads the equipment list.
    *
    * @remarks
-   * During initialization, this method obtains the current labId from IamStore.
+   * During initialization, this method obtains the current numeric labId from IamStore.
    * If the labId exists, it requests the equipment list through EquipmentStore.
    */
   ngOnInit(): void {
     const labId = this.iamStore.currentUserId();
     if (labId) {
-      this.store.loadEquipment(labId);
+      this.store.loadEquipment(Number(labId));
     }
   }
 
@@ -106,12 +106,12 @@ export class EquipmentList implements OnInit {
    * Refreshes the equipment list.
    *
    * @remarks
-   * This method reloads the equipment records associated with the current labId.
+   * This method reloads the equipment records associated with the current numeric labId.
    * It is commonly triggered from the UI when the user wants to manually update
    * the displayed equipment table.
    */
   protected onRefresh(): void {
     const labId = this.iamStore.currentUserId();
-    if (labId) this.store.loadEquipment(labId);
+    if (labId) this.store.loadEquipment(Number(labId));
   }
 }

@@ -13,23 +13,23 @@
  * @example
  * ```typescript
  * const request: RegisterMaintenanceRequest = {
- *   equipmentId: 'equipment-001',
- *   maintenanceDate: '2026-05-12',
- *   technicianName: 'John Doe',
- *   description: 'Preventive maintenance and calibration performed.',
- *   type: 'PREVENTIVE'
+ * equipmentId: 101,
+ * maintenanceDate: '2026-05-12',
+ * technicianName: 'John Doe',
+ * description: 'Preventive maintenance and calibration performed.',
+ * type: 'PREVENTIVE'
  * };
  * ```
  */
 export interface RegisterMaintenanceRequest {
   /**
-   * The identifier of the equipment associated with the maintenance activity.
+   * The numeric identifier of the equipment associated with the maintenance activity.
    *
    * @remarks
    * This value links the maintenance registration request to a specific
    * equipment registered in the system.
    */
-  equipmentId: string;
+  equipmentId: number;
 
   /**
    * The date when the maintenance activity was performed.

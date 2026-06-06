@@ -14,30 +14,30 @@ import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-res
  * @example
  * ```typescript
  * const resource: MaintenanceResource = {
- *   id: 'maintenance-001',
- *   equipmentId: 'equipment-001',
- *   maintenanceDate: '2026-05-12',
- *   technicianName: 'John Doe',
- *   description: 'Preventive maintenance and calibration performed.',
- *   type: 'PREVENTIVE',
- *   createdAt: '2026-05-12T10:00:00Z'
+ * id: 1,
+ * equipmentId: 101,
+ * maintenanceDate: '2026-05-12',
+ * technicianName: 'John Doe',
+ * description: 'Preventive maintenance and calibration performed.',
+ * type: 'PREVENTIVE',
+ * createdAt: '2026-05-12T10:00:00Z'
  * };
  * ```
  */
 export interface MaintenanceResource extends BaseResource {
   /**
-   * The unique identifier of the maintenance resource.
+   * The unique numeric identifier of the maintenance resource.
    */
-  id: string;
+  id: number;
 
   /**
-   * The identifier of the equipment associated with the maintenance record.
+   * The numeric identifier of the equipment associated with the maintenance record.
    *
    * @remarks
    * This value links the maintenance resource to a specific equipment registered
    * in the system.
    */
-  equipmentId: string;
+  equipmentId: number;
 
   /**
    * The date when the maintenance activity was performed.
@@ -96,17 +96,17 @@ export interface MaintenanceResource extends BaseResource {
  * @example
  * ```typescript
  * const response: MaintenancesResponse = {
- *   maintenances: [
- *     {
- *       id: 'maintenance-001',
- *       equipmentId: 'equipment-001',
- *       maintenanceDate: '2026-05-12',
- *       technicianName: 'John Doe',
- *       description: 'Preventive maintenance and calibration performed.',
- *       type: 'PREVENTIVE',
- *       createdAt: '2026-05-12T10:00:00Z'
- *     }
- *   ]
+ * maintenances: [
+ * {
+ * id: 1,
+ * equipmentId: 101,
+ * maintenanceDate: '2026-05-12',
+ * technicianName: 'John Doe',
+ * description: 'Preventive maintenance and calibration performed.',
+ * type: 'PREVENTIVE',
+ * createdAt: '2026-05-12T10:00:00Z'
+ * }
+ * ]
  * };
  * ```
  */

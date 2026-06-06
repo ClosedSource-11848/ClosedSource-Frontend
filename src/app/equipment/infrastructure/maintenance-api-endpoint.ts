@@ -34,18 +34,18 @@ const equipmentEndpointUrl = `${environment.serverBasePath}${environment.equipme
  * ```typescript
  * const endpoint = new MaintenanceApiEndpoint(httpClient);
  *
- * endpoint.getMaintenanceHistory('equipment-001').subscribe((records) => {
- *   console.log(records);
+ * endpoint.getMaintenanceHistory(101).subscribe((records) => {
+ * console.log(records);
  * });
  *
  * endpoint.registerMaintenance({
- *   equipmentId: 'equipment-001',
- *   maintenanceDate: '2026-05-12',
- *   technicianName: 'John Doe',
- *   description: 'Preventive maintenance and calibration performed.',
- *   type: 'PREVENTIVE'
+ * equipmentId: 101,
+ * maintenanceDate: '2026-05-12',
+ * technicianName: 'John Doe',
+ * description: 'Preventive maintenance and calibration performed.',
+ * type: 'PREVENTIVE'
  * }).subscribe((record) => {
- *   console.log(record);
+ * console.log(record);
  * });
  * ```
  */
@@ -71,7 +71,7 @@ export class MaintenanceApiEndpoint extends BaseApiEndpoint<
   /**
    * Retrieves the maintenance history of a specific equipment.
    *
-   * @param equipmentId - The unique identifier of the equipment.
+   * @param equipmentId - The unique numeric identifier of the equipment.
    * @returns An Observable containing a list of MaintenanceRecord domain entities.
    *
    * @remarks
@@ -81,7 +81,7 @@ export class MaintenanceApiEndpoint extends BaseApiEndpoint<
    * The API response is transformed into domain entities using the assembler.
    * If the request fails, the inherited handleError method manages the error.
    */
-  getMaintenanceHistory(equipmentId: string): Observable<MaintenanceRecord[]> {
+  getMaintenanceHistory(equipmentId: number): Observable<MaintenanceRecord[]> {
     return this.http
       .get<MaintenancesResponse>(`${this.endpointUrl}/${equipmentId}/maintenance`)
       .pipe(
