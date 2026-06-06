@@ -10,30 +10,29 @@
  * @example
  * ```typescript
  * const command: CreateBatchCommand = {
- *   labId: 'lab-001',
- *   productId: 'prod-890',
- *   batchNumber: 'LOTE-2026A',
- *   quantity: 5000,
- *   startDate: '2026-05-12T08:00:00Z',
- *   notes: 'Urgent production requested by central distribution.'
+ * labId: 1,
+ * productId: 890,
+ * batchNumber: 'LOTE-2026A',
+ * quantity: 5000,
+ * startDate: '2026-05-12T08:00:00Z',
+ * notes: 'Urgent production requested by central distribution.'
  * };
  *
  * await createBatchUseCase.execute(command);
- *
- ```
+ * ```
  *
  * @author Qualitrack
  */
 export interface CreateBatchCommand {
   /**
-   * The identifier of the laboratory where the batch will be produced.
+   * The numeric identifier of the laboratory where the batch will be produced.
    */
-  labId: string;
+  labId: number;
 
   /**
-   * The identifier of the product that is going to be manufactured.
+   * The numeric identifier of the product that is going to be manufactured.
    */
-  productId: string;
+  productId: number;
 
   /**
    * The specific alphanumeric traceability code to be assigned to this batch run.

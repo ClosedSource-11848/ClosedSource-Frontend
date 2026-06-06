@@ -14,16 +14,16 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  * @example
  * ```typescript
  * const productBatch = new Batch({
- *   id: '123e4567-e89b-12d3-a456-426614174000',
- *   labId: 'lab-001',
- *   productId: 'prod-890',
- *   productName: 'Ibuprofen 400mg',
- *   batchNumber: 'LOTE-2026A',
- *   quantity: 5000,
- *   unit: 'units',
- *   status: 'IN_PROGRESS',
- *   startDate: '2026-05-12T08:00:00Z',
- *   createdAt: '2026-05-12T07:30:00Z'
+ * id: 1,
+ * labId: 101,
+ * productId: 890,
+ * productName: 'Ibuprofen 400mg',
+ * batchNumber: 'LOTE-2026A',
+ * quantity: 5000,
+ * unit: 'units',
+ * status: 'IN_PROGRESS',
+ * startDate: '2026-05-12T08:00:00Z',
+ * createdAt: '2026-05-12T07:30:00Z'
  * });
  *
  * console.log(productBatch.batchNumber); // 'LOTE-2026A'
@@ -33,19 +33,19 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  */
 export class Batch implements BaseEntity {
   /**
-   * The unique identifier for this batch.
+   * The unique numeric identifier for this batch.
    */
-  id: string;
+  id: number;
 
   /**
-   * The identifier of the laboratory responsible for this batch.
+   * The numeric identifier of the laboratory responsible for this batch.
    */
-  labId: string;
+  labId: number;
 
   /**
-   * The identifier of the product being manufactured.
+   * The numeric identifier of the product being manufactured.
    */
-  productId: string;
+  productId: number;
 
   /**
    * The display name of the product.
@@ -96,9 +96,9 @@ export class Batch implements BaseEntity {
    * Creates a new Batch entity.
    *
    * @param params - Initialization properties
-   * @param params.id - The unique identifier for the batch
-   * @param params.labId - The laboratory identifier
-   * @param params.productId - The product identifier
+   * @param params.id - The unique numeric identifier for the batch
+   * @param params.labId - The numeric laboratory identifier
+   * @param params.productId - The numeric product identifier
    * @param params.productName - The product display name
    * @param params.batchNumber - The specific traceability code for the batch
    * @param params.quantity - The total amount produced
@@ -114,9 +114,9 @@ export class Batch implements BaseEntity {
    * requires all mandatory manufacturing and traceability data to be created.
    */
   constructor(params: {
-    id: string;
-    labId: string;
-    productId: string;
+    id: number;
+    labId: number;
+    productId: number;
     productName: string;
     batchNumber: string;
     quantity: number;

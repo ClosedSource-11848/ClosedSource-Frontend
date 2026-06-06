@@ -38,15 +38,17 @@ export class BatchDetail implements OnInit {
   protected readonly store = inject(BatchStore);
 
   /**
-   * The unique identifier of the batch currently being viewed.
+   * The unique numeric identifier of the batch currently being viewed.
    */
-  batchId!: string;
+  batchId!: number;
 
   /**
    * Lifecycle hook to initialize the component and load batch usage data.
    */
   ngOnInit(): void {
-    this.batchId = this.route.snapshot.paramMap.get('id') || '';
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.batchId = idParam ? Number(idParam) : 0;
+
     if (this.batchId) {
       this.store.loadBatchUsage(this.batchId);
     }

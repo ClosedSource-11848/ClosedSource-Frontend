@@ -40,9 +40,9 @@ import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/m
 })
 export class RawMaterialUsageComponent implements OnInit {
   /**
-   * The identifier of the production batch to which materials are linked.
+   * The numeric identifier of the production batch to which materials are linked.
    */
-  @Input() batchId!: string;
+  @Input() batchId!: number;
 
   private readonly fb = inject(FormBuilder);
   protected readonly store = inject(BatchStore);
@@ -60,10 +60,10 @@ export class RawMaterialUsageComponent implements OnInit {
   displayedColumns: string[] = ['material', 'quantity', 'date'];
 
   /**
-   * Gets the active laboratory ID from the security context.
+   * Gets the active numeric laboratory ID from the security context.
    */
-  private get currentLabId(): string {
-    return this.iamStore.currentUserId() || 'LAB-001';
+  private get currentLabId(): number {
+    return this.iamStore.currentUserId() || 1;
   }
 
   /**

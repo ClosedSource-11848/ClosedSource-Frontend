@@ -10,28 +10,28 @@
  * @example
  * ```typescript
  * const requestPayload: CreateBatchRequest = {
- *   labId: 'lab-001',
- *   productId: 'prod-890',
- *   batchNumber: 'LOTE-2026A',
- *   quantity: 5000,
- *   startDate: '2026-05-12T08:00:00Z',
- *   notes: 'Standard production run'
+ * labId: 101,
+ * productId: 890,
+ * batchNumber: 'LOTE-2026A',
+ * quantity: 5000,
+ * startDate: '2026-05-12T08:00:00Z',
+ * notes: 'Standard production run'
  * };
  *
- ```
+ * ```
  *
  * @author Qualitrack
  */
 export interface CreateBatchRequest {
   /**
-   * The identifier of the laboratory where the batch will be produced.
+   * The numeric identifier of the laboratory where the batch will be produced.
    */
-  labId: string;
+  labId: number;
 
   /**
-   * The identifier of the product that is going to be manufactured.
+   * The numeric identifier of the product that is going to be manufactured.
    */
-  productId: string;
+  productId: number;
 
   /**
    * The specific alphanumeric traceability code to be assigned to this batch run.
@@ -66,11 +66,11 @@ export interface CreateBatchRequest {
  * @example
  * ```typescript
  * const releasePayload: ReleaseBatchRequest = {
- *   releaseDate: '2026-05-12T11:30:00Z',
- *   notes: 'All final quality control tests passed successfully.'
+ * releaseDate: '2026-05-12T11:30:00Z',
+ * notes: 'All final quality control tests passed successfully.'
  * };
  *
- ```
+ * ```
  *
  * @author Qualitrack
  */
@@ -98,11 +98,11 @@ export interface ReleaseBatchRequest {
  * @example
  * ```typescript
  * const rejectPayload: RejectBatchRequest = {
- *   rejectionDate: '2026-05-12T10:00:00Z',
- *   reason: 'Failed viscosity and pH tests during final validation phase.'
+ * rejectionDate: '2026-05-12T10:00:00Z',
+ * reason: 'Failed viscosity and pH tests during final validation phase.'
  * };
  *
- ```
+ * ```
  *
  * @author Qualitrack
  */

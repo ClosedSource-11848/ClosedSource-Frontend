@@ -10,22 +10,21 @@
  * @example
  * ```typescript
  * const command: ReleaseBatchCommand = {
- *   batchId: '123e4567-e89b-12d3-a456-426614174000',
- *   releaseDate: '2026-05-12T11:30:00Z',
- *   notes: 'All final quality control tests passed. Product meets pH and viscosity standards. Approved for distribution.'
+ * batchId: 101,
+ * releaseDate: '2026-05-12T11:30:00Z',
+ * notes: 'All final quality control tests passed. Product meets pH and viscosity standards. Approved for distribution.'
  * };
  *
  * await releaseBatchUseCase.execute(command);
- *
- ```
+ * ```
  *
  * @author Qualitrack
  */
 export interface ReleaseBatchCommand {
   /**
-   * The unique identifier of the production batch being released.
+   * The unique numeric identifier of the production batch being released.
    */
-  batchId: string;
+  batchId: number;
 
   /**
    * The ISO date string representing the exact moment the batch was officially approved and released.

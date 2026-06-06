@@ -10,22 +10,21 @@
  * @example
  * ```typescript
  * const command: RejectBatchCommand = {
- *   batchId: '123e4567-e89b-12d3-a456-426614174000',
- *   rejectionDate: '2026-05-12T10:00:00Z',
- *   reason: 'Failed pH level test during final quality control phase. Does not meet BPM standards.'
+ * batchId: 101,
+ * rejectionDate: '2026-05-12T10:00:00Z',
+ * reason: 'Failed pH level test during final quality control phase. Does not meet BPM standards.'
  * };
  *
  * await rejectBatchUseCase.execute(command);
- *
- ```
+ * ```
  *
  * @author Qualitrack
  */
 export interface RejectBatchCommand {
   /**
-   * The unique identifier of the production batch being rejected.
+   * The unique numeric identifier of the production batch being rejected.
    */
-  batchId: string;
+  batchId: number;
 
   /**
    * The ISO date string representing the exact moment the rejection was formalized.
