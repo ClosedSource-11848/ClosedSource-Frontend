@@ -6,7 +6,9 @@ import { EquipmentStatus } from '../domain/model/equipment-status.entity';
 import { EquipmentStatusResource, EquipmentStatusesResponse } from './equipment-status-response';
 import { EquipmentStatusAssembler } from './equipment-status-assembler';
 
-const endpointUrl = `${environment.serverBasePath}${environment.trackingTelemetryEndpointPath}/status`;
+//const endpointUrl = `${environment.serverBasePath}${environment.trackingTelemetryEndpointPath}/status`;
+const endpointUrl = `${environment.trackingTelemetryEndpointPath}/status`;
+
 
 export class EquipmentStatusApiEndpoint extends BaseApiEndpoint<
   EquipmentStatus,

@@ -3,23 +3,23 @@
  * @author QualiTrack
  */
 export class AssignRoleCommand {
-  private _userId: string;
+  private _userId: number;
   private _role: string;
 
   /**
    * Creates a new AssignRoleCommand instance.
    * @param resource - The data containing userId and the role to assign.
    */
-  constructor(resource: { userId: string; role: string }) {
+  constructor(resource: { userId: number; role: string }) {
     this._userId = resource.userId;
     this._role = resource.role;
   }
 
-  get userId(): string {
+  get userId(): number {
     return this._userId;
   }
 
-  set userId(value: string) {
+  set userId(value: number) {
     this._userId = value;
   }
 

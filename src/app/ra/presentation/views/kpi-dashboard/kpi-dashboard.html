@@ -1,5 +1,4 @@
 <div class="dashboard-container">
-  <!-- Header de la sección -->
   <div class="section-header">
     <div class="title-group">
       <mat-icon class="title-icon">speed</mat-icon>
@@ -7,14 +6,12 @@
     </div>
   </div>
 
-  <!-- Indicador de Carga -->
   @if (store.isLoading()) {
     <div class="loading-shade">
       <mat-spinner diameter="50"></mat-spinner>
     </div>
   }
 
-  <!-- Mensaje de Error -->
   @if (store.error()) {
     <div class="error-message">
       <mat-icon>error_outline</mat-icon>
@@ -22,12 +19,9 @@
     </div>
   }
 
-  <!-- Contenido del Dashboard -->
   @if (store.dashboard(); as dash) {
 
-    <!-- Tarjetas de Resumen (Summary Cards) -->
     <div class="summary-cards">
-      <!-- Health Score -->
       <mat-card class="stat-card health-card">
         <mat-card-content>
           <div class="stat-header">
@@ -41,7 +35,6 @@
         </mat-card-content>
       </mat-card>
 
-      <!-- Métricas en Riesgo -->
       <mat-card class="stat-card warning-card">
         <mat-card-content>
           <div class="stat-header">
@@ -53,7 +46,6 @@
         </mat-card-content>
       </mat-card>
 
-      <!-- Desviaciones Críticas -->
       <mat-card class="stat-card critical-card">
         <mat-card-content>
           <div class="stat-header">
@@ -66,7 +58,22 @@
       </mat-card>
     </div>
 
-    <!-- Tabla Detallada (Material Table) -->
+    <div class="chart-section" style="margin-top: 24px; margin-bottom: 24px;">
+      <mat-card class="mat-elevation-z2">
+        <mat-card-content>
+          <div class="chart-header" style="margin-bottom: 16px;">
+            <h3 style="margin: 0; font-size: 1.1rem; color: #333;">{{ 'kpi-dashboard.chart-title' | translate }}</h3>
+          </div>
+          <div style="display: block; position: relative; height: 300px; width: 100%;">
+            <canvas baseChart
+                    [data]="chartData()"
+                    [options]="barChartOptions"
+                    [type]="barChartType">
+            </canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
     <div class="table-header">
       <h3>{{ 'kpi-dashboard.detailed-parameters' | translate }}</h3>
     </div>
@@ -74,13 +81,11 @@
     <div class="table-card mat-elevation-z2">
       <table mat-table [dataSource]="dash.metrics" class="full-width-table">
 
-        <!-- Name Column -->
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef>{{ 'kpi-dashboard.table.metric' | translate }}</th>
           <td mat-cell *matCellDef="let metric" class="name-cell">{{ metric.name }}</td>
         </ng-container>
 
-        <!-- Status Column -->
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef>{{ 'common.status' | translate }}</th>
           <td mat-cell *matCellDef="let metric">
@@ -90,7 +95,6 @@
           </td>
         </ng-container>
 
-        <!-- Current Value Column -->
         <ng-container matColumnDef="current">
           <th mat-header-cell *matHeaderCellDef>{{ 'kpi-dashboard.table.current' | translate }}</th>
           <td mat-cell *matCellDef="let metric">
@@ -98,7 +102,6 @@
           </td>
         </ng-container>
 
-        <!-- Target Value Column -->
         <ng-container matColumnDef="target">
           <th mat-header-cell *matHeaderCellDef>{{ 'kpi-dashboard.table.target' | translate }}</th>
           <td mat-cell *matCellDef="let metric" class="target-cell">
@@ -106,7 +109,6 @@
           </td>
         </ng-container>
 
-        <!-- Recorded At Column -->
         <ng-container matColumnDef="recordedAt">
           <th mat-header-cell *matHeaderCellDef>{{ 'kpi-dashboard.table.recorded' | translate }}</th>
           <td mat-cell *matCellDef="let metric" class="date-cell">{{ metric.recordedAt | date:'shortTime' }}</td>

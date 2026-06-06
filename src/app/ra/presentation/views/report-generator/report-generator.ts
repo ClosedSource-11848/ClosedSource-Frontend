@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,7 +22,7 @@ import { IamStore } from '../../../../iam/application/iam.store';
   imports: [
     CommonModule,
     FormsModule,
-    TranslatePipe,
+    TranslateModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
@@ -65,7 +65,7 @@ export class ReportGeneratorComponent {
   }
 
   private get currentLabId(): string {
-    return 'LAB-001';
+    return this.iamStore.currentUserId() || 'LAB-001';
   }
 
   // ── Actions ─────────────────────────────────────────────────────────────

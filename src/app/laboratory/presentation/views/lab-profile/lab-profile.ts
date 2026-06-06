@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,7 +16,7 @@ import { MatIcon } from '@angular/material/icon';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    TranslatePipe,
+    TranslateModule,
     MatFormFieldModule,
     MatInputModule,
     MatIcon,
@@ -30,7 +30,7 @@ import { MatIcon } from '@angular/material/icon';
 })
 export class LabProfile implements OnInit {
   protected readonly store = inject(LaboratoryStore);
-  protected readonly iamStore = inject(IamStore); // Inyección del store de identidad
+  protected readonly iamStore = inject(IamStore);
   private readonly fb = inject(FormBuilder);
 
   protected isEditing = signal(false);
@@ -44,8 +44,8 @@ export class LabProfile implements OnInit {
     applicableRegulations: [[], Validators.required],
   });
 
-  private get currentLabId(): string {
-    return this.iamStore.currentUserId() || 'DEFAULT_LAB_ID';
+  private get currentLabId(): number {
+    return this.iamStore.currentUserId() || 1;
   }
 
   ngOnInit(): void {

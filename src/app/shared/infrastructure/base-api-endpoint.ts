@@ -8,7 +8,7 @@ import { ErrorHandlingEnabledBaseType } from './error-handling-enabled-base-type
 /**
  * Abstract base class for QualiTrack API endpoints handling CRUD operations.
  * @remarks Provides common GET/POST/PUT/DELETE methods using the QualiTrack
- * REST API conventions. All IDs are string UUIDs. Each bounded context endpoint
+ * REST API conventions. All IDs are numeric. Each bounded context endpoint
  * extends this class and passes the correct assembler for entity mapping.
  * @template TEntity    - The domain entity type extending BaseEntity.
  * @template TResource  - The API resource type extending BaseResource.
@@ -53,11 +53,11 @@ export abstract class BaseApiEndpoint<
   }
 
   /**
-   * Retrieves a single entity by its string UUID.
-   * @param id - The UUID of the entity to retrieve.
+   * Retrieves a single entity by its numeric identifier.
+   * @param id - The numeric ID of the entity to retrieve.
    * @returns An observable of the domain entity.
    */
-  getById(id: string): Observable<TEntity> {
+  getById(id: number): Observable<TEntity> {
     return this.http.get<TResource>(`${this.endpointUrl}/${id}`).pipe(
       map((resource) => this.assembler.toEntityFromResource(resource)),
       catchError(this.handleError(`Failed to fetch entity with id ${id}`)),
@@ -80,10 +80,10 @@ export abstract class BaseApiEndpoint<
   /**
    * Updates an existing entity via PUT request.
    * @param entity - The domain entity with updated values.
-   * @param id     - The UUID of the entity to update.
+   * @param id     - The numeric ID of the entity to update.
    * @returns An observable of the updated domain entity.
    */
-  update(entity: TEntity, id: string): Observable<TEntity> {
+  update(entity: TEntity, id: number): Observable<TEntity> {
     const resource = this.assembler.toResourceFromEntity(entity);
     return this.http.put<TResource>(`${this.endpointUrl}/${id}`, resource).pipe(
       map((updatedResource) => this.assembler.toEntityFromResource(updatedResource)),
@@ -92,11 +92,11 @@ export abstract class BaseApiEndpoint<
   }
 
   /**
-   * Deletes an entity by its string UUID via DELETE request.
-   * @param id - The UUID of the entity to delete.
+   * Deletes an entity by its numeric identifier via DELETE request.
+   * @param id - The numeric ID of the entity to delete.
    * @returns An observable that completes when deletion is done.
    */
-  delete(id: string): Observable<void> {
+  delete(id: number): Observable<void> {
     return this.http
       .delete<void>(`${this.endpointUrl}/${id}`)
       .pipe(catchError(this.handleError(`Failed to delete entity with id ${id}`)));
