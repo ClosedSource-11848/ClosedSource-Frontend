@@ -10,19 +10,19 @@
  * @example
  * ```typescript
  * const requestPayload: LinkRawMaterialRequest = {
- *   rawMaterialId: 'mat-045',
- *   quantityUsed: 150.5
+ * rawMaterialId: 45,
+ * quantityUsed: 150.5
  * };
  *
- ```
+ * ```
  *
  * @author Qualitrack
  */
 export interface LinkRawMaterialRequest {
   /**
-   * The identifier of the specific raw material to be linked or consumed.
+   * The numeric identifier of the specific raw material to be linked or consumed.
    */
-  rawMaterialId: string;
+  rawMaterialId: number;
 
   /**
    * The exact amount of the raw material utilized in the production process.

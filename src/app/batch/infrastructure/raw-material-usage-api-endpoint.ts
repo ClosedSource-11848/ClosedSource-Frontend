@@ -49,14 +49,14 @@ export class RawMaterialUsageApiEndpoint extends BaseApiEndpoint<
   /**
    * Retrieves the collection of raw material usage records for a specific production batch.
    *
-   * @param batchId - The unique identifier of the batch.
+   * @param batchId - The unique numeric identifier of the batch.
    * @returns An Observable emitting an array of RawMaterialUsage domain entities.
    *
    * @remarks
    * Performs an HTTP GET request to fetch the traceability data. The response envelope
    * is automatically mapped into domain entities via the assembler.
    */
-  getUsageByBatch(batchId: string): Observable<RawMaterialUsage[]> {
+  getUsageByBatch(batchId: number): Observable<RawMaterialUsage[]> {
     return this.http
       .get<RawMaterialUsagesResponse>(`${this.endpointUrl}/${batchId}/materials`)
       .pipe(
@@ -68,7 +68,7 @@ export class RawMaterialUsageApiEndpoint extends BaseApiEndpoint<
   /**
    * Records the usage of a specific raw material and links it to a production batch.
    *
-   * @param batchId - The identifier of the batch consuming the material.
+   * @param batchId - The numeric identifier of the batch consuming the material.
    * @param request - The payload containing material ID and quantity used.
    * @returns An Observable emitting the resulting RawMaterialUsage domain entity.
    *
@@ -76,7 +76,7 @@ export class RawMaterialUsageApiEndpoint extends BaseApiEndpoint<
    * Performs an HTTP POST request to establish the genealogical link between
    * the batch and the raw material, critical for quality control and compliance.
    */
-  linkRawMaterial(batchId: string, request: LinkRawMaterialRequest): Observable<RawMaterialUsage> {
+  linkRawMaterial(batchId: number, request: LinkRawMaterialRequest): Observable<RawMaterialUsage> {
     return this.http
       .post<RawMaterialUsageResource>(`${this.endpointUrl}/${batchId}/materials`, request)
       .pipe(

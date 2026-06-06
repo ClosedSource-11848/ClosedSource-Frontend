@@ -42,15 +42,16 @@ export class BatchReleaseForm implements OnInit {
   releaseForm!: FormGroup;
 
   /**
-   * The unique identifier of the batch to be released.
+   * The unique numeric identifier of the batch to be released.
    */
-  batchId!: string;
+  batchId!: number;
 
   /**
    * Initializes the component and sets up the release form.
    */
   ngOnInit(): void {
-    this.batchId = this.route.snapshot.paramMap.get('id') || '';
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.batchId = idParam ? Number(idParam) : 0;
 
     this.releaseForm = this.fb.group({
       releaseDate: [new Date().toISOString().substring(0, 10), Validators.required],

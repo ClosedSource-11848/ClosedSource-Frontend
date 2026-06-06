@@ -49,10 +49,10 @@ export class BatchList implements OnInit {
   ];
 
   /**
-   * Gets the active laboratory ID from the security context.
+   * Gets the active numeric laboratory ID from the security context.
    */
-  private get currentLabId(): string {
-    return this.iamStore.currentUserId() || 'LAB-001';
+  private get currentLabId(): number {
+    return this.iamStore.currentUserId() || 1;
   }
 
   /**

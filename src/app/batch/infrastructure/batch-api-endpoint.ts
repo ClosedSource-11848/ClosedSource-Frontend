@@ -53,7 +53,7 @@ export class BatchApiEndpoint extends BaseApiEndpoint<
   /**
    * Retrieves all production batches associated with a specific laboratory.
    *
-   * @param labId - The unique identifier of the target laboratory
+   * @param labId - The unique numeric identifier of the target laboratory
    * @returns An Observable emitting an array of Batch domain entities
    *
    * @remarks
@@ -61,7 +61,7 @@ export class BatchApiEndpoint extends BaseApiEndpoint<
    * It pipes the response envelope through the assembler to transform the raw
    * infrastructure payload into an array of pure Batch domain entities.
    */
-  getBatchesByLab(labId: string): Observable<Batch[]> {
+  getBatchesByLab(labId: number): Observable<Batch[]> {
     return this.http.get<BatchesResponse>(`${this.endpointUrl}/lab/${labId}`).pipe(
       map((response) => this.assembler.toEntitiesFromResponse(response)),
       catchError(this.handleError(`Failed to fetch batches for lab ${labId}`)),
@@ -89,7 +89,7 @@ export class BatchApiEndpoint extends BaseApiEndpoint<
   /**
    * Officially approves and releases a production batch via the API.
    *
-   * @param batchId - The unique identifier of the batch to be released
+   * @param batchId - The unique numeric identifier of the batch to be released
    * @param request - The payload containing release date and quality control remarks
    * @returns An Observable emitting the updated Batch domain entity
    *
@@ -98,7 +98,7 @@ export class BatchApiEndpoint extends BaseApiEndpoint<
    * Translates the returned infrastructure resource back into a domain entity,
    * reflecting the new state within the application.
    */
-  releaseBatch(batchId: string, request: ReleaseBatchRequest): Observable<Batch> {
+  releaseBatch(batchId: number, request: ReleaseBatchRequest): Observable<Batch> {
     return this.http.patch<BatchResource>(`${this.endpointUrl}/${batchId}/release`, request).pipe(
       map((resource) => this.assembler.toEntityFromResource(resource)),
       catchError(this.handleError(`Failed to release batch ${batchId}`)),
@@ -108,7 +108,7 @@ export class BatchApiEndpoint extends BaseApiEndpoint<
   /**
    * Rejects a production batch via the API due to non-compliance.
    *
-   * @param batchId - The unique identifier of the batch to be rejected
+   * @param batchId - The unique numeric identifier of the batch to be rejected
    * @param request - The payload containing the rejection date and justification
    * @returns An Observable emitting the updated Batch domain entity
    *
@@ -117,7 +117,7 @@ export class BatchApiEndpoint extends BaseApiEndpoint<
    * Translates the returned infrastructure resource back into a domain entity,
    * reflecting the recorded non-compliance state within the application.
    */
-  rejectBatch(batchId: string, request: RejectBatchRequest): Observable<Batch> {
+  rejectBatch(batchId: number, request: RejectBatchRequest): Observable<Batch> {
     return this.http.patch<BatchResource>(`${this.endpointUrl}/${batchId}/reject`, request).pipe(
       map((resource) => this.assembler.toEntityFromResource(resource)),
       catchError(this.handleError(`Failed to reject batch ${batchId}`)),
