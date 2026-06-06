@@ -18,7 +18,7 @@ export class IamStore {
   private readonly _errorSignal = signal<string | null>(null);
   private readonly isSignedInSignal = signal<boolean>(false);
   private readonly currentUsernameSignal = signal<string | null>(null);
-  private readonly currentUserIdSignal = signal<string | null>(null); // Adaptado a UUID (string)
+  private readonly currentUserIdSignal = signal<number | null>(null);
   private readonly usersSignal = signal<Array<User>>([]);
 
   readonly isSignedIn = this.isSignedInSignal.asReadonly();
@@ -37,7 +37,6 @@ export class IamStore {
     this.isSignedInSignal.set(false);
     this.currentUsernameSignal.set(null);
     this.currentUserIdSignal.set(null);
-
   }
 
   recoverPassword(recoverPasswordCommand: RecoverPasswordCommand, router: Router) {
@@ -63,7 +62,7 @@ export class IamStore {
     this.iamApi.signIn(signInCommand).subscribe({
       next: (signInResource) => {
         localStorage.setItem('token', signInResource.token);
-        localStorage.setItem('userId', signInResource.id); // Es string, no necesita .toString()
+        localStorage.setItem('userId', signInResource.id.toString());
 
         this.isSignedInSignal.set(true);
         this.currentUsernameSignal.set(signInResource.username);
