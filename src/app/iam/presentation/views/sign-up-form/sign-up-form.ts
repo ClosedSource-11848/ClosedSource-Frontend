@@ -34,10 +34,6 @@ export class SignUpForm {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  /**
-   * Propiedad 'role' añadida para resolver el error TS2339 en el HTML.
-   * Se usa para las llaves de traducción dinámica: 'iam.sign-up.roles.' + role
-   */
   role: string = 'lab-operator';
 
   selectedRole: string = 'ROLE_LAB_OPERATOR';
@@ -66,7 +62,6 @@ export class SignUpForm {
 
   constructor() {
     this.route.queryParams.subscribe((params) => {
-      // Sincronizamos 'role' para el HTML y 'selectedRole' para el comando del Backend
       if (params['role'] === 'qa-manager') {
         this.role = 'qa-manager';
         this.selectedRole = 'ROLE_QA_MANAGER';
