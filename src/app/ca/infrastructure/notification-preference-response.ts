@@ -14,15 +14,15 @@ import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-res
  */
 export interface NotificationPreferenceResource extends BaseResource {
   /**
-   * Unique identifier for the notification preference resource.
+   * Unique numeric identifier for the notification preference resource.
    */
-  id: string;
+  id: number;
 
   /**
-   * Identifier for the user who owns these preferences.
+   * Numeric identifier for the user who owns these preferences.
    * This is a foreign key reference to the User aggregate.
    */
-  userId: string;
+  userId: number;
 
   /**
    * Status of the email notification channel.
@@ -63,8 +63,8 @@ export interface NotificationPreferenceResource extends BaseResource {
  * // API returns:
  * // {
  * //   preferences: [
- * //     { id: 'p-1', userId: 'u-123', emailEnabled: true, ... },
- * //     { id: 'p-2', userId: 'u-456', emailEnabled: false, ... }
+ * //     { id: 1, userId: 123, emailEnabled: true, ... },
+ * //     { id: 2, userId: 456, emailEnabled: false, ... }
  * //   ]
  * // }
  * ```

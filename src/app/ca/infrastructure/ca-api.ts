@@ -30,9 +30,9 @@ import { UpdateNotificationPreferenceRequest } from './notification-preference.r
  * constructor(private caApi: CaApi) {}
  *
  * loadAlerts() {
- *    this.caApi.getAlerts({ severity: 'CRITICAL' }).subscribe(alerts => {
- *      // Handle critical alerts
- *    });
+ * this.caApi.getAlerts({ severity: 'CRITICAL' }).subscribe(alerts => {
+ * // Handle critical alerts
+ * });
  * }
  * ```
  */
@@ -85,8 +85,8 @@ export class CaApi extends BaseApi {
    * Fetches alerts from the remote manufacturing/quality monitoring system.
    */
   getAlerts(filters?: {
-    equipmentId?: string;
-    batchId?: string;
+    equipmentId?: number;
+    batchId?: number;
     status?: string;
     severity?: string;
   }): Observable<DeviationAlert[]> {
@@ -98,13 +98,13 @@ export class CaApi extends BaseApi {
   /**
    * Retrieves all compliance events associated with a specific entity.
    *
-   * @param entityId - The unique identifier of the related entity (e.g., User or Asset)
+   * @param entityId - The unique numeric identifier of the related entity (e.g., User or Asset)
    * @returns Observable stream emitting an array of ComplianceEvent entities
    *
    * @remarks
    * Accesses the audit trail to retrieve events linked to the provided entity identity.
    */
-  getEventsByEntity(entityId: string): Observable<ComplianceEvent[]> {
+  getEventsByEntity(entityId: number): Observable<ComplianceEvent[]> {
     return this._complianceEventEndpoint.getEventsByEntity(entityId);
   }
 
@@ -113,20 +113,20 @@ export class CaApi extends BaseApi {
   /**
    * Retrieves the notification configuration for a specific user.
    *
-   * @param userId - The unique identifier of the user
+   * @param userId - The unique numeric identifier of the user
    * @returns Observable stream emitting the user's NotificationPreference
    *
    * @remarks
    * Fetches the delivery channel settings and severity thresholds for the user.
    */
-  getPreferences(userId: string): Observable<NotificationPreference> {
+  getPreferences(userId: number): Observable<NotificationPreference> {
     return this._preferenceEndpoint.getPreferences(userId);
   }
 
   /**
    * Updates a user's notification preferences.
    *
-   * @param userId - The unique identifier of the user to update
+   * @param userId - The unique numeric identifier of the user to update
    * @param request - The update data transfer object containing new preference states
    * @returns Observable stream emitting the updated NotificationPreference entity
    *
@@ -134,7 +134,7 @@ export class CaApi extends BaseApi {
    * Persists changes to notification channels (email, SMS, in-app) and severity filters.
    */
   updatePreferences(
-    userId: string,
+    userId: number,
     request: UpdateNotificationPreferenceRequest,
   ): Observable<NotificationPreference> {
     return this._preferenceEndpoint.updatePreferences(userId, request);

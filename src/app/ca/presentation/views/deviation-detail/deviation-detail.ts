@@ -34,9 +34,9 @@ export class DeviationDetail implements OnInit {
   protected readonly store = inject(CaStore);
 
   /**
-   * The unique identifier of the alert being viewed, retrieved from the URL.
+   * The unique numeric identifier of the alert being viewed, retrieved from the URL.
    */
-  alertId: string = '';
+  alertId: number = 0;
 
   /**
    * Reactive Signal containing the details of the specific deviation alert.
@@ -47,7 +47,8 @@ export class DeviationDetail implements OnInit {
    * Initializes the component by extracting the ID from the route and binding the data from the store.
    */
   ngOnInit(): void {
-    this.alertId = this.route.snapshot.paramMap.get('id') || '';
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.alertId = idParam ? Number(idParam) : 0;
 
     this.alert = this.store.getAlertById(this.alertId);
 

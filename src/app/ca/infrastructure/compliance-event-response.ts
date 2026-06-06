@@ -14,15 +14,15 @@ import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-res
  */
 export interface ComplianceEventResource extends BaseResource {
   /**
-   * Unique identifier for the compliance event resource.
+   * Unique numeric identifier for the compliance event resource.
    */
-  id: string;
+  id: number;
 
   /**
-   * Identifier for the domain entity related to this event.
+   * Numeric identifier for the domain entity related to this event.
    * This serves as a reference to the aggregate or object being audited.
    */
-  relatedEntityId: string;
+  relatedEntityId: number;
 
   /**
    * The classification or type of the compliance event.
@@ -40,9 +40,9 @@ export interface ComplianceEventResource extends BaseResource {
   timestamp: string;
 
   /**
-   * (Optional) The identifier of the agent or system that resolved the event.
+   * (Optional) The numeric identifier of the agent or system that resolved the event.
    */
-  resolvedBy?: string;
+  resolvedBy?: number;
 
   /**
    * The timestamp of when the record was created in the system.
@@ -63,8 +63,8 @@ export interface ComplianceEventResource extends BaseResource {
  * // API returns:
  * // {
  * //   complianceEvents: [
- * //     { id: 'ev-1', eventType: 'LOGIN', relatedEntityId: 'u-123', ... },
- * //     { id: 'ev-2', eventType: 'LOGOUT', relatedEntityId: 'u-123', ... }
+ * //     { id: 1, eventType: 'LOGIN', relatedEntityId: 123, ... },
+ * //     { id: 2, eventType: 'LOGOUT', relatedEntityId: 123, ... }
  * //   ]
  * // }
  * ```

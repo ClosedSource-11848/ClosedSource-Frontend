@@ -14,12 +14,12 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  * @example
  * ```typescript
  * const securityEvent = new ComplianceEvent({
- *   id: 'ev-123',
- *   relatedEntityId: 'user-456',
- *   eventType: 'UNAUTHORIZED_ACCESS',
- *   description: 'Attempted access to restricted resource',
- *   timestamp: '2026-05-12T10:00:00Z',
- *   createdAt: '2026-05-12T10:05:00Z'
+ * id: 1,
+ * relatedEntityId: 456,
+ * eventType: 'UNAUTHORIZED_ACCESS',
+ * description: 'Attempted access to restricted resource',
+ * timestamp: '2026-05-12T10:00:00Z',
+ * createdAt: '2026-05-12T10:05:00Z'
  * });
  *
  * console.log(securityEvent.eventType); // 'UNAUTHORIZED_ACCESS'
@@ -27,14 +27,14 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  */
 export class ComplianceEvent implements BaseEntity {
   /**
-   * The unique identifier for this compliance event.
+   * The unique numeric identifier for this compliance event.
    */
-  id: string;
+  id: number;
 
   /**
-   * The identifier of the entity (e.g., User, Asset) related to this event.
+   * The numeric identifier of the entity (e.g., User, Asset) related to this event.
    */
-  relatedEntityId: string;
+  relatedEntityId: number;
 
   /**
    * The classification or category of the compliance event.
@@ -52,9 +52,9 @@ export class ComplianceEvent implements BaseEntity {
   timestamp: string;
 
   /**
-   * The identifier of the agent or system that addressed the event, if applicable.
+   * The numeric identifier of the agent or system that addressed the event, if applicable.
    */
-  resolvedBy?: string;
+  resolvedBy?: number;
 
   /**
    * The timestamp indicating when this record was persisted in the system.
@@ -65,12 +65,12 @@ export class ComplianceEvent implements BaseEntity {
    * Creates a new ComplianceEvent entity.
    *
    * @param params - Initialization properties
-   * @param params.id - The unique identifier for the event
-   * @param params.relatedEntityId - ID of the entity associated with this event
+   * @param params.id - The unique numeric identifier for the event
+   * @param params.relatedEntityId - Numeric ID of the entity associated with this event
    * @param params.eventType - The type/category of the event
    * @param params.description - Detailed description of the occurrence
    * @param params.timestamp - Original occurrence date and time
-   * @param params.resolvedBy - (Optional) Entity that resolved the event
+   * @param params.resolvedBy - (Optional) Numeric ID of the entity that resolved the event
    * @param params.createdAt - Creation date of the record
    *
    * @remarks
@@ -78,12 +78,12 @@ export class ComplianceEvent implements BaseEntity {
    * As an entity, the ID is fundamental to its identity across the domain.
    */
   constructor(params: {
-    id: string;
-    relatedEntityId: string;
+    id: number;
+    relatedEntityId: number;
     eventType: string;
     description: string;
     timestamp: string;
-    resolvedBy?: string;
+    resolvedBy?: number;
     createdAt: string;
   }) {
     this.id = params.id;
