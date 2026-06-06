@@ -10,6 +10,14 @@ import { GenerateBatchReportCommand } from '../domain/model/generate-batch-repor
 import { GenerateComplianceReportCommand } from '../domain/model/generate-compliance-report.command';
 import { ExportEquipmentLogCommand } from '../domain/model/export-equipment-log.command';
 
+/**
+ * Application store for managing Reporting and Analysis (RA) state.
+ *
+ * @remarks
+ * This store acts as the central state management for the RA domain, using Angular Signals
+ * for reactive data flow. It coordinates between the infrastructure layer (API) and
+ * the presentation layer for performance metrics, trends, and reports.
+ */
 @Injectable({ providedIn: 'root' })
 export class RaStore {
   private readonly api = inject(RaApi);
@@ -46,7 +54,12 @@ export class RaStore {
 
   // ── Dashboard & Metrics ──────────────────────────────────────────────────
 
-  loadDashboard(labId: string): void {
+  /**
+   * Fetches the KPI dashboard for a specific lab.
+   *
+   * @param labId - The unique numeric identifier of the laboratory
+   */
+  loadDashboard(labId: number): void {
     this._isLoading.set(true);
     this._error.set(null);
     this.api
@@ -64,7 +77,12 @@ export class RaStore {
       });
   }
 
-  loadDeviationTrends(equipmentId: string): void {
+  /**
+   * Fetches deviation trends for a specific piece of equipment.
+   *
+   * @param equipmentId - The unique numeric identifier of the equipment
+   */
+  loadDeviationTrends(equipmentId: number): void {
     this._isLoading.set(true);
     this._error.set(null);
     this.api
@@ -84,9 +102,14 @@ export class RaStore {
 
   // ── Audit Logs ───────────────────────────────────────────────────────────
 
+  /**
+   * Fetches the audit logs based on provided filters.
+   *
+   * @param filters - Optional criteria to filter the logs (numeric equipment, numeric batch, dates)
+   */
   loadAuditLog(filters?: {
-    equipmentId?: string;
-    batchId?: string;
+    equipmentId?: number;
+    batchId?: number;
     dateFrom?: string;
     dateTo?: string;
   }): void {
