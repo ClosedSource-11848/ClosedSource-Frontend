@@ -18,6 +18,15 @@ import { TrackingStore } from '../../../application/tracking.store';
 import { EquipmentStore } from '../../../../equipment/application/equipment.store';
 import { IamStore } from '../../../../iam/application/iam.store';
 
+/**
+ * Component responsible for displaying the main telemetry and IoT tracking dashboard.
+ *
+ * @remarks
+ * In the presentation layer, this component orchestrates data from multiple domains
+ * (Tracking, Equipment, and IAM) to provide a unified real-time visualization of
+ * equipment health. It utilizes Chart.js to render time-series telemetry data and
+ * highlights operational anomalies automatically.
+ */
 @Component({
   selector: 'app-telemetry-dashboard',
   standalone: true,
@@ -32,24 +41,54 @@ import { IamStore } from '../../../../iam/application/iam.store';
     MatFormFieldModule,
     MatInputModule,
     MatProgressSpinnerModule,
-    BaseChartDirective
+    BaseChartDirective,
   ],
   templateUrl: './telemetry-dashboard.html',
   styleUrl: './telemetry-dashboard.css',
 })
 export class TelemetryDashboardComponent implements OnInit {
+  /**
+   * The application store managing the state for the Tracking and Telemetry domain.
+   */
   protected readonly store = inject(TrackingStore);
+
+  /**
+   * The application store managing the state for the Equipment domain.
+   */
   protected readonly equipmentStore = inject(EquipmentStore);
+
+  /**
+   * The identity and access management store, used to retrieve user context.
+   */
   protected readonly iamStore = inject(IamStore);
+
+  /**
+   * Service for handling internationalization and translation lookups.
+   */
   private readonly translate = inject(TranslateService);
 
-  protected selectedEquipmentId = signal<string>('');
+  /**
+   * Reactive signal holding the numeric ID of the currently selected equipment.
+   */
+  protected selectedEquipmentId = signal<number>(0);
 
-  private get currentLabId(): string {
-    return this.iamStore.currentUserId() || 'LAB-001';
+  /**
+   * Retrieves the current laboratory ID based on the authenticated user's context.
+   *
+   * @remarks
+   * Converts the ID to a numeric value for domain entity consistency. Defaults to 1.
+   */
+  private get currentLabId(): number {
+    const id = this.iamStore.currentUserId();
+    return id ? Number(id) : 1;
   }
 
   // ── Configuración de Chart.js (Consistente con QualiTrack) ────────────────
+
+  /**
+   * General configuration options for the Chart.js line chart instance.
+   * Defines responsiveness, tooltips, axes, and line tension.
+   */
   public chartOptions: ChartOptions<'line'> = {
     responsive: true,
     maintainAspectRatio: false,
@@ -67,6 +106,15 @@ export class TelemetryDashboardComponent implements OnInit {
     },
   };
 
+  /**
+   * Reactive computed signal that transforms historical telemetry points into
+   * a structure compatible with Chart.js line charts.
+   *
+   * @remarks
+   * Sorts history chronologically and maps anomalous points to distinct colors
+   * (e.g., red for anomalies, dark blue for normal) to provide immediate visual
+   * cues regarding equipment health.
+   */
   public chartData = computed<ChartConfiguration<'line'>['data']>(() => {
     const history = this.store.telemetryHistory();
     const sortedHistory = [...history].sort(
@@ -86,6 +134,7 @@ export class TelemetryDashboardComponent implements OnInit {
           fill: true,
           borderColor: '#1a3a5c',
           backgroundColor: 'rgba(26, 58, 92, 0.1)',
+          // Visually distinguish anomalies with a red color indicator
           pointBackgroundColor: sortedHistory.map((p) => (p.isAnomaly ? '#d32f2f' : '#1a3a5c')),
           pointBorderColor: '#ffffff',
         },
@@ -94,6 +143,15 @@ export class TelemetryDashboardComponent implements OnInit {
   });
 
   // ── Lifecycle y Carga de Datos Reales ────────────────────────────────────
+
+  /**
+   * Lifecycle hook that initializes the component.
+   *
+   * @remarks
+   * Initiates the load of available equipment for the current lab context. Uses a
+   * short-lived interval to poll the equipment store until populated, ensuring
+   * the dashboard auto-selects the first available machine to display immediate data.
+   */
   ngOnInit(): void {
     this.equipmentStore.loadEquipment(this.currentLabId);
 
@@ -107,16 +165,25 @@ export class TelemetryDashboardComponent implements OnInit {
     }, 500);
   }
 
+  /**
+   * Event handler triggered when the user changes the selected equipment in the UI dropdown.
+   */
   onEquipmentChange(): void {
     this.loadDashboardData();
   }
 
+  /**
+   * Dispatches commands to the TrackingStore to load real-time status, latest
+   * measurements, and historical telemetry for the currently selected equipment.
+   */
   private loadDashboardData(): void {
     const eqId = this.selectedEquipmentId();
     if (!eqId) return;
 
     this.store.loadEquipmentStatus(eqId);
     this.store.loadLatestMeasurements();
+
+    // Convert to string for the API call if the store expects a string filter
     this.store.loadTelemetryHistory({ equipmentId: eqId });
   }
 }

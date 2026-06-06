@@ -20,6 +20,14 @@ import { TrackingStore } from '../../../application/tracking.store';
 import { EquipmentStore } from '../../../../equipment/application/equipment.store';
 import { IamStore } from '../../../../iam/application/iam.store';
 
+/**
+ * Component responsible for providing detailed analytical charts for telemetry data.
+ *
+ * @remarks
+ * In the presentation layer, this component allows users to perform deeper historical
+ * analysis of equipment telemetry. It features time-based filtering and advanced
+ * visual indicators (like highlighting line segments that connect to anomalous data points).
+ */
 @Component({
   selector: 'app-telemetry-chart',
   standalone: true,
@@ -42,23 +50,54 @@ import { IamStore } from '../../../../iam/application/iam.store';
   styleUrl: './telemetry-chart.css',
 })
 export class TelemetryChartComponent implements OnInit {
+  /**
+   * The application store managing the state for the Tracking and Telemetry domain.
+   */
   protected readonly store = inject(TrackingStore);
+
+  /**
+   * The application store managing the state for the Equipment domain.
+   */
   protected readonly equipmentStore = inject(EquipmentStore);
+
+  /**
+   * The identity and access management store, used to retrieve user context.
+   */
   protected readonly iamStore = inject(IamStore);
+
+  /**
+   * Service for handling internationalization and translation lookups.
+   */
   private readonly translate = inject(TranslateService);
 
-  // ── Filtros Analíticos ───────────────────────────────────────────────────
+  // ── Analytical Filters ───────────────────────────────────────────────────
+
+  /**
+   * Current filter state for querying historical telemetry data.
+   */
   protected filters = {
-    equipmentId: '',
+    equipmentId: null as number | null,
     dateFrom: null as Date | null,
     dateTo: null as Date | null,
   };
 
-  private get currentLabId(): string {
-    return this.iamStore.currentUserId() || 'LAB-001';
+  /**
+   * Retrieves the current laboratory ID based on the authenticated user's context.
+   *
+   * @remarks
+   * Converts the ID to a numeric value for domain consistency. Defaults to 1.
+   */
+  private get currentLabId(): number {
+    const id = this.iamStore.currentUserId();
+    return id ? Number(id) : 1;
   }
 
-  // ── Configuración de Chart.js ────────────────────────────────────────────
+  // ── Chart.js Configuration ───────────────────────────────────────────────
+
+  /**
+   * Advanced configuration options for the analytical Chart.js line chart.
+   * Features custom tooltips and nearest-neighbor interaction modes for better UX.
+   */
   public chartOptions: ChartOptions<'line'> = {
     responsive: true,
     maintainAspectRatio: false,
@@ -88,10 +127,19 @@ export class TelemetryChartComponent implements OnInit {
     },
   };
 
+  /**
+   * Reactive computed signal that transforms historical telemetry points into
+   * a sophisticated analytical chart structure.
+   *
+   * @remarks
+   * Sorts history chronologically, formats dates for X-axis readability, and dynamically
+   * colors both data points and the line segments connecting them. If a segment connects
+   * to a recorded anomaly, the line turns red to immediately draw the analyst's attention.
+   */
   public chartData = computed<ChartConfiguration<'line'>['data']>(() => {
     const history = this.store.telemetryHistory();
 
-    // Ordenar cronológicamente
+    // Sort chronologically for accurate line drawing
     const sortedHistory = [...history].sort(
       (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
     );
@@ -112,13 +160,13 @@ export class TelemetryChartComponent implements OnInit {
           data: sortedHistory.map((p) => p.recordedValue),
           label: datasetLabel,
           fill: true,
-          borderColor: '#1a3a5c', // Estilo QualiTrack
+          borderColor: '#1a3a5c', // Standard branding color
           backgroundColor: 'rgba(26, 58, 92, 0.05)',
           pointBackgroundColor: sortedHistory.map((p) => (p.isAnomaly ? '#d32f2f' : '#1a3a5c')),
           pointBorderColor: '#ffffff',
           segment: {
             borderColor: (ctx) => {
-              // Pinta el segmento de rojo si conecta con una anomalía
+              // Paints the segment red if it connects to or from an anomalous data point
               const p1Anomaly = sortedHistory[ctx.p0DataIndex]?.isAnomaly;
               const p2Anomaly = sortedHistory[ctx.p1DataIndex]?.isAnomaly;
               return p1Anomaly || p2Anomaly ? '#d32f2f' : '#1a3a5c';
@@ -129,11 +177,18 @@ export class TelemetryChartComponent implements OnInit {
     };
   });
 
-  // ── Ciclo de Vida y Acciones ─────────────────────────────────────────────
+  // ── Lifecycle and Actions ────────────────────────────────────────────────
+
+  /**
+   * Lifecycle hook that initializes the component.
+   *
+   * @remarks
+   * Initiates the load of available equipment. Polls the store briefly to
+   * auto-select the first available equipment and render the initial chart.
+   */
   ngOnInit(): void {
     this.equipmentStore.loadEquipment(this.currentLabId);
 
-    // Autoseleccionar el primer equipo cuando cargue
     const checkEquipment = setInterval(() => {
       const list = this.equipmentStore.equipmentList();
       if (list.length > 0) {
@@ -144,10 +199,16 @@ export class TelemetryChartComponent implements OnInit {
     }, 500);
   }
 
+  /**
+   * Dispatches a command to load historical telemetry data based on the current
+   * state of the analytical filters (Equipment ID and Date Ranges).
+   */
   loadChartData(): void {
     if (!this.filters.equipmentId) return;
 
-    const query: any = { equipmentId: this.filters.equipmentId };
+    const query: { equipmentId: number; from?: string; to?: string } = {
+      equipmentId: this.filters.equipmentId,
+    };
 
     if (this.filters.dateFrom) query.from = this.filters.dateFrom.toISOString();
     if (this.filters.dateTo) query.to = this.filters.dateTo.toISOString();
@@ -155,6 +216,10 @@ export class TelemetryChartComponent implements OnInit {
     this.store.loadTelemetryHistory(query);
   }
 
+  /**
+   * Resets the date range filters to their default empty states and reloads
+   * the chart with the full available history for the selected equipment.
+   */
   clearFilters(): void {
     this.filters.dateFrom = null;
     this.filters.dateTo = null;
