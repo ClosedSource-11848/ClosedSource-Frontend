@@ -14,13 +14,13 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  * @example
  * ```typescript
  * const userPrefs = new NotificationPreference({
- *   id: 'pref-552',
- *   userId: 'user-001',
- *   emailEnabled: true,
- *   smsEnabled: false,
- *   inAppEnabled: true,
- *   minimumSeverity: 'HIGH',
- *   createdAt: '2026-05-12T11:28:14Z'
+ * id: 1,
+ * userId: 101,
+ * emailEnabled: true,
+ * smsEnabled: false,
+ * inAppEnabled: true,
+ * minimumSeverity: 'HIGH',
+ * createdAt: '2026-05-12T11:28:14Z'
  * });
  *
  * console.log(userPrefs.emailEnabled); // true
@@ -28,14 +28,14 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  */
 export class NotificationPreference implements BaseEntity {
   /**
-   * The unique identifier for this preference record.
+   * The unique numeric identifier for this preference record.
    */
-  id: string;
+  id: number;
 
   /**
-   * The identifier of the user to whom these preferences belong.
+   * The numeric identifier of the user to whom these preferences belong.
    */
-  userId: string;
+  userId: number;
 
   /**
    * Indicates if the user wants to receive notifications via email.
@@ -66,8 +66,8 @@ export class NotificationPreference implements BaseEntity {
    * Creates a new NotificationPreference entity.
    *
    * @param params - Initialization properties
-   * @param params.id - The unique identifier for the preference settings
-   * @param params.userId - ID of the owner of these preferences
+   * @param params.id - The unique numeric identifier for the preference settings
+   * @param params.userId - Numeric ID of the owner of these preferences
    * @param params.emailEnabled - Toggle for email delivery
    * @param params.smsEnabled - Toggle for SMS delivery
    * @param params.inAppEnabled - Toggle for in-app delivery
@@ -79,8 +79,8 @@ export class NotificationPreference implements BaseEntity {
    * the ID, while the behavior focuses on the state of delivery channels.
    */
   constructor(params: {
-    id: string;
-    userId: string;
+    id: number;
+    userId: number;
     emailEnabled: boolean;
     smsEnabled: boolean;
     inAppEnabled: boolean;

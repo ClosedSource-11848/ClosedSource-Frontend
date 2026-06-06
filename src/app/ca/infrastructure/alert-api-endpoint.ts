@@ -46,8 +46,8 @@ export class AlertApiEndpoint extends BaseApiEndpoint<
    * Retrieves a collection of deviation alerts based on provided criteria.
    *
    * @param filters - Optional object containing query parameters to filter results
-   * @param filters.equipmentId - Filter by the specific equipment source
-   * @param filters.batchId - Filter by a production batch identifier
+   * @param filters.equipmentId - Filter by the specific numeric equipment source
+   * @param filters.batchId - Filter by a numeric production batch identifier
    * @param filters.status - Filter by the current lifecycle state of the alert
    * @param filters.severity - Filter by the impact level of the deviation
    *
@@ -59,8 +59,8 @@ export class AlertApiEndpoint extends BaseApiEndpoint<
    * error handling specific to the alert fetching process.
    */
   getAlerts(filters?: {
-    equipmentId?: string;
-    batchId?: string;
+    equipmentId?: number;
+    batchId?: number;
     status?: string;
     severity?: string;
   }): Observable<DeviationAlert[]> {

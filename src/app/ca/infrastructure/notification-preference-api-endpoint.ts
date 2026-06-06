@@ -29,8 +29,8 @@ const prefsEndpointUrl = `${environment.serverBasePath}${environment.caNotificat
  * @example
  * ```typescript
  * const endpoint = new NotificationPreferenceApiEndpoint(http);
- * endpoint.getPreferences('user-789').subscribe(prefs => {
- *    // prefs is a fully hydrated NotificationPreference domain entity
+ * endpoint.getPreferences(789).subscribe(prefs => {
+ * // prefs is a fully hydrated NotificationPreference domain entity
  * });
  * ```
  */
@@ -57,14 +57,14 @@ export class NotificationPreferenceApiEndpoint extends BaseApiEndpoint<
   /**
    * Retrieves the notification preferences for a specific user.
    *
-   * @param userId - The unique identifier of the user
+   * @param userId - The unique numeric identifier of the user
    * @returns Observable stream emitting the NotificationPreference domain entity
    *
    * @remarks
    * Fetches the user's specific configuration for communication channels
    * and alert severity thresholds.
    */
-  getPreferences(userId: string): Observable<NotificationPreference> {
+  getPreferences(userId: number): Observable<NotificationPreference> {
     return this.http.get<NotificationPreferenceResource>(`${this.endpointUrl}/${userId}`).pipe(
       map((resource) => this.assembler.toEntityFromResource(resource)),
       catchError(this.handleError(`Failed to fetch notification preferences for user ${userId}`)),
@@ -74,7 +74,7 @@ export class NotificationPreferenceApiEndpoint extends BaseApiEndpoint<
   /**
    * Updates an existing user's notification preferences.
    *
-   * @param userId - The unique identifier of the user to update
+   * @param userId - The unique numeric identifier of the user to update
    * @param request - The DTO containing the updated preference values
    * @returns Observable stream emitting the updated NotificationPreference entity
    *
@@ -83,7 +83,7 @@ export class NotificationPreferenceApiEndpoint extends BaseApiEndpoint<
    * The response resource is automatically assembled back into a domain entity.
    */
   updatePreferences(
-    userId: string,
+    userId: number,
     request: UpdateNotificationPreferenceRequest,
   ): Observable<NotificationPreference> {
     return this.http

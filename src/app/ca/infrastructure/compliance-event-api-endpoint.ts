@@ -25,8 +25,8 @@ const complianceEndpointUrl = `${environment.serverBasePath}${environment.caComp
  * @example
  * ```typescript
  * const endpoint = new ComplianceEventApiEndpoint(http);
- * endpoint.getEventsByEntity('user-123').subscribe(events => {
- *    // events are fully hydrated ComplianceEvent domain entities
+ * endpoint.getEventsByEntity(123).subscribe(events => {
+ * // events are fully hydrated ComplianceEvent domain entities
  * });
  * ```
  */
@@ -54,14 +54,14 @@ export class ComplianceEventApiEndpoint extends BaseApiEndpoint<
   /**
    * Retrieves all compliance events associated with a specific entity ID.
    *
-   * @param entityId - The unique identifier of the related entity to filter by
+   * @param entityId - The unique numeric identifier of the related entity to filter by
    * @returns Observable stream emitting an array of ComplianceEvent domain entities
    *
    * @remarks
    * Performs a GET request to a specialized sub-route to fetch audit trails
    * or compliance logs linked to a particular domain object (e.g., a specific user or asset).
    */
-  getEventsByEntity(entityId: string): Observable<ComplianceEvent[]> {
+  getEventsByEntity(entityId: number): Observable<ComplianceEvent[]> {
     return this.http.get<ComplianceEventsResponse>(`${this.endpointUrl}/entity/${entityId}`).pipe(
       map((response) => this.assembler.toEntitiesFromResponse(response)),
       catchError(this.handleError(`Failed to fetch compliance events for entity ${entityId}`)),
