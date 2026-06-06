@@ -39,12 +39,12 @@ import { CreateRawMaterialRequest } from './raw-material.request';
  * ```typescript
  * @Component({ ... })
  * export class LabDashboardComponent {
- *   constructor(private readonly labApi: LaboratoryApi) {}
+ * constructor(private readonly labApi: LaboratoryApi) {}
  *
- *   loadDashboard(labId: string): void {
- *     this.labApi.getLaboratory(labId).subscribe(lab => console.log(lab.name));
- *     this.labApi.getStaff(labId).subscribe(staff => console.log(staff.length));
- *   }
+ * loadDashboard(labId: number): void {
+ * this.labApi.getLaboratory(labId).subscribe(lab => console.log(lab.name));
+ * this.labApi.getStaff(labId).subscribe(staff => console.log(staff.length));
+ * }
  * }
  * ```
  */
@@ -84,25 +84,25 @@ export class LaboratoryApi extends BaseApi {
   // ── Laboratory ────────────────────────────────────────────────────────────
 
   /**
-   * Retrieves the profile of a laboratory by its identifier.
+   * Retrieves the profile of a laboratory by its numeric identifier.
    *
-   * @param labId - The unique identifier of the laboratory to retrieve.
+   * @param labId - The unique numeric identifier of the laboratory to retrieve.
    * @returns An `Observable` that emits the matching {@link Laboratory} entity.
    */
-  getLaboratory(labId: string): Observable<Laboratory> {
+  getLaboratory(labId: number): Observable<Laboratory> {
     return this._laboratoryEndpoint.getByLabId(labId);
   }
 
   /**
    * Updates the profile information of an existing laboratory.
    *
-   * @param labId - The unique identifier of the laboratory to update.
+   * @param labId - The unique numeric identifier of the laboratory to update.
    * @param request - The {@link UpdateLaboratoryRequest} payload containing
    * the new values for the laboratory's mutable fields.
    * @returns An `Observable` that emits the updated {@link Laboratory} entity
    * as returned by the server after applying the changes.
    */
-  updateLaboratory(labId: string, request: UpdateLaboratoryRequest): Observable<Laboratory> {
+  updateLaboratory(labId: number, request: UpdateLaboratoryRequest): Observable<Laboratory> {
     return this._laboratoryEndpoint.updateLaboratory(labId, request);
   }
 
@@ -111,32 +111,32 @@ export class LaboratoryApi extends BaseApi {
   /**
    * Retrieves all staff members associated with a laboratory.
    *
-   * @param labId - The unique identifier of the laboratory whose staff to retrieve.
+   * @param labId - The unique numeric identifier of the laboratory whose staff to retrieve.
    * @returns An `Observable` that emits an array of {@link StaffMember} entities
    * belonging to the specified laboratory.
    */
-  getStaff(labId: string): Observable<StaffMember[]> {
+  getStaff(labId: number): Observable<StaffMember[]> {
     return this._staffEndpoint.getStaffByLab(labId);
   }
 
   /**
    * Registers a new staff member under a specific laboratory.
    *
-   * @param labId - The unique identifier of the laboratory to register the staff member under.
+   * @param labId - The unique numeric identifier of the laboratory to register the staff member under.
    * @param request - The {@link RegisterStaffRequest} payload containing the
    * new staff member's profile information.
    * @returns An `Observable` that emits the newly created {@link StaffMember}
    * entity as returned by the server.
    */
-  registerStaff(labId: string, request: RegisterStaffRequest): Observable<StaffMember> {
+  registerStaff(labId: number, request: RegisterStaffRequest): Observable<StaffMember> {
     return this._staffEndpoint.registerStaff(labId, request);
   }
 
   /**
    * Deactivates an existing staff member within a laboratory.
    *
-   * @param labId - The unique identifier of the laboratory the staff member belongs to.
-   * @param staffId - The unique identifier of the staff member to deactivate.
+   * @param labId - The unique numeric identifier of the laboratory the staff member belongs to.
+   * @param staffId - The unique numeric identifier of the staff member to deactivate.
    * @returns An `Observable` that completes when the deactivation has been
    * successfully processed by the server.
    *
@@ -145,7 +145,7 @@ export class LaboratoryApi extends BaseApi {
    * traceability including authorship on past audit entries and batch approvals.
    * See {@link StaffMember.active} for details.
    */
-  deactivateStaff(labId: string, staffId: string): Observable<void> {
+  deactivateStaff(labId: number, staffId: number): Observable<void> {
     return this._staffEndpoint.deactivateStaff(labId, staffId);
   }
 
@@ -154,24 +154,24 @@ export class LaboratoryApi extends BaseApi {
   /**
    * Retrieves all pharmaceutical products registered under a laboratory.
    *
-   * @param labId - The unique identifier of the laboratory whose products to retrieve.
+   * @param labId - The unique numeric identifier of the laboratory whose products to retrieve.
    * @returns An `Observable` that emits an array of {@link PharmaceuticalProduct}
    * entities belonging to the specified laboratory.
    */
-  getProducts(labId: string): Observable<PharmaceuticalProduct[]> {
+  getProducts(labId: number): Observable<PharmaceuticalProduct[]> {
     return this._productsEndpoint.getProductsByLab(labId);
   }
 
   /**
    * Creates a new pharmaceutical product under a specific laboratory.
    *
-   * @param labId - The unique identifier of the laboratory to register the product under.
+   * @param labId - The unique numeric identifier of the laboratory to register the product under.
    * @param request - The {@link CreateProductRequest} payload containing
    * the new product's details.
    * @returns An `Observable` that emits the newly created {@link PharmaceuticalProduct}
    * entity as returned by the server.
    */
-  createProduct(labId: string, request: CreateProductRequest): Observable<PharmaceuticalProduct> {
+  createProduct(labId: number, request: CreateProductRequest): Observable<PharmaceuticalProduct> {
     return this._productsEndpoint.createProduct(labId, request);
   }
 
@@ -180,11 +180,11 @@ export class LaboratoryApi extends BaseApi {
   /**
    * Retrieves all raw materials registered under a laboratory.
    *
-   * @param labId - The unique identifier of the laboratory whose raw materials to retrieve.
+   * @param labId - The unique numeric identifier of the laboratory whose raw materials to retrieve.
    * @returns An `Observable` that emits an array of {@link RawMaterial} entities
    * belonging to the specified laboratory.
    */
-  getRawMaterials(labId: string): Observable<RawMaterial[]> {
+  getRawMaterials(labId: number): Observable<RawMaterial[]> {
     return this._materialsEndpoint.getRawMaterialsByLab(labId);
   }
 
@@ -192,7 +192,7 @@ export class LaboratoryApi extends BaseApi {
    * Retrieves all raw materials whose stock level is at or below their
    * defined minimum stock threshold.
    *
-   * @param labId - The unique identifier of the laboratory to check for low-stock materials.
+   * @param labId - The unique numeric identifier of the laboratory to check for low-stock materials.
    * @returns An `Observable` that emits an array of {@link RawMaterial} entities
    * that require restocking attention.
    *
@@ -201,20 +201,20 @@ export class LaboratoryApi extends BaseApi {
    * See {@link RawMaterial.minimumStock} for the threshold definition used to
    * determine low-stock status.
    */
-  getLowStockMaterials(labId: string): Observable<RawMaterial[]> {
+  getLowStockMaterials(labId: number): Observable<RawMaterial[]> {
     return this._materialsEndpoint.getLowStockMaterials(labId);
   }
 
   /**
    * Creates a new raw material entry under a specific laboratory.
    *
-   * @param labId - The unique identifier of the laboratory to register the material under.
+   * @param labId - The unique numeric identifier of the laboratory to register the material under.
    * @param request - The {@link CreateRawMaterialRequest} payload containing
    * the new material's inventory and traceability details.
    * @returns An `Observable` that emits the newly created {@link RawMaterial}
    * entity as returned by the server.
    */
-  createRawMaterial(labId: string, request: CreateRawMaterialRequest): Observable<RawMaterial> {
+  createRawMaterial(labId: number, request: CreateRawMaterialRequest): Observable<RawMaterial> {
     return this._materialsEndpoint.createRawMaterial(labId, request);
   }
 }

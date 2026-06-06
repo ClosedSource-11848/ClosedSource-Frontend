@@ -17,7 +17,7 @@
  * @example
  * ```typescript
  * const command: RegisterStaffCommand = {
- *   labId: 'lab-123',
+ *   labId: 123',
  *   fullName: 'María Elena Torres',
  *   role: 'Quality Control Analyst',
  *   email: 'metorres@biolabperu.com',
@@ -33,7 +33,7 @@ export interface RegisterStaffCommand {
    * ensuring that their role and responsibilities are contained within the correct
    * organizational context.
    */
-  labId: string;
+  labId: number;
 
   /**
    * The full legal name of the staff member being registered.

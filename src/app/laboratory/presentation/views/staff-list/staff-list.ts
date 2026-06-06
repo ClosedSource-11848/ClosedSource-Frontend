@@ -28,8 +28,8 @@ export class StaffList implements OnInit {
   protected readonly iamStore = inject(IamStore);
   private readonly router = inject(Router);
 
-  private get currentLabId(): string {
-    return this.iamStore.currentUserId() || 'LAB-001';
+  private get currentLabId(): number {
+    return this.iamStore.currentUserId() || 1;
   }
 
   protected readonly displayedColumns = ['fullName', 'role', 'email', 'active', 'actions'];
@@ -42,7 +42,7 @@ export class StaffList implements OnInit {
     this.router.navigate(['/laboratories/staff-form']);
   }
 
-  protected onDeactivate(staffId: string): void {
+  protected onDeactivate(staffId: number): void {
     if (confirm('Are you sure you want to deactivate this staff member?')) {
       this.store.deactivateStaff(this.currentLabId, staffId);
     }

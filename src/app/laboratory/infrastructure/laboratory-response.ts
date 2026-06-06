@@ -17,20 +17,20 @@ import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-res
  * @example
  * ```typescript
  * const resource: LaboratoryResource = {
- *   id: 'lab-123',
- *   name: 'BioLab Peru S.A.C.',
- *   ruc: '20512345678',
- *   address: 'Av. Industrial 456, Lima',
- *   phone: '+51 1 234-5678',
- *   applicableRegulations: ['ISO 17025', 'DIGEMID'],
- *   createdAt: '2024-01-15T08:00:00Z',
- *   updatedAt: '2024-06-10T12:30:00Z',
+ * id: 123,
+ * name: 'BioLab Peru S.A.C.',
+ * ruc: '20512345678',
+ * address: 'Av. Industrial 456, Lima',
+ * phone: '+51 1 234-5678',
+ * applicableRegulations: ['ISO 17025', 'DIGEMID'],
+ * createdAt: '2024-01-15T08:00:00Z',
+ * updatedAt: '2024-06-10T12:30:00Z',
  * };
  * ```
  */
 export interface LaboratoryResource extends BaseResource {
-  /** The unique identifier of the laboratory as assigned by the server. */
-  id: string;
+  /** The unique numeric identifier of the laboratory as assigned by the server. */
+  id: number;
 
   /** The official registered name of the laboratory. */
   name: string;
@@ -84,18 +84,18 @@ export interface LaboratoryResource extends BaseResource {
  * @example
  * ```typescript
  * const response: LaboratoriesResponse = {
- *   laboratories: [
- *     {
- *       id: 'lab-123',
- *       name: 'BioLab Peru S.A.C.',
- *       ruc: '20512345678',
- *       address: 'Av. Industrial 456, Lima',
- *       phone: '+51 1 234-5678',
- *       applicableRegulations: ['ISO 17025'],
- *       createdAt: '2024-01-15T08:00:00Z',
- *       updatedAt: '2024-06-10T12:30:00Z',
- *     }
- *   ]
+ * laboratories: [
+ * {
+ * id: 123,
+ * name: 'BioLab Peru S.A.C.',
+ * ruc: '20512345678',
+ * address: 'Av. Industrial 456, Lima',
+ * phone: '+51 1 234-5678',
+ * applicableRegulations: ['ISO 17025'],
+ * createdAt: '2024-01-15T08:00:00Z',
+ * updatedAt: '2024-06-10T12:30:00Z',
+ * }
+ * ]
  * };
  * ```
  */

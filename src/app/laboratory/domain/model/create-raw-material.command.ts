@@ -16,28 +16,28 @@
  * @example
  * ```typescript
  * const command: CreateRawMaterialCommand = {
- *   labId: 'lab-123',
- *   name: 'Etanol 96°',
- *   code: 'RM-ETH-96',
- *   supplier: 'QuimicaPeru S.A.C.',
- *   batchNumber: 'LOTE-2024-045',
- *   expirationDate: '2026-12-31',
- *   quantityInStock: 150,
- *   unit: 'L',
- *   minimumStock: 20,
+ * labId: 123,
+ * name: 'Ethanol 96',
+ * code: 'RM-ETH-96',
+ * supplier: 'ChemCorp S.A.C.',
+ * batchNumber: 'LOTE-2024-045',
+ * expirationDate: '2026-12-31',
+ * quantityInStock: 150,
+ * unit: 'L',
+ * minimumStock: 20,
  * };
  * ```
  */
 export interface CreateRawMaterialCommand {
   /**
-   * The identifier of the laboratory under which the raw material will be registered.
+   * The numeric identifier of the laboratory under which the raw material will be registered.
    *
    * @remarks
    * This field scopes the new raw material to a specific {@link Laboratory} entity,
    * ensuring that inventory tracking and stock management are contained within
    * the correct organizational context.
    */
-  labId: string;
+  labId: number;
 
   /**
    * The common or chemical name of the raw material.

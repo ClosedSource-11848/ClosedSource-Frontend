@@ -17,22 +17,22 @@ import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-res
  * @example
  * ```typescript
  * const resource: StaffMemberResource = {
- *   id: 'staff-001',
- *   labId: 'lab-123',
- *   fullName: 'María Elena Torres',
- *   role: 'Quality Control Analyst',
- *   email: 'metorres@biolabperu.com',
- *   active: true,
- *   createdAt: '2024-05-20T08:00:00Z',
+ * id: 1,
+ * labId: 123,
+ * fullName: 'María Elena Torres',
+ * role: 'Quality Control Analyst',
+ * email: 'metorres@biolabperu.com',
+ * active: true,
+ * createdAt: '2024-05-20T08:00:00Z',
  * };
  * ```
  */
 export interface StaffMemberResource extends BaseResource {
-  /** The unique identifier of the staff member as assigned by the server. */
-  id: string;
+  /** The unique numeric identifier of the staff member as assigned by the server. */
+  id: number;
 
-  /** The identifier of the laboratory this staff member belongs to. */
-  labId: string;
+  /** The numeric identifier of the laboratory this staff member belongs to. */
+  labId: number;
 
   /**
    * The full legal name of the staff member as stored on the server.
@@ -87,17 +87,17 @@ export interface StaffMemberResource extends BaseResource {
  * @example
  * ```typescript
  * const response: StaffMembersResponse = {
- *   staffMembers: [
- *     {
- *       id: 'staff-001',
- *       labId: 'lab-123',
- *       fullName: 'María Elena Torres',
- *       role: 'Quality Control Analyst',
- *       email: 'metorres@biolabperu.com',
- *       active: true,
- *       createdAt: '2024-05-20T08:00:00Z',
- *     }
- *   ]
+ * staffMembers: [
+ * {
+ * id: 1,
+ * labId: 123,
+ * fullName: 'María Elena Torres',
+ * role: 'Quality Control Analyst',
+ * email: 'metorres@biolabperu.com',
+ * active: true,
+ * createdAt: '2024-05-20T08:00:00Z',
+ * }
+ * ]
  * };
  * ```
  */

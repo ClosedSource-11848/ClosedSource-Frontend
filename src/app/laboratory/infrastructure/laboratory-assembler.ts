@@ -25,9 +25,9 @@ import { LaboratoryResource, LaboratoriesResponse } from './laboratory-response'
  * ```
  */
 export class LaboratoryAssembler implements BaseAssembler<
-Laboratory,
+  Laboratory,
   LaboratoryResource,
-LaboratoriesResponse
+  LaboratoriesResponse
 > {
   /**
    * Maps a {@link LaboratoriesResponse} collection response into an array
