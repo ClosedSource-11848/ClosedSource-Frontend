@@ -15,13 +15,13 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  * @example
  * ```typescript
  * const temperatureConfig = new BpmParameterConfig({
- *   id: 'config-001',
- *   equipmentId: 'equipment-001',
- *   parameterName: 'Temperature',
- *   minValue: 20,
- *   maxValue: 80,
- *   unit: '°C',
- *   createdAt: '2026-05-12T10:00:00Z'
+ * id: 1,
+ * equipmentId: 101,
+ * parameterName: 'Temperature',
+ * minValue: 20,
+ * maxValue: 80,
+ * unit: '°C',
+ * createdAt: '2026-05-12T10:00:00Z'
  * });
  *
  * console.log(temperatureConfig.parameterName); // 'Temperature'
@@ -29,14 +29,14 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  */
 export class BpmParameterConfig implements BaseEntity {
   /**
-   * The unique identifier of the BPM parameter configuration.
+   * The unique numeric identifier of the BPM parameter configuration.
    */
-  id: string;
+  id: number;
 
   /**
-   * The identifier of the equipment associated with this parameter configuration.
+   * The numeric identifier of the equipment associated with this parameter configuration.
    */
-  equipmentId: string;
+  equipmentId: number;
 
   /**
    * The name of the parameter being configured.
@@ -85,8 +85,8 @@ export class BpmParameterConfig implements BaseEntity {
    * Creates a new BPM parameter configuration entity.
    *
    * @param params - Initialization properties for the BPM parameter configuration.
-   * @param params.id - The unique identifier of the configuration.
-   * @param params.equipmentId - The identifier of the related equipment.
+   * @param params.id - The unique numeric identifier of the configuration.
+   * @param params.equipmentId - The numeric identifier of the related equipment.
    * @param params.parameterName - The name of the configured parameter.
    * @param params.minValue - The minimum acceptable parameter value.
    * @param params.maxValue - The maximum acceptable parameter value.
@@ -99,8 +99,8 @@ export class BpmParameterConfig implements BaseEntity {
    * the allowed range for one monitored parameter.
    */
   constructor(params: {
-    id: string;
-    equipmentId: string;
+    id: number;
+    equipmentId: number;
     parameterName: string;
     minValue: number;
     maxValue: number;

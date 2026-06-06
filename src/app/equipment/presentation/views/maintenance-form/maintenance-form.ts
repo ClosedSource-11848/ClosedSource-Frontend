@@ -85,13 +85,13 @@ export class MaintenanceForm implements OnInit {
   protected readonly store = inject(EquipmentStore);
 
   /**
-   * Signal that stores the current equipment identifier.
+   * Signal that stores the current numeric equipment identifier.
    *
    * @remarks
    * The value is obtained from the route parameter during component
    * initialization. It remains null if no equipment identifier is available.
    */
-  protected readonly equipmentId = signal<string | null>(null);
+  protected readonly equipmentId = signal<number | null>(null);
 
   /**
    * List of available maintenance types displayed in the form.
@@ -131,8 +131,8 @@ export class MaintenanceForm implements OnInit {
    * so it can later be used when creating the RegisterMaintenanceCommand.
    */
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) this.equipmentId.set(id);
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) this.equipmentId.set(Number(idParam));
   }
 
   /**

@@ -33,18 +33,18 @@ import { RegisterMaintenanceRequest } from './maintenance.request';
  *
  * @example
  * ```typescript
- * equipmentApi.getEquipment('lab-001').subscribe((equipmentList) => {
- *   console.log(equipmentList);
+ * equipmentApi.getEquipment(101).subscribe((equipmentList) => {
+ * console.log(equipmentList);
  * });
  *
  * equipmentApi.configureBpm({
- *   equipmentId: 'equipment-001',
- *   parameterName: 'Temperature',
- *   minValue: 20,
- *   maxValue: 80,
- *   unit: '°C'
+ * equipmentId: 101,
+ * parameterName: 'Temperature',
+ * minValue: 20,
+ * maxValue: 80,
+ * unit: '°C'
  * }).subscribe((config) => {
- *   console.log(config);
+ * console.log(config);
  * });
  * ```
  */
@@ -99,14 +99,14 @@ export class EquipmentApi extends BaseApi {
   /**
    * Retrieves the equipment registered in a specific laboratory.
    *
-   * @param labId - The identifier of the laboratory.
+   * @param labId - The numeric identifier of the laboratory.
    * @returns An Observable containing a list of Equipment entities.
    *
    * @remarks
    * This method delegates the request to EquipmentApiEndpoint and returns
    * the equipment associated with the provided laboratory identifier.
    */
-  getEquipment(labId: string): Observable<Equipment[]> {
+  getEquipment(labId: number): Observable<Equipment[]> {
     return this._equipmentEndpoint.getEquipmentByLab(labId);
   }
 
@@ -130,14 +130,14 @@ export class EquipmentApi extends BaseApi {
   /**
    * Retrieves the BPM parameter configuration for a specific equipment.
    *
-   * @param equipmentId - The identifier of the equipment.
+   * @param equipmentId - The numeric identifier of the equipment.
    * @returns An Observable containing a list of BpmParameterConfig entities.
    *
    * @remarks
    * This method obtains the configured parameter limits associated with an
    * equipment, such as minimum value, maximum value, and measurement unit.
    */
-  getBpmConfig(equipmentId: string): Observable<BpmParameterConfig[]> {
+  getBpmConfig(equipmentId: number): Observable<BpmParameterConfig[]> {
     return this._bpmEndpoint.getConfigByEquipment(equipmentId);
   }
 
@@ -161,7 +161,7 @@ export class EquipmentApi extends BaseApi {
   /**
    * Retrieves the maintenance history of a specific equipment.
    *
-   * @param equipmentId - The identifier of the equipment.
+   * @param equipmentId - The numeric identifier of the equipment.
    * @returns An Observable containing a list of MaintenanceRecord entities.
    *
    * @remarks
@@ -169,7 +169,7 @@ export class EquipmentApi extends BaseApi {
    * equipment, allowing the application to display historical maintenance
    * activities, inspections, calibrations, or corrective actions.
    */
-  getMaintenanceHistory(equipmentId: string): Observable<MaintenanceRecord[]> {
+  getMaintenanceHistory(equipmentId: number): Observable<MaintenanceRecord[]> {
     return this._maintenanceEndpoint.getMaintenanceHistory(equipmentId);
   }
 

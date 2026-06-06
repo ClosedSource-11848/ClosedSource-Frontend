@@ -15,14 +15,14 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  * @example
  * ```typescript
  * const equipment = new Equipment({
- *   id: 'equipment-001',
- *   labId: 'lab-001',
- *   name: 'Centrifuge',
- *   type: 'Laboratory Equipment',
- *   model: 'CF-3000',
- *   serialNumber: 'SN-2026-001',
- *   status: 'OPERATIONAL',
- *   createdAt: '2026-05-12T10:00:00Z'
+ * id: 1,
+ * labId: 101,
+ * name: 'Centrifuge',
+ * type: 'Laboratory Equipment',
+ * model: 'CF-3000',
+ * serialNumber: 'SN-2026-001',
+ * status: 'OPERATIONAL',
+ * createdAt: '2026-05-12T10:00:00Z'
  * });
  *
  * console.log(equipment.name); // 'Centrifuge'
@@ -30,17 +30,17 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  */
 export class Equipment implements BaseEntity {
   /**
-   * The unique identifier of the equipment.
+   * The unique numeric identifier of the equipment.
    */
-  id: string;
+  id: number;
 
   /**
-   * The identifier of the laboratory where the equipment is located or assigned.
+   * The numeric identifier of the laboratory where the equipment is located or assigned.
    *
    * @remarks
    * This value links the equipment to a specific laboratory within the system.
    */
-  labId: string;
+  labId: number;
 
   /**
    * The display name of the equipment.
@@ -99,8 +99,8 @@ export class Equipment implements BaseEntity {
    * Creates a new Equipment entity.
    *
    * @param params - Initialization properties for the equipment.
-   * @param params.id - The unique identifier of the equipment.
-   * @param params.labId - The identifier of the laboratory associated with the equipment.
+   * @param params.id - The unique numeric identifier of the equipment.
+   * @param params.labId - The numeric identifier of the laboratory associated with the equipment.
    * @param params.name - The display name of the equipment.
    * @param params.type - The type or category of the equipment.
    * @param params.model - The model of the equipment.
@@ -114,8 +114,8 @@ export class Equipment implements BaseEntity {
    * enough technical information to support identification and traceability.
    */
   constructor(params: {
-    id: string;
-    labId: string;
+    id: number;
+    labId: number;
     name: string;
     type: string;
     model: string;

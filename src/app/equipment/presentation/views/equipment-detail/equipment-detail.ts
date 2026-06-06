@@ -68,13 +68,13 @@ export class EquipmentDetail implements OnInit {
   protected readonly store = inject(EquipmentStore);
 
   /**
-   * Signal that stores the current equipment identifier.
+   * Signal that stores the current numeric equipment identifier.
    *
    * @remarks
    * The value is initialized from the route parameter during component startup.
    * It remains null if the route does not contain a valid equipment identifier.
    */
-  protected readonly equipmentId = signal<string | null>(null);
+  protected readonly equipmentId = signal<number | null>(null);
 
   /**
    * Initializes the component and loads related equipment information.
@@ -85,8 +85,9 @@ export class EquipmentDetail implements OnInit {
    * loads the BPM configuration and maintenance history for that equipment.
    */
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      const id = Number(idParam);
       this.equipmentId.set(id);
       this.store.loadBpmConfig(id);
       this.store.loadMaintenanceHistory(id);

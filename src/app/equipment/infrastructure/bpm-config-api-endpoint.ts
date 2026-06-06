@@ -34,18 +34,18 @@ const equipmentEndpointUrl = `${environment.serverBasePath}${environment.equipme
  * ```typescript
  * const endpoint = new BpmConfigApiEndpoint(httpClient);
  *
- * endpoint.getConfigByEquipment('equipment-001').subscribe((configs) => {
- *   console.log(configs);
+ * endpoint.getConfigByEquipment(101).subscribe((configs) => {
+ * console.log(configs);
  * });
  *
  * endpoint.configureBpm({
- *   equipmentId: 'equipment-001',
- *   parameterName: 'Temperature',
- *   minValue: 20,
- *   maxValue: 80,
- *   unit: '°C'
+ * equipmentId: 101,
+ * parameterName: 'Temperature',
+ * minValue: 20,
+ * maxValue: 80,
+ * unit: '°C'
  * }).subscribe((config) => {
- *   console.log(config);
+ * console.log(config);
  * });
  * ```
  */
@@ -71,7 +71,7 @@ export class BpmConfigApiEndpoint extends BaseApiEndpoint<
   /**
    * Retrieves BPM parameter configurations for a specific equipment.
    *
-   * @param equipmentId - The unique identifier of the equipment.
+   * @param equipmentId - The unique numeric identifier of the equipment.
    * @returns An Observable containing a list of BpmParameterConfig entities.
    *
    * @remarks
@@ -81,7 +81,7 @@ export class BpmConfigApiEndpoint extends BaseApiEndpoint<
    * If the request fails, the error is handled using the inherited handleError
    * method from BaseApiEndpoint.
    */
-  getConfigByEquipment(equipmentId: string): Observable<BpmParameterConfig[]> {
+  getConfigByEquipment(equipmentId: number): Observable<BpmParameterConfig[]> {
     return this.http.get<BpmConfigsResponse>(`${this.endpointUrl}/${equipmentId}/bpm-config`).pipe(
       map((response) => this.assembler.toEntitiesFromResponse(response)),
       catchError(this.handleError(`Failed to fetch BPM config for equipment ${equipmentId}`)),

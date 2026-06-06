@@ -66,13 +66,13 @@ export class MaintenanceHistory implements OnInit {
   protected readonly store = inject(EquipmentStore);
 
   /**
-   * Signal that stores the current equipment identifier.
+   * Signal that stores the current numeric equipment identifier.
    *
    * @remarks
    * The value is obtained from the route during component initialization.
    * It remains null if the route does not contain a valid equipment identifier.
    */
-  protected readonly equipmentId = signal<string | null>(null);
+  protected readonly equipmentId = signal<number | null>(null);
 
   /**
    * Columns displayed in the maintenance history table.
@@ -92,8 +92,9 @@ export class MaintenanceHistory implements OnInit {
    * the maintenance history from EquipmentStore.
    */
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      const id = Number(idParam);
       this.equipmentId.set(id);
       this.store.loadMaintenanceHistory(id);
     }

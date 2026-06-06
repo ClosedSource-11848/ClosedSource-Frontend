@@ -14,30 +14,30 @@ import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-res
  * @example
  * ```typescript
  * const resource: BpmConfigResource = {
- *   id: 'config-001',
- *   equipmentId: 'equipment-001',
- *   parameterName: 'Temperature',
- *   minValue: 20,
- *   maxValue: 80,
- *   unit: '°C',
- *   createdAt: '2026-05-12T10:00:00Z'
+ * id: 1,
+ * equipmentId: 101,
+ * parameterName: 'Temperature',
+ * minValue: 20,
+ * maxValue: 80,
+ * unit: '°C',
+ * createdAt: '2026-05-12T10:00:00Z'
  * };
  * ```
  */
 export interface BpmConfigResource extends BaseResource {
   /**
-   * The unique identifier of the BPM configuration resource.
+   * The unique numeric identifier of the BPM configuration resource.
    */
-  id: string;
+  id: number;
 
   /**
-   * The identifier of the equipment associated with the BPM configuration.
+   * The numeric identifier of the equipment associated with the BPM configuration.
    *
    * @remarks
    * This value links the BPM parameter configuration to a specific equipment
    * registered in the system.
    */
-  equipmentId: string;
+  equipmentId: number;
 
   /**
    * The name of the parameter being configured.
@@ -95,17 +95,17 @@ export interface BpmConfigResource extends BaseResource {
  * @example
  * ```typescript
  * const response: BpmConfigsResponse = {
- *   bpmConfigs: [
- *     {
- *       id: 'config-001',
- *       equipmentId: 'equipment-001',
- *       parameterName: 'Temperature',
- *       minValue: 20,
- *       maxValue: 80,
- *       unit: '°C',
- *       createdAt: '2026-05-12T10:00:00Z'
- *     }
- *   ]
+ * bpmConfigs: [
+ * {
+ * id: 1,
+ * equipmentId: 101,
+ * parameterName: 'Temperature',
+ * minValue: 20,
+ * maxValue: 80,
+ * unit: '°C',
+ * createdAt: '2026-05-12T10:00:00Z'
+ * }
+ * ]
  * };
  * ```
  */

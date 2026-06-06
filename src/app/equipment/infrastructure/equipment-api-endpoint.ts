@@ -34,18 +34,18 @@ const equipmentEndpointUrl = `${environment.serverBasePath}${environment.equipme
  * ```typescript
  * const endpoint = new EquipmentApiEndpoint(httpClient);
  *
- * endpoint.getEquipmentByLab('lab-001').subscribe((equipmentList) => {
- *   console.log(equipmentList);
+ * endpoint.getEquipmentByLab(101).subscribe((equipmentList) => {
+ * console.log(equipmentList);
  * });
  *
  * endpoint.registerEquipment({
- *   labId: 'lab-001',
- *   name: 'Centrifuge',
- *   type: 'Laboratory Equipment',
- *   model: 'CF-3000',
- *   serialNumber: 'SN-2026-001'
+ * labId: 101,
+ * name: 'Centrifuge',
+ * type: 'Laboratory Equipment',
+ * model: 'CF-3000',
+ * serialNumber: 'SN-2026-001'
  * }).subscribe((equipment) => {
- *   console.log(equipment);
+ * console.log(equipment);
  * });
  * ```
  */
@@ -71,7 +71,7 @@ export class EquipmentApiEndpoint extends BaseApiEndpoint<
   /**
    * Retrieves equipment registered in a specific laboratory.
    *
-   * @param labId - The identifier of the laboratory.
+   * @param labId - The numeric identifier of the laboratory.
    * @returns An Observable containing a list of Equipment domain entities.
    *
    * @remarks
@@ -81,7 +81,7 @@ export class EquipmentApiEndpoint extends BaseApiEndpoint<
    * The API response is transformed into domain entities using the assembler.
    * If the request fails, the inherited handleError method manages the error.
    */
-  getEquipmentByLab(labId: string): Observable<Equipment[]> {
+  getEquipmentByLab(labId: number): Observable<Equipment[]> {
     return this.http.get<EquipmentsResponse>(`${this.endpointUrl}/lab/${labId}`).pipe(
       map((response) => this.assembler.toEntitiesFromResponse(response)),
       catchError(this.handleError(`Failed to fetch equipment for lab ${labId}`)),

@@ -13,21 +13,21 @@
  * @example
  * ```typescript
  * const command: LinkSensorCommand = {
- *   equipmentId: 'equipment-001',
- *   sensorExternalId: 'sensor-ext-001',
- *   sensorType: 'Temperature'
+ * equipmentId: 101,
+ * sensorExternalId: 'sensor-ext-001',
+ * sensorType: 'Temperature'
  * };
  * ```
  */
 export interface LinkSensorCommand {
   /**
-   * The identifier of the equipment to which the sensor will be linked.
+   * The numeric identifier of the equipment to which the sensor will be linked.
    *
    * @remarks
    * This value references the equipment registered in the system and allows
    * the sensor association to be tracked correctly.
    */
-  equipmentId: string;
+  equipmentId: number;
 
   /**
    * The external identifier of the sensor.
