@@ -32,14 +32,14 @@ const labEndpointUrl = `${environment.serverBasePath}${environment.laboratoryLab
  * @example
  * ```typescript
  * const endpoint = new ProductApiEndpoint(http);
- * endpoint.getProductsByLab('lab-123').subscribe(products => console.log(products.length));
+ * endpoint.getProductsByLab(123).subscribe(products => console.log(products.length));
  * ```
  */
 export class ProductApiEndpoint extends BaseApiEndpoint<
-PharmaceuticalProduct,
+  PharmaceuticalProduct,
   PharmaceuticalProductResource,
   PharmaceuticalProductsResponse,
-ProductAssembler
+  ProductAssembler
 > {
   /**
    * Creates an instance of `ProductApiEndpoint`.
@@ -58,7 +58,7 @@ ProductAssembler
   /**
    * Retrieves all pharmaceutical products registered under a specific laboratory.
    *
-   * @param labId - The unique identifier of the laboratory whose products to retrieve.
+   * @param labId - The unique numeric identifier of the laboratory whose products to retrieve.
    * @returns An `Observable` that emits an array of {@link PharmaceuticalProduct}
    * domain entities mapped from the server response.
    *
@@ -68,7 +68,7 @@ ProductAssembler
    * {@link ProductAssembler.toEntitiesFromResponse}. Errors are forwarded
    * through the base class error handler.
    */
-  getProductsByLab(labId: string): Observable<PharmaceuticalProduct[]> {
+  getProductsByLab(labId: number): Observable<PharmaceuticalProduct[]> {
     return this.http
       .get<PharmaceuticalProductsResponse>(`${this.endpointUrl}/${labId}/products`)
       .pipe(
@@ -80,7 +80,7 @@ ProductAssembler
   /**
    * Creates a new pharmaceutical product under a specific laboratory.
    *
-   * @param labId - The unique identifier of the laboratory to register the product under.
+   * @param labId - The unique numeric identifier of the laboratory to register the product under.
    * @param request - The {@link CreateProductRequest} payload containing
    * the new product's details.
    * @returns An `Observable` that emits the newly created {@link PharmaceuticalProduct}
@@ -93,7 +93,7 @@ ProductAssembler
    * {@link ProductAssembler.toEntityFromResource}. Errors are forwarded
    * through the base class error handler.
    */
-  createProduct(labId: string, request: CreateProductRequest): Observable<PharmaceuticalProduct> {
+  createProduct(labId: number, request: CreateProductRequest): Observable<PharmaceuticalProduct> {
     return this.http
       .post<PharmaceuticalProductResource>(`${this.endpointUrl}/${labId}/products`, request)
       .pipe(

@@ -6,7 +6,7 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  * @remarks
  * In Domain-Driven Design, a RawMaterial is an entity that models a physical
  * input substance used in the manufacturing or quality control processes of a
- * laboratory. Each raw material has a unique identity and is always associated
+ * laboratory. Each raw material has a unique numeric identity and is always associated
  * with the laboratory that manages it.
  *
  * This entity tracks both the identity and the inventory state of a raw material,
@@ -16,17 +16,17 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  * @example
  * ```typescript
  * const material = new RawMaterial({
- *   id: 'mat-001',
- *   labId: 'lab-123',
- *   name: 'Etanol 96°',
- *   code: 'RM-ETH-96',
- *   supplier: 'QuimicaPeru S.A.C.',
- *   batchNumber: 'LOTE-2024-045',
- *   expirationDate: '2026-12-31',
- *   quantityInStock: 150,
- *   unit: 'L',
- *   minimumStock: 20,
- *   createdAt: '2024-04-10T07:30:00Z',
+ * id: 1,
+ * labId: 123,
+ * name: 'Etanol 96°',
+ * code: 'RM-ETH-96',
+ * supplier: 'QuimicaPeru S.A.C.',
+ * batchNumber: 'LOTE-2024-045',
+ * expirationDate: '2026-12-31',
+ * quantityInStock: 150,
+ * unit: 'L',
+ * minimumStock: 20,
+ * createdAt: '2024-04-10T07:30:00Z',
  * });
  *
  * console.log(material.name);            // 'Etanol 96°'
@@ -35,19 +35,19 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  */
 export class RawMaterial implements BaseEntity {
   /**
-   * The unique identifier for this raw material record.
+   * The unique numeric identifier for this raw material record.
    */
-  id: string;
+  id: number;
 
   /**
-   * The identifier of the laboratory that owns and manages this raw material.
+   * The numeric identifier of the laboratory that owns and manages this raw material.
    *
    * @remarks
    * This field establishes the relationship between the raw material and its
    * parent {@link Laboratory} entity, scoping the material's inventory to a
    * specific laboratory context.
    */
-  labId: string;
+  labId: number;
 
   /**
    * The common or chemical name of the raw material.
@@ -135,8 +135,8 @@ export class RawMaterial implements BaseEntity {
    * Creates a new RawMaterial entity.
    *
    * @param params - Initialization properties
-   * @param params.id - The unique identifier for the raw material
-   * @param params.labId - The identifier of the owning laboratory
+   * @param params.id - The unique numeric identifier for the raw material
+   * @param params.labId - The numeric identifier of the owning laboratory
    * @param params.name - The common or chemical name of the raw material
    * @param params.code - The internal catalog code of the raw material
    * @param params.supplier - The name of the supplier or vendor
@@ -152,8 +152,8 @@ export class RawMaterial implements BaseEntity {
    * All fields are required and no defaults are applied.
    */
   constructor(params: {
-    id: string;
-    labId: string;
+    id: number;
+    labId: number;
     name: string;
     code: string;
     supplier: string;

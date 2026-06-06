@@ -17,26 +17,26 @@ import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-res
  * @example
  * ```typescript
  * const resource: RawMaterialResource = {
- *   id: 'mat-001',
- *   labId: 'lab-123',
- *   name: 'Etanol 96°',
- *   code: 'RM-ETH-96',
- *   supplier: 'QuimicaPeru S.A.C.',
- *   batchNumber: 'LOTE-2024-045',
- *   expirationDate: '2026-12-31',
- *   quantityInStock: 150,
- *   unit: 'L',
- *   minimumStock: 20,
- *   createdAt: '2024-04-10T07:30:00Z',
+ * id: 1,
+ * labId: 123,
+ * name: 'Etanol 96°',
+ * code: 'RM-ETH-96',
+ * supplier: 'QuimicaPeru S.A.C.',
+ * batchNumber: 'LOTE-2024-045',
+ * expirationDate: '2026-12-31',
+ * quantityInStock: 150,
+ * unit: 'L',
+ * minimumStock: 20,
+ * createdAt: '2024-04-10T07:30:00Z',
  * };
  * ```
  */
 export interface RawMaterialResource extends BaseResource {
-  /** The unique identifier of the raw material as assigned by the server. */
-  id: string;
+  /** The unique numeric identifier of the raw material as assigned by the server. */
+  id: number;
 
-  /** The identifier of the laboratory that owns this raw material. */
-  labId: string;
+  /** The numeric identifier of the laboratory that owns this raw material. */
+  labId: number;
 
   /** The common or chemical name of the raw material. */
   name: string;
@@ -116,21 +116,21 @@ export interface RawMaterialResource extends BaseResource {
  * @example
  * ```typescript
  * const response: RawMaterialsResponse = {
- *   rawMaterials: [
- *     {
- *       id: 'mat-001',
- *       labId: 'lab-123',
- *       name: 'Etanol 96°',
- *       code: 'RM-ETH-96',
- *       supplier: 'QuimicaPeru S.A.C.',
- *       batchNumber: 'LOTE-2024-045',
- *       expirationDate: '2026-12-31',
- *       quantityInStock: 150,
- *       unit: 'L',
- *       minimumStock: 20,
- *       createdAt: '2024-04-10T07:30:00Z',
- *     }
- *   ]
+ * rawMaterials: [
+ * {
+ * id: 1,
+ * labId: 123,
+ * name: 'Etanol 96°',
+ * code: 'RM-ETH-96',
+ * supplier: 'QuimicaPeru S.A.C.',
+ * batchNumber: 'LOTE-2024-045',
+ * expirationDate: '2026-12-31',
+ * quantityInStock: 150,
+ * unit: 'L',
+ * minimumStock: 20,
+ * createdAt: '2024-04-10T07:30:00Z',
+ * }
+ * ]
  * };
  * ```
  */

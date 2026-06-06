@@ -1,6 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-// Cambiamos TranslatePipe por TranslateModule para mantener la consistencia
 import { TranslateModule } from '@ngx-translate/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -45,8 +44,8 @@ export class LabProfile implements OnInit {
     applicableRegulations: [[], Validators.required],
   });
 
-  private get currentLabId(): string {
-    return this.iamStore.currentUserId() || 'LAB-001';
+  private get currentLabId(): number {
+    return this.iamStore.currentUserId() || 1;
   }
 
   ngOnInit(): void {

@@ -28,8 +28,8 @@ export class RawMaterialList implements OnInit {
   protected readonly iamStore = inject(IamStore);
   private readonly router = inject(Router);
 
-  private get currentLabId(): string {
-    return this.iamStore.currentUserId() || 'LAB-001';
+  private get currentLabId(): number {
+    return this.iamStore.currentUserId() || 1;
   }
 
   protected readonly displayedColumns = [

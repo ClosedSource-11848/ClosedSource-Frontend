@@ -32,14 +32,14 @@ const labEndpointUrl = `${environment.serverBasePath}${environment.laboratoryLab
  * @example
  * ```typescript
  * const endpoint = new StaffApiEndpoint(http);
- * endpoint.getStaffByLab('lab-123').subscribe(staff => console.log(staff.length));
+ * endpoint.getStaffByLab(123).subscribe(staff => console.log(staff.length));
  * ```
  */
 export class StaffApiEndpoint extends BaseApiEndpoint<
-StaffMember,
+  StaffMember,
   StaffMemberResource,
   StaffMembersResponse,
-StaffAssembler
+  StaffAssembler
 > {
   /**
    * Creates an instance of `StaffApiEndpoint`.
@@ -58,7 +58,7 @@ StaffAssembler
   /**
    * Retrieves all staff members associated with a specific laboratory.
    *
-   * @param labId - The unique identifier of the laboratory whose staff to retrieve.
+   * @param labId - The unique numeric identifier of the laboratory whose staff to retrieve.
    * @returns An `Observable` that emits an array of {@link StaffMember} domain
    * entities mapped from the server response.
    *
@@ -68,7 +68,7 @@ StaffAssembler
    * {@link StaffAssembler.toEntitiesFromResponse}. Errors are forwarded
    * through the base class error handler.
    */
-  getStaffByLab(labId: string): Observable<StaffMember[]> {
+  getStaffByLab(labId: number): Observable<StaffMember[]> {
     return this.http.get<StaffMembersResponse>(`${this.endpointUrl}/${labId}/staff`).pipe(
       map((response) => this.assembler.toEntitiesFromResponse(response)),
       catchError(this.handleError(`Failed to fetch staff for lab ${labId}`)),
@@ -78,7 +78,7 @@ StaffAssembler
   /**
    * Registers a new staff member under a specific laboratory.
    *
-   * @param labId - The unique identifier of the laboratory to register the staff member under.
+   * @param labId - The unique numeric identifier of the laboratory to register the staff member under.
    * @param request - The {@link RegisterStaffRequest} payload containing the
    * new staff member's profile information.
    * @returns An `Observable` that emits the newly created {@link StaffMember}
@@ -91,7 +91,7 @@ StaffAssembler
    * {@link StaffAssembler.toEntityFromResource}. Errors are forwarded through
    * the base class error handler.
    */
-  registerStaff(labId: string, request: RegisterStaffRequest): Observable<StaffMember> {
+  registerStaff(labId: number, request: RegisterStaffRequest): Observable<StaffMember> {
     return this.http.post<StaffMemberResource>(`${this.endpointUrl}/${labId}/staff`, request).pipe(
       map((resource) => this.assembler.toEntityFromResource(resource)),
       catchError(this.handleError('Failed to register staff member')),
@@ -101,8 +101,8 @@ StaffAssembler
   /**
    * Deactivates an existing staff member within a laboratory.
    *
-   * @param labId - The unique identifier of the laboratory the staff member belongs to.
-   * @param staffId - The unique identifier of the staff member to deactivate.
+   * @param labId - The unique numeric identifier of the laboratory the staff member belongs to.
+   * @param staffId - The unique numeric identifier of the staff member to deactivate.
    * @returns An `Observable` that completes when the deactivation has been
    * successfully processed by the server.
    *
@@ -113,7 +113,7 @@ StaffAssembler
    * See {@link StaffMember.active} for details. Errors are forwarded through
    * the base class error handler.
    */
-  deactivateStaff(labId: string, staffId: string): Observable<void> {
+  deactivateStaff(labId: number, staffId: number): Observable<void> {
     return this.http
       .delete<void>(`${this.endpointUrl}/${labId}/staff/${staffId}`)
       .pipe(catchError(this.handleError(`Failed to deactivate staff member ${staffId}`)));
