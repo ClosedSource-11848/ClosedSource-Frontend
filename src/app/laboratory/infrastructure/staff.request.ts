@@ -17,23 +17,23 @@
  * @example
  * ```typescript
  * const body: RegisterStaffRequest = {
- *   labId: 'lab-123',
- *   fullName: 'María Elena Torres',
- *   role: 'Quality Control Analyst',
- *   email: 'metorres@biolabperu.com',
+ * labId: 123,
+ * fullName: 'María Elena Torres',
+ * role: 'Quality Control Analyst',
+ * email: 'metorres@biolabperu.com',
  * };
  * ```
  */
 export interface RegisterStaffRequest {
   /**
-   * The identifier of the laboratory under which the staff member will be registered.
+   * The numeric identifier of the laboratory under which the staff member will be registered.
    *
    * @remarks
    * This field scopes the new staff member to a specific {@link Laboratory} entity,
    * ensuring that their role and responsibilities are contained within the correct
    * organizational context.
    */
-  labId: string;
+  labId: number;
 
   /**
    * The full legal name of the staff member being registered.

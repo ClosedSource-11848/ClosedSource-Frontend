@@ -16,17 +16,17 @@
  * @example
  * ```typescript
  * const body: CreateProductRequest = {
- *   labId: 'lab-123',
- *   code: 'MED-2024-001',
- *   name: 'Amoxicilina 500mg',
- *   description: 'Antibiótico de amplio espectro en cápsulas',
- *   specifications: 'Cápsulas de 500mg, blister x 12 unidades',
+ * labId: 123,
+ * code: 'MED-2024-001',
+ * name: 'Amoxicilina 500mg',
+ * description: 'Antibiótico de amplio espectro en cápsulas',
+ * specifications: 'Cápsulas de 500mg, blister x 12 unidades',
  * };
  * ```
  */
 export interface CreateProductRequest {
-  /** The identifier of the laboratory under which the product will be registered. */
-  labId: string;
+  /** The numeric identifier of the laboratory under which the product will be registered. */
+  labId: number;
 
   /**
    * The internal catalog code that will uniquely identify the product

@@ -32,14 +32,14 @@ const labEndpointUrl = `${environment.serverBasePath}${environment.laboratoryLab
  * @example
  * ```typescript
  * const endpoint = new LaboratoryApiEndpoint(http);
- * endpoint.getByLabId('lab-123').subscribe(lab => console.log(lab.name));
+ * endpoint.getByLabId(123).subscribe(lab => console.log(lab.name));
  * ```
  */
 export class LaboratoryApiEndpoint extends BaseApiEndpoint<
-Laboratory,
+  Laboratory,
   LaboratoryResource,
   LaboratoriesResponse,
-LaboratoryAssembler
+  LaboratoryAssembler
 > {
   /**
    * Creates an instance of `LaboratoryApiEndpoint`.
@@ -58,7 +58,7 @@ LaboratoryAssembler
   /**
    * Retrieves the profile of a laboratory by its unique identifier.
    *
-   * @param labId - The unique identifier of the laboratory to retrieve.
+   * @param labId - The unique numeric identifier of the laboratory to retrieve.
    * @returns An `Observable` that emits the {@link Laboratory} domain entity
    * mapped from the server response.
    *
@@ -68,7 +68,7 @@ LaboratoryAssembler
    * {@link LaboratoryAssembler.toEntityFromResource}. Errors are forwarded
    * through the base class error handler.
    */
-  getByLabId(labId: string): Observable<Laboratory> {
+  getByLabId(labId: number): Observable<Laboratory> {
     return this.http.get<LaboratoryResource>(`${this.endpointUrl}/${labId}`).pipe(
       map((resource) => this.assembler.toEntityFromResource(resource)),
       catchError(this.handleError(`Failed to fetch laboratory ${labId}`)),
@@ -78,7 +78,7 @@ LaboratoryAssembler
   /**
    * Updates the profile information of an existing laboratory.
    *
-   * @param labId - The unique identifier of the laboratory to update.
+   * @param labId - The unique numeric identifier of the laboratory to update.
    * @param request - The {@link UpdateLaboratoryRequest} payload containing
    * the new values for the laboratory's mutable fields.
    * @returns An `Observable` that emits the updated {@link Laboratory} domain
@@ -91,7 +91,7 @@ LaboratoryAssembler
    * {@link LaboratoryAssembler.toEntityFromResource}. Errors are forwarded
    * through the base class error handler.
    */
-  updateLaboratory(labId: string, request: UpdateLaboratoryRequest): Observable<Laboratory> {
+  updateLaboratory(labId: number, request: UpdateLaboratoryRequest): Observable<Laboratory> {
     return this.http.put<LaboratoryResource>(`${this.endpointUrl}/${labId}`, request).pipe(
       map((resource) => this.assembler.toEntityFromResource(resource)),
       catchError(this.handleError(`Failed to update laboratory ${labId}`)),

@@ -15,14 +15,14 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  * @example
  * ```typescript
  * const lab = new Laboratory({
- *   id: 'abc-123',
- *   name: 'BioLab Peru S.A.C.',
- *   ruc: '20512345678',
- *   address: 'Av. Industrial 456, Lima',
- *   phone: '+51 1 234-5678',
- *   applicableRegulations: ['ISO 17025', 'DIGEMID'],
- *   createdAt: '2024-01-15T08:00:00Z',
- *   updatedAt: '2024-06-10T12:30:00Z',
+ * id: 1,
+ * name: 'BioLab Peru S.A.C.',
+ * ruc: '20512345678',
+ * address: 'Av. Industrial 456, Lima',
+ * phone: '+51 1 234-5678',
+ * applicableRegulations: ['ISO 17025', 'DIGEMID'],
+ * createdAt: '2024-01-15T08:00:00Z',
+ * updatedAt: '2024-06-10T12:30:00Z',
  * });
  *
  * console.log(lab.name); // 'BioLab Peru S.A.C.'
@@ -31,9 +31,9 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  */
 export class Laboratory implements BaseEntity {
   /**
-   * The unique identifier for this laboratory.
+   * The unique numeric identifier for this laboratory.
    */
-  id: string;
+  id: number;
 
   /**
    * The official registered name of the laboratory.
@@ -83,7 +83,7 @@ export class Laboratory implements BaseEntity {
    * Creates a new Laboratory entity.
    *
    * @param params - Initialization properties
-   * @param params.id - The unique identifier for the laboratory
+   * @param params.id - The unique numeric identifier for the laboratory
    * @param params.name - The official registered name of the laboratory
    * @param params.ruc - The tax identification number (RUC) of the laboratory
    * @param params.address - The physical address of the laboratory
@@ -97,7 +97,7 @@ export class Laboratory implements BaseEntity {
    * All fields are required and no defaults are applied.
    */
   constructor(params: {
-    id: string;
+    id: number;
     name: string;
     ruc: string;
     address: string;

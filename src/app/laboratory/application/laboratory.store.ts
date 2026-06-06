@@ -38,20 +38,20 @@ import { retry } from 'rxjs';
  * ```typescript
  * @Component({ ... })
  * export class LabProfileComponent {
- *   private readonly store = inject(LaboratoryStore);
+ * private readonly store = inject(LaboratoryStore);
  *
- *   ngOnInit() {
- *     this.store.loadLaboratory('lab-123');
- *   }
+ * ngOnInit() {
+ * this.store.loadLaboratory(123);
+ * }
  *
- *   get laboratory() {
- *     return this.store.laboratory();
- *   }
+ * get laboratory() {
+ * return this.store.laboratory();
+ * }
  *
- *   updateLab() {
- *     const command: UpdateLaboratoryCommand = { ... };
- *     this.store.updateLaboratory('lab-123', command);
- *   }
+ * updateLab() {
+ * const command: UpdateLaboratoryCommand = { ... };
+ * this.store.updateLaboratory(123, command);
+ * }
  * }
  * ```
  *
@@ -184,7 +184,7 @@ export class LaboratoryStore {
   /**
    * Retrieves and loads the laboratory profile into the store's state.
    *
-   * @param labId - The unique identifier of the laboratory to load.
+   * @param labId - The unique numeric identifier of the laboratory to load.
    *
    * @remarks
    * - Sets `isLoading` to `true` at the start and `false` upon completion
@@ -193,9 +193,9 @@ export class LaboratoryStore {
    * - On success, updates the {@link laboratory} signal and clears any error messages
    * - On failure, sets the {@link error} signal with a formatted error message
    * - The operation is asynchronous and non-blocking; callers should monitor
-   *   the {@link isLoading} and {@link error} signals for operation status
+   * the {@link isLoading} and {@link error} signals for operation status
    */
-  loadLaboratory(labId: string): void {
+  loadLaboratory(labId: number): void {
     this._isLoading.set(true);
     this._error.set(null);
     this.api
@@ -216,7 +216,7 @@ export class LaboratoryStore {
   /**
    * Updates the laboratory profile with mutable field values.
    *
-   * @param labId - The unique identifier of the laboratory to update.
+   * @param labId - The unique numeric identifier of the laboratory to update.
    * @param command - An {@link UpdateLaboratoryCommand} encapsulating the new
    * values for the laboratory's mutable fields (name, address, phone, regulations).
    *
@@ -225,16 +225,16 @@ export class LaboratoryStore {
    * - Clears any previous error and success message before initiating the request
    * - Implements automatic retry logic (2 retries) via the RxJS `retry` operator
    * - On success:
-   *   - Updates the {@link laboratory} signal with the server-returned entity
-   *   - Sets the {@link successMsg} signal to confirm the operation
-   *   - Clears the {@link error} signal
+   * - Updates the {@link laboratory} signal with the server-returned entity
+   * - Sets the {@link successMsg} signal to confirm the operation
+   * - Clears the {@link error} signal
    * - On failure, sets the {@link error} signal with a formatted error message
    * - The command is mapped internally to the HTTP request structure by
-   *   {@link LaboratoryApi}
+   * {@link LaboratoryApi}
    *
    * @see {@link UpdateLaboratoryCommand} for mutable field constraints
    */
-  updateLaboratory(labId: string, command: UpdateLaboratoryCommand): void {
+  updateLaboratory(labId: number, command: UpdateLaboratoryCommand): void {
     this._isLoading.set(true);
     this._error.set(null);
     this.api
@@ -258,20 +258,20 @@ export class LaboratoryStore {
   /**
    * Retrieves and loads all staff members associated with a laboratory.
    *
-   * @param labId - The unique identifier of the laboratory whose staff to retrieve.
+   * @param labId - The unique numeric identifier of the laboratory whose staff to retrieve.
    *
    * @remarks
    * - Sets `isLoading` to `true` at the start and `false` upon completion
    * - Clears any previous error before initiating the request
    * - Implements automatic retry logic (2 retries) via the RxJS `retry` operator
    * - On success:
-   *   - Replaces the {@link staffList} signal with the server-returned list
-   *   - Includes information about each member's active status (see {@link StaffMember.active})
-   *   - Clears any error messages
+   * - Replaces the {@link staffList} signal with the server-returned list
+   * - Includes information about each member's active status (see {@link StaffMember.active})
+   * - Clears any error messages
    * - On failure, sets the {@link error} signal with a formatted error message
    * - To obtain only active staff members, use the {@link activeStaff} computed selector
    */
-  loadStaff(labId: string): void {
+  loadStaff(labId: number): void {
     this._isLoading.set(true);
     this._error.set(null);
     this.api
@@ -292,7 +292,7 @@ export class LaboratoryStore {
   /**
    * Registers a new staff member under the laboratory.
    *
-   * @param labId - The unique identifier of the laboratory under which to register the staff member.
+   * @param labId - The unique numeric identifier of the laboratory under which to register the staff member.
    * @param command - A {@link RegisterStaffCommand} encapsulating the staff member's
    * profile information (fullName, role, email). System-generated fields (id, active,
    * createdAt) are assigned by the server.
@@ -302,17 +302,17 @@ export class LaboratoryStore {
    * - Clears any previous error and success message before initiating the request
    * - Implements automatic retry logic (2 retries) via the RxJS `retry` operator
    * - On success:
-   *   - Appends the newly created {@link StaffMember} to the {@link staffList}
-   *   - Sets the {@link successMsg} signal to confirm the operation
-   *   - Clears the {@link error} signal
+   * - Appends the newly created {@link StaffMember} to the {@link staffList}
+   * - Sets the {@link successMsg} signal to confirm the operation
+   * - Clears the {@link error} signal
    * - On failure, sets the {@link error} signal with a formatted error message
    * - Newly registered staff members are considered active by default
-   *   (see {@link StaffMember.active})
+   * (see {@link StaffMember.active})
    *
    * @see {@link RegisterStaffCommand} for required field constraints
    * @see {@link StaffMember.email} for uniqueness requirements
    */
-  registerStaff(labId: string, command: RegisterStaffCommand): void {
+  registerStaff(labId: number, command: RegisterStaffCommand): void {
     this._isLoading.set(true);
     this._error.set(null);
     this.api
@@ -334,27 +334,27 @@ export class LaboratoryStore {
   /**
    * Deactivates an existing staff member within a laboratory.
    *
-   * @param labId - The unique identifier of the laboratory the staff member belongs to.
-   * @param staffId - The unique identifier of the staff member to deactivate.
+   * @param labId - The unique numeric identifier of the laboratory the staff member belongs to.
+   * @param staffId - The unique numeric identifier of the staff member to deactivate.
    *
    * @remarks
    * - Sets `isLoading` to `true` at the start and `false` upon completion
    * - Clears any previous error and success message before initiating the request
    * - Implements automatic retry logic (2 retries) via the RxJS `retry` operator
    * - On success:
-   *   - Updates the matching {@link StaffMember} in {@link staffList} by setting
-   *     its {@link StaffMember.active} flag to `false`
-   *   - Sets the {@link successMsg} signal to confirm the operation
-   *   - Clears the {@link error} signal
+   * - Updates the matching {@link StaffMember} in {@link staffList} by setting
+   * its {@link StaffMember.active} flag to `false`
+   * - Sets the {@link successMsg} signal to confirm the operation
+   * - Clears the {@link error} signal
    * - On failure, sets the {@link error} signal with a formatted error message
    * - **Important:** Deactivation does NOT delete the record. The staff member's
-   *   historical information (authorship of audit entries, batch approvals) is
-   *   retained for traceability and compliance. See {@link StaffMember.active}
-   *   for details on the semantics of deactivation.
+   * historical information (authorship of audit entries, batch approvals) is
+   * retained for traceability and compliance. See {@link StaffMember.active}
+   * for details on the semantics of deactivation.
    * - Deactivated staff members are automatically excluded from the
-   *   {@link activeStaff} computed selector
+   * {@link activeStaff} computed selector
    */
-  deactivateStaff(labId: string, staffId: string): void {
+  deactivateStaff(labId: number, staffId: number): void {
     this._isLoading.set(true);
     this._error.set(null);
     this.api
@@ -380,21 +380,21 @@ export class LaboratoryStore {
   /**
    * Retrieves and loads all pharmaceutical products registered under a laboratory.
    *
-   * @param labId - The unique identifier of the laboratory whose products to retrieve.
+   * @param labId - The unique numeric identifier of the laboratory whose products to retrieve.
    *
    * @remarks
    * - Sets `isLoading` to `true` at the start and `false` upon completion
    * - Clears any previous error before initiating the request
    * - Implements automatic retry logic (2 retries) via the RxJS `retry` operator
    * - On success:
-   *   - Replaces the {@link products} signal with the server-returned list
-   *   - Each product includes its active status (see {@link PharmaceuticalProduct.active})
-   *   - Clears any error messages
+   * - Replaces the {@link products} signal with the server-returned list
+   * - Each product includes its active status (see {@link PharmaceuticalProduct.active})
+   * - Clears any error messages
    * - On failure, sets the {@link error} signal with a formatted error message
    * - Inactive products are included in the list; the presentation layer should
-   *   filter them if needed for user-facing operations
+   * filter them if needed for user-facing operations
    */
-  loadProducts(labId: string): void {
+  loadProducts(labId: number): void {
     this._isLoading.set(true);
     this._error.set(null);
     this.api
@@ -415,7 +415,7 @@ export class LaboratoryStore {
   /**
    * Creates a new pharmaceutical product under the laboratory.
    *
-   * @param labId - The unique identifier of the laboratory under which to register the product.
+   * @param labId - The unique numeric identifier of the laboratory under which to register the product.
    * @param command - A {@link CreateProductCommand} encapsulating the product's
    * information (code, name, description, specifications). System-generated fields
    * (id, active, createdAt) are assigned by the server.
@@ -425,18 +425,18 @@ export class LaboratoryStore {
    * - Clears any previous error and success message before initiating the request
    * - Implements automatic retry logic (2 retries) via the RxJS `retry` operator
    * - On success:
-   *   - Appends the newly created {@link PharmaceuticalProduct} to the {@link products} list
-   *   - Sets the {@link successMsg} signal to confirm the operation
-   *   - Clears the {@link error} signal
+   * - Appends the newly created {@link PharmaceuticalProduct} to the {@link products} list
+   * - Sets the {@link successMsg} signal to confirm the operation
+   * - Clears the {@link error} signal
    * - On failure, sets the {@link error} signal with a formatted error message
    * - Newly created products are considered active by default
-   *   (see {@link PharmaceuticalProduct.active})
+   * (see {@link PharmaceuticalProduct.active})
    * - The product code must be unique within the laboratory's product catalog
    *
    * @see {@link CreateProductCommand} for required field constraints
    * @see {@link PharmaceuticalProduct.code} for uniqueness requirements
    */
-  createProduct(labId: string, command: CreateProductCommand): void {
+  createProduct(labId: number, command: CreateProductCommand): void {
     this._isLoading.set(true);
     this._error.set(null);
     this.api
@@ -460,31 +460,31 @@ export class LaboratoryStore {
   /**
    * Retrieves and loads all raw materials and low-stock alerts for a laboratory.
    *
-   * @param labId - The unique identifier of the laboratory whose inventory to retrieve.
+   * @param labId - The unique numeric identifier of the laboratory whose inventory to retrieve.
    *
    * @remarks
    * - Sets `isLoading` to `true` at the start and `false` upon completion (for the
-   *   main materials load; low-stock load runs in parallel)
+   * main materials load; low-stock load runs in parallel)
    * - Clears any previous error before initiating the request
    * - **Dual-load strategy:** This method makes two concurrent API calls:
-   *   1. Fetches all raw materials via {@link LaboratoryApi.getRawMaterials}
-   *   2. Fetches low-stock materials via {@link LaboratoryApi.getLowStockMaterials}
+   * 1. Fetches all raw materials via {@link LaboratoryApi.getRawMaterials}
+   * 2. Fetches low-stock materials via {@link LaboratoryApi.getLowStockMaterials}
    * - Implements automatic retry logic (2 retries) for both API calls via the
-   *   RxJS `retry` operator
+   * RxJS `retry` operator
    * - On success for main materials load:
-   *   - Replaces the {@link rawMaterials} signal with the server-returned list
-   *   - Clears any error messages
+   * - Replaces the {@link rawMaterials} signal with the server-returned list
+   * - Clears any error messages
    * - On success for low-stock load:
-   *   - Updates the {@link lowStock} signal with materials requiring attention
-   *   - Intended to support inventory monitoring workflows (see {@link hasLowStock})
+   * - Updates the {@link lowStock} signal with materials requiring attention
+   * - Intended to support inventory monitoring workflows (see {@link hasLowStock})
    * - On failure for main load, sets the {@link error} signal
    * - On failure for low-stock load, logs the error without blocking continued
-   *   operation (as inventory is still visible even if alerts fail to load)
+   * operation (as inventory is still visible even if alerts fail to load)
    *
    * @see {@link hasLowStock} for checking if any low-stock conditions exist
    * @see {@link RawMaterial.minimumStock} for threshold definition
    */
-  loadRawMaterials(labId: string): void {
+  loadRawMaterials(labId: number): void {
     this._isLoading.set(true);
     this._error.set(null);
 
@@ -514,7 +514,7 @@ export class LaboratoryStore {
   /**
    * Registers a new raw material entry into the laboratory's inventory.
    *
-   * @param labId - The unique identifier of the laboratory under which to register the material.
+   * @param labId - The unique numeric identifier of the laboratory under which to register the material.
    * @param command - A {@link CreateRawMaterialCommand} encapsulating the material's
    * information including name, code, supplier, batch number, expiration date, initial
    * stock quantity, unit, and minimum stock threshold. System-generated fields
@@ -525,22 +525,22 @@ export class LaboratoryStore {
    * - Clears any previous error and success message before initiating the request
    * - Implements automatic retry logic (2 retries) via the RxJS `retry` operator
    * - On success:
-   *   - Appends the newly created {@link RawMaterial} to the {@link rawMaterials} list
-   *   - Sets the {@link successMsg} signal to confirm the operation
-   *   - Clears the {@link error} signal
+   * - Appends the newly created {@link RawMaterial} to the {@link rawMaterials} list
+   * - Sets the {@link successMsg} signal to confirm the operation
+   * - Clears the {@link error} signal
    * - On failure, sets the {@link error} signal with a formatted error message
    * - **Inventory Tracking:** The command captures:
-   *   - Supplier information for supply chain traceability (see {@link RawMaterial.supplier})
-   *   - Batch number for pharmaceutical traceability (see {@link RawMaterial.batchNumber})
-   *   - Expiration date to enforce quality control (see {@link RawMaterial.expirationDate})
-   *   - Minimum stock threshold for restocking alerts (see {@link RawMaterial.minimumStock})
+   * - Supplier information for supply chain traceability (see {@link RawMaterial.supplier})
+   * - Batch number for pharmaceutical traceability (see {@link RawMaterial.batchNumber})
+   * - Expiration date to enforce quality control (see {@link RawMaterial.expirationDate})
+   * - Minimum stock threshold for restocking alerts (see {@link RawMaterial.minimumStock})
    * - The material code must be unique within the laboratory's catalog
    * - The expiration date must be validated as a future date before registration
    *
    * @see {@link CreateRawMaterialCommand} for required field constraints
    * @see {@link RawMaterial} for the complete domain entity model
    */
-  createRawMaterial(labId: string, command: CreateRawMaterialCommand): void {
+  createRawMaterial(labId: number, command: CreateRawMaterialCommand): void {
     this._isLoading.set(true);
     this._error.set(null);
     this.api
@@ -568,14 +568,14 @@ export class LaboratoryStore {
    * - Sets the {@link error} signal to `null`
    * - Sets the {@link successMsg} signal to `null`
    * - Intended to be called by the presentation layer after displaying
-   *   transient feedback messages (success confirmations, error alerts) to the user
+   * transient feedback messages (success confirmations, error alerts) to the user
    * - This method does NOT affect other state (loading, entities, etc.)
    *
    * @example
    * ```typescript
    * // Clear messages after user dismisses a snackbar notification
    * onNotificationDismissed() {
-   *   this.store.clearMessages();
+   * this.store.clearMessages();
    * }
    * ```
    */
@@ -593,12 +593,12 @@ export class LaboratoryStore {
    *
    * @remarks
    * - If the error is an `Error` instance:
-   *   - Checks if the message contains "Resource not found" (404 style)
-   *   - Returns a composed message combining the fallback context with "Not Found"
-   *   - Otherwise returns the error's message directly
+   * - Checks if the message contains "Resource not found" (404 style)
+   * - Returns a composed message combining the fallback context with "Not Found"
+   * - Otherwise returns the error's message directly
    * - For non-Error types (e.g., unknown error shapes), returns the fallback message
    * - Used internally by all store methods to consistently format errors before
-   *   storing them in the {@link _error} signal
+   * storing them in the {@link _error} signal
    *
    * @private
    */

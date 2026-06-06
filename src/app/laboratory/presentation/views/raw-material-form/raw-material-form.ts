@@ -51,8 +51,8 @@ export class RawMaterialForm {
 
   protected readonly units = ['kg', 'g', 'L', 'mL', 'units'];
 
-  private get currentLabId(): string {
-    return this.iamStore.currentUserId() || 'LAB-001';
+  private get currentLabId(): number {
+    return this.iamStore.currentUserId() || 1;
   }
 
   protected form: FormGroup = this.fb.group({

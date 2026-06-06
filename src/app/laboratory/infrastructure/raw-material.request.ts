@@ -15,21 +15,21 @@
  * @example
  * ```typescript
  * const body: CreateRawMaterialRequest = {
- *   labId: 'lab-123',
- *   name: 'Etanol 96°',
- *   code: 'RM-ETH-96',
- *   supplier: 'QuimicaPeru S.A.C.',
- *   batchNumber: 'LOTE-2024-045',
- *   expirationDate: '2026-12-31',
- *   quantityInStock: 150,
- *   unit: 'L',
- *   minimumStock: 20,
+ * labId: 123,
+ * name: 'Etanol 96°',
+ * code: 'RM-ETH-96',
+ * supplier: 'QuimicaPeru S.A.C.',
+ * batchNumber: 'LOTE-2024-045',
+ * expirationDate: '2026-12-31',
+ * quantityInStock: 150,
+ * unit: 'L',
+ * minimumStock: 20,
  * };
  * ```
  */
 export interface CreateRawMaterialRequest {
-  /** The identifier of the laboratory under which the raw material will be registered. */
-  labId: string;
+  /** The numeric identifier of the laboratory under which the raw material will be registered. */
+  labId: number;
 
   /** The common or chemical name of the raw material. */
   name: string;

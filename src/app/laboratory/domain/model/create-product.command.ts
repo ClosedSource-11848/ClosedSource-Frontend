@@ -16,23 +16,23 @@
  * @example
  * ```typescript
  * const command: CreateProductCommand = {
- *   labId: 'lab-123',
- *   code: 'MED-2024-001',
- *   name: 'Amoxicilina 500mg',
- *   description: 'Antibiótico de amplio espectro en cápsulas',
- *   specifications: 'Cápsulas de 500mg, blister x 12 unidades',
+ * labId: 123,
+ * code: 'MED-2024-001',
+ * name: 'Amoxicilina 500mg',
+ * description: 'Antibiótico de amplio espectro en cápsulas',
+ * specifications: 'Cápsulas de 500mg, blister x 12 unidades',
  * };
  * ```
  */
 export interface CreateProductCommand {
   /**
-   * The identifier of the laboratory under which the product will be registered.
+   * The numeric identifier of the laboratory under which the product will be registered.
    *
    * @remarks
    * This field scopes the new product to a specific {@link Laboratory} entity,
    * ensuring that the product is created within the correct organizational context.
    */
-  labId: string;
+  labId: number;
 
   /**
    * The internal catalog code that will uniquely identify the product

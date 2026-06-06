@@ -5,7 +5,7 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  *
  * @remarks
  * In Domain-Driven Design, a StaffMember is an entity that models a human actor
- * belonging to a laboratory organization. Each staff member has a unique identity
+ * belonging to a laboratory organization. Each staff member has a unique numeric identity
  * and is always scoped to the laboratory they are assigned to.
  *
  * This entity captures the essential professional profile of a staff member,
@@ -16,13 +16,13 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  * @example
  * ```typescript
  * const staff = new StaffMember({
- *   id: 'staff-001',
- *   labId: 'lab-123',
- *   fullName: 'María Elena Torres',
- *   role: 'Quality Control Analyst',
- *   email: 'metorres@biolabperu.com',
- *   active: true,
- *   createdAt: '2024-05-20T08:00:00Z',
+ * id: 1,
+ * labId: 123,
+ * fullName: 'María Elena Torres',
+ * role: 'Quality Control Analyst',
+ * email: 'metorres@biolabperu.com',
+ * active: true,
+ * createdAt: '2024-05-20T08:00:00Z',
  * });
  *
  * console.log(staff.fullName); // 'María Elena Torres'
@@ -31,19 +31,19 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  */
 export class StaffMember implements BaseEntity {
   /**
-   * The unique identifier for this staff member record.
+   * The unique numeric identifier for this staff member record.
    */
-  id: string;
+  id: number;
 
   /**
-   * The identifier of the laboratory this staff member belongs to.
+   * The numeric identifier of the laboratory this staff member belongs to.
    *
    * @remarks
    * This field establishes the relationship between the staff member and its
    * parent {@link Laboratory} entity, scoping the member's responsibilities
    * and access to a specific laboratory context.
    */
-  labId: string;
+  labId: number;
 
   /**
    * The full legal name of the staff member.
@@ -96,8 +96,8 @@ export class StaffMember implements BaseEntity {
    * Creates a new StaffMember entity.
    *
    * @param params - Initialization properties
-   * @param params.id - The unique identifier for the staff member
-   * @param params.labId - The identifier of the laboratory they belong to
+   * @param params.id - The unique numeric identifier for the staff member
+   * @param params.labId - The numeric identifier of the laboratory they belong to
    * @param params.fullName - The full legal name of the staff member
    * @param params.role - The professional role or position within the laboratory
    * @param params.email - The institutional email address of the staff member
@@ -109,8 +109,8 @@ export class StaffMember implements BaseEntity {
    * All fields are required and no defaults are applied.
    */
   constructor(params: {
-    id: string;
-    labId: string;
+    id: number;
+    labId: number;
     fullName: string;
     role: string;
     email: string;

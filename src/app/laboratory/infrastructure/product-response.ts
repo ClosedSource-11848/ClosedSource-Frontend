@@ -18,23 +18,23 @@ import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-res
  * @example
  * ```typescript
  * const resource: PharmaceuticalProductResource = {
- *   id: 'prod-001',
- *   labId: 'lab-123',
- *   code: 'MED-2024-001',
- *   name: 'Amoxicilina 500mg',
- *   description: 'Antibiótico de amplio espectro en cápsulas',
- *   specifications: 'Cápsulas de 500mg, blister x 12 unidades',
- *   active: true,
- *   createdAt: '2024-03-01T09:00:00Z',
+ * id: 1,
+ * labId: 123,
+ * code: 'MED-2024-001',
+ * name: 'Amoxicilina 500mg',
+ * description: 'Antibiótico de amplio espectro en cápsulas',
+ * specifications: 'Cápsulas de 500mg, blister x 12 unidades',
+ * active: true,
+ * createdAt: '2024-03-01T09:00:00Z',
  * };
  * ```
  */
 export interface PharmaceuticalProductResource extends BaseResource {
-  /** The unique identifier of the product as assigned by the server. */
-  id: string;
+  /** The unique numeric identifier of the product as assigned by the server. */
+  id: number;
 
-  /** The identifier of the laboratory that owns this product. */
-  labId: string;
+  /** The numeric identifier of the laboratory that owns this product. */
+  labId: number;
 
   /** The internal catalog code that uniquely identifies this product within the laboratory. */
   code: string;
@@ -86,18 +86,18 @@ export interface PharmaceuticalProductResource extends BaseResource {
  * @example
  * ```typescript
  * const response: PharmaceuticalProductsResponse = {
- *   products: [
- *     {
- *       id: 'prod-001',
- *       labId: 'lab-123',
- *       code: 'MED-2024-001',
- *       name: 'Amoxicilina 500mg',
- *       description: 'Antibiótico de amplio espectro en cápsulas',
- *       specifications: 'Cápsulas de 500mg, blister x 12 unidades',
- *       active: true,
- *       createdAt: '2024-03-01T09:00:00Z',
- *     }
- *   ]
+ * products: [
+ * {
+ * id: 1,
+ * labId: 123,
+ * code: 'MED-2024-001',
+ * name: 'Amoxicilina 500mg',
+ * description: 'Antibiótico de amplio espectro en cápsulas',
+ * specifications: 'Cápsulas de 500mg, blister x 12 unidades',
+ * active: true,
+ * createdAt: '2024-03-01T09:00:00Z',
+ * }
+ * ]
  * };
  * ```
  */

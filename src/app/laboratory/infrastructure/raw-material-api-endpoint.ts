@@ -32,14 +32,14 @@ const labEndpointUrl = `${environment.serverBasePath}${environment.laboratoryLab
  * @example
  * ```typescript
  * const endpoint = new RawMaterialApiEndpoint(http);
- * endpoint.getRawMaterialsByLab('lab-123').subscribe(materials => console.log(materials.length));
+ * endpoint.getRawMaterialsByLab(123).subscribe(materials => console.log(materials.length));
  * ```
  */
 export class RawMaterialApiEndpoint extends BaseApiEndpoint<
-RawMaterial,
+  RawMaterial,
   RawMaterialResource,
   RawMaterialsResponse,
-RawMaterialAssembler
+  RawMaterialAssembler
 > {
   /**
    * Creates an instance of `RawMaterialApiEndpoint`.
@@ -58,7 +58,7 @@ RawMaterialAssembler
   /**
    * Retrieves all raw materials registered under a specific laboratory.
    *
-   * @param labId - The unique identifier of the laboratory whose raw materials to retrieve.
+   * @param labId - The unique numeric identifier of the laboratory whose raw materials to retrieve.
    * @returns An `Observable` that emits an array of {@link RawMaterial} domain
    * entities mapped from the server response.
    *
@@ -68,7 +68,7 @@ RawMaterialAssembler
    * {@link RawMaterialAssembler.toEntitiesFromResponse}. Errors are forwarded
    * through the base class error handler.
    */
-  getRawMaterialsByLab(labId: string): Observable<RawMaterial[]> {
+  getRawMaterialsByLab(labId: number): Observable<RawMaterial[]> {
     return this.http.get<RawMaterialsResponse>(`${this.endpointUrl}/${labId}/raw-materials`).pipe(
       map((response) => this.assembler.toEntitiesFromResponse(response)),
       catchError(this.handleError(`Failed to fetch raw materials for lab ${labId}`)),
@@ -79,7 +79,7 @@ RawMaterialAssembler
    * Retrieves all raw materials whose current stock level is at or below
    * their defined minimum stock threshold.
    *
-   * @param labId - The unique identifier of the laboratory to check for low-stock materials.
+   * @param labId - The unique numeric identifier of the laboratory to check for low-stock materials.
    * @returns An `Observable` that emits an array of {@link RawMaterial} domain
    * entities that require restocking attention.
    *
@@ -90,7 +90,7 @@ RawMaterialAssembler
    * through the base class error handler. See {@link RawMaterial.minimumStock}
    * for the threshold definition used to determine low-stock status.
    */
-  getLowStockMaterials(labId: string): Observable<RawMaterial[]> {
+  getLowStockMaterials(labId: number): Observable<RawMaterial[]> {
     return this.http
       .get<RawMaterialsResponse>(`${this.endpointUrl}/${labId}/raw-materials/low-stock`)
       .pipe(
@@ -102,7 +102,7 @@ RawMaterialAssembler
   /**
    * Creates a new raw material entry under a specific laboratory.
    *
-   * @param labId - The unique identifier of the laboratory to register the material under.
+   * @param labId - The unique numeric identifier of the laboratory to register the material under.
    * @param request - The {@link CreateRawMaterialRequest} payload containing
    * the new material's inventory and traceability details.
    * @returns An `Observable` that emits the newly created {@link RawMaterial}
@@ -115,7 +115,7 @@ RawMaterialAssembler
    * {@link RawMaterialAssembler.toEntityFromResource}. Errors are forwarded
    * through the base class error handler.
    */
-  createRawMaterial(labId: string, request: CreateRawMaterialRequest): Observable<RawMaterial> {
+  createRawMaterial(labId: number, request: CreateRawMaterialRequest): Observable<RawMaterial> {
     return this.http
       .post<RawMaterialResource>(`${this.endpointUrl}/${labId}/raw-materials`, request)
       .pipe(
