@@ -1,7 +1,7 @@
 import { BaseResource } from '../../shared/infrastructure/base-response';
 
 export interface SignInResource extends BaseResource {
-  id: string;
+  id: number;
   username: string;
   roles: string[];
   token: string;

@@ -1,7 +1,7 @@
 import { BaseResource } from '../../shared/infrastructure/base-response';
 
 export interface SignUpResource extends BaseResource {
-  id: string;
+  id: number;
   username: string;
 }
 

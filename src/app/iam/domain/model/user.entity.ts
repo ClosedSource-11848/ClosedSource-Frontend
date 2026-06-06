@@ -2,11 +2,11 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
 
 /**
  * Represents a user entity in the identity and access management domain.
- * @remarks Implements BaseEntity using a string UUID identifier.
+ * @remarks Implements BaseEntity using a numeric identifier.
  * @author QualiTrack
  */
 export class User implements BaseEntity {
-  private _id: string; // Adaptado a string (UUID)
+  private _id: number;
   private _username: string;
   private _roles: string[];
 
@@ -14,17 +14,17 @@ export class User implements BaseEntity {
    * Creates a new User instance.
    * @param user - The user data object containing id, username, and roles.
    */
-  constructor(user: { id: string; username: string; roles: string[] }) {
+  constructor(user: { id: number; username: string; roles: string[] }) {
     this._id = user.id;
     this._username = user.username;
     this._roles = user.roles;
   }
 
-  get id(): string {
+  get id(): number {
     return this._id;
   }
 
-  set id(value: string) {
+  set id(value: number) {
     this._id = value;
   }
 
