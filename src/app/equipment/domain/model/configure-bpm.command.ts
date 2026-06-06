@@ -13,23 +13,23 @@
  * @example
  * ```typescript
  * const command: ConfigureBpmCommand = {
- *   equipmentId: 'equipment-001',
- *   parameterName: 'Temperature',
- *   minValue: 20,
- *   maxValue: 80,
- *   unit: '°C'
+ * equipmentId: 101,
+ * parameterName: 'Temperature',
+ * minValue: 20,
+ * maxValue: 80,
+ * unit: '°C'
  * };
  * ```
  */
 export interface ConfigureBpmCommand {
   /**
-   * The identifier of the equipment to which the BPM parameter configuration belongs.
+   * The numeric identifier of the equipment to which the BPM parameter configuration belongs.
    *
    * @remarks
    * This value links the configuration request to a specific equipment registered
    * in the system.
    */
-  equipmentId: string;
+  equipmentId: number;
 
   /**
    * The name of the parameter to be configured.

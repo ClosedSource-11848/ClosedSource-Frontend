@@ -15,13 +15,13 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  * @example
  * ```typescript
  * const record = new MaintenanceRecord({
- *   id: 'maintenance-001',
- *   equipmentId: 'equipment-001',
- *   maintenanceDate: '2026-05-12',
- *   technicianName: 'John Doe',
- *   description: 'Preventive maintenance and calibration performed.',
- *   type: 'PREVENTIVE',
- *   createdAt: '2026-05-12T10:00:00Z'
+ * id: 1,
+ * equipmentId: 101,
+ * maintenanceDate: '2026-05-12',
+ * technicianName: 'John Doe',
+ * description: 'Preventive maintenance and calibration performed.',
+ * type: 'PREVENTIVE',
+ * createdAt: '2026-05-12T10:00:00Z'
  * });
  *
  * console.log(record.technicianName); // 'John Doe'
@@ -29,18 +29,18 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  */
 export class MaintenanceRecord implements BaseEntity {
   /**
-   * The unique identifier of the maintenance record.
+   * The unique numeric identifier of the maintenance record.
    */
-  id: string;
+  id: number;
 
   /**
-   * The identifier of the equipment associated with this maintenance record.
+   * The numeric identifier of the equipment associated with this maintenance record.
    *
    * @remarks
    * This value links the maintenance activity to a specific equipment registered
    * in the system.
    */
-  equipmentId: string;
+  equipmentId: number;
 
   /**
    * The date when the maintenance activity was performed.
@@ -89,8 +89,8 @@ export class MaintenanceRecord implements BaseEntity {
    * Creates a new MaintenanceRecord entity.
    *
    * @param params - Initialization properties for the maintenance record.
-   * @param params.id - The unique identifier of the maintenance record.
-   * @param params.equipmentId - The identifier of the equipment associated with the record.
+   * @param params.id - The unique numeric identifier of the maintenance record.
+   * @param params.equipmentId - The numeric identifier of the equipment associated with the record.
    * @param params.maintenanceDate - The date when the maintenance activity was performed.
    * @param params.technicianName - The name of the technician responsible for the maintenance.
    * @param params.description - The description of the maintenance activity.
@@ -103,8 +103,8 @@ export class MaintenanceRecord implements BaseEntity {
    * equipment.
    */
   constructor(params: {
-    id: string;
-    equipmentId: string;
+    id: number;
+    equipmentId: number;
     maintenanceDate: string;
     technicianName: string;
     description: string;

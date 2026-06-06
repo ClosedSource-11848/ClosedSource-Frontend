@@ -27,7 +27,7 @@ import { RegisterMaintenanceCommand } from '../domain/model/register-maintenance
  * ```typescript
  * const store = inject(EquipmentStore);
  *
- * store.loadEquipment('lab-001');
+ * store.loadEquipment(101);
  *
  * console.log(store.equipmentList());
  * console.log(store.operationalEquipment());
@@ -205,7 +205,7 @@ export class EquipmentStore {
   /**
    * Loads the equipment registered in a specific laboratory.
    *
-   * @param labId - The identifier of the laboratory whose equipment will be loaded.
+   * @param labId - The numeric identifier of the laboratory whose equipment will be loaded.
    *
    * @remarks
    * This method sets the loading state, clears previous errors, requests the
@@ -214,7 +214,7 @@ export class EquipmentStore {
    *
    * The request is retried up to two times before handling the error.
    */
-  loadEquipment(labId: string): void {
+  loadEquipment(labId: number): void {
     this._isLoading.set(true);
     this._error.set(null);
     this.api
@@ -268,7 +268,7 @@ export class EquipmentStore {
   /**
    * Loads BPM parameter configurations for a specific equipment.
    *
-   * @param equipmentId - The identifier of the equipment whose BPM configurations will be loaded.
+   * @param equipmentId - The numeric identifier of the equipment whose BPM configurations will be loaded.
    *
    * @remarks
    * This method retrieves the configured parameter ranges associated with
@@ -276,7 +276,7 @@ export class EquipmentStore {
    *
    * The request is retried up to two times before handling the error.
    */
-  loadBpmConfig(equipmentId: string): void {
+  loadBpmConfig(equipmentId: number): void {
     this._isLoading.set(true);
     this._error.set(null);
     this.api
@@ -331,7 +331,7 @@ export class EquipmentStore {
   /**
    * Loads the maintenance history for a specific equipment.
    *
-   * @param equipmentId - The identifier of the equipment whose maintenance history will be loaded.
+   * @param equipmentId - The numeric identifier of the equipment whose maintenance history will be loaded.
    *
    * @remarks
    * This method retrieves all maintenance records associated with the provided
@@ -339,7 +339,7 @@ export class EquipmentStore {
    *
    * The request is retried up to two times before handling the error.
    */
-  loadMaintenanceHistory(equipmentId: string): void {
+  loadMaintenanceHistory(equipmentId: number): void {
     this._isLoading.set(true);
     this._error.set(null);
     this.api

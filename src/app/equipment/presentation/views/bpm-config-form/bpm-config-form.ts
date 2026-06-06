@@ -76,13 +76,13 @@ export class BpmConfigForm implements OnInit {
   protected readonly store = inject(EquipmentStore);
 
   /**
-   * Signal that stores the current equipment identifier.
+   * Signal that stores the current numeric equipment identifier.
    *
    * @remarks
    * The value is obtained from the route parameter named id during component
    * initialization. It remains null if no equipment identifier is available.
    */
-  protected readonly equipmentId = signal<string | null>(null);
+  protected readonly equipmentId = signal<number | null>(null);
 
   /**
    * Reactive form used to configure a BPM parameter.
@@ -107,8 +107,8 @@ export class BpmConfigForm implements OnInit {
    * so it can later be used when building the BPM configuration command.
    */
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) this.equipmentId.set(id);
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) this.equipmentId.set(Number(idParam));
   }
 
   /**
