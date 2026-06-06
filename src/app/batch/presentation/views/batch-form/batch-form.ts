@@ -48,8 +48,8 @@ export class BatchForm implements OnInit {
   /**
    * Gets the current laboratory identifier from the IAM context.
    */
-  private get currentLabId(): string {
-    return this.iamStore.currentUserId() || 'LAB-001';
+  private get currentLabId(): number {
+    return this.iamStore.currentUserId() || 1;
   }
 
   /**

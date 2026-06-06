@@ -96,9 +96,9 @@ export class BatchStore {
   /**
    * Fetches the list of batches from the API for a specific laboratory.
    *
-   * @param labId - The unique identifier of the laboratory.
+   * @param labId - The unique numeric identifier of the laboratory.
    */
-  loadBatches(labId: string): void {
+  loadBatches(labId: number): void {
     this._isLoading.set(true);
     this._error.set(null);
     this.api
@@ -143,10 +143,10 @@ export class BatchStore {
   /**
    * Finalizes and releases a batch into the distribution phase.
    *
-   * @param batchId - Identifier of the batch to update.
+   * @param batchId - Numeric identifier of the batch to update.
    * @param command - The release details and quality remarks.
    */
-  releaseBatch(batchId: string, command: ReleaseBatchCommand): void {
+  releaseBatch(batchId: number, command: ReleaseBatchCommand): void {
     this._isLoading.set(true);
     this._error.set(null);
     this.api
@@ -168,10 +168,10 @@ export class BatchStore {
   /**
    * Marks a batch as rejected due to non-compliance.
    *
-   * @param batchId - Identifier of the batch to update.
+   * @param batchId - Numeric identifier of the batch to update.
    * @param command - The rejection justification and date.
    */
-  rejectBatch(batchId: string, command: RejectBatchCommand): void {
+  rejectBatch(batchId: number, command: RejectBatchCommand): void {
     this._isLoading.set(true);
     this._error.set(null);
     this.api
@@ -195,9 +195,9 @@ export class BatchStore {
   /**
    * Loads the genealogy of raw materials used in a specific batch.
    *
-   * @param batchId - The target batch identifier.
+   * @param batchId - The target numeric batch identifier.
    */
-  loadBatchUsage(batchId: string): void {
+  loadBatchUsage(batchId: number): void {
     this._isLoading.set(true);
     this._error.set(null);
     this.api
@@ -218,10 +218,10 @@ export class BatchStore {
   /**
    * Links a specific amount of raw material to the batch record.
    *
-   * @param batchId - The identifier of the consuming batch.
+   * @param batchId - The numeric identifier of the consuming batch.
    * @param command - The material ID and quantity used.
    */
-  linkMaterial(batchId: string, command: LinkRawMaterialCommand): void {
+  linkMaterial(batchId: number, command: LinkRawMaterialCommand): void {
     this._isLoading.set(true);
     this._error.set(null);
     this.api

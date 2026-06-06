@@ -60,14 +60,14 @@ export class BatchApi extends BaseApi {
   /**
    * Retrieves all manufacturing batches associated with a specific laboratory.
    *
-   * @param labId - The unique identifier of the laboratory
+   * @param labId - The unique numeric identifier of the laboratory
    * @returns An Observable emitting an array of Batch domain entities
    *
    * @remarks
    * Delegates the HTTP GET request to the batch endpoint to fetch the collection
    * and ensures the response is mapped into proper domain entities.
    */
-  getBatches(labId: string): Observable<Batch[]> {
+  getBatches(labId: number): Observable<Batch[]> {
     return this._batchEndpoint.getBatchesByLab(labId);
   }
 
@@ -88,21 +88,21 @@ export class BatchApi extends BaseApi {
   /**
    * Officially approves and releases a production batch.
    *
-   * @param batchId - The unique identifier of the batch to be released
+   * @param batchId - The unique numeric identifier of the batch to be released
    * @param request - The payload containing final quality control remarks and release date
    * @returns An Observable emitting the updated Batch domain entity
    *
    * @remarks
    * Submits the required compliance data to transition the batch state to 'RELEASED'.
    */
-  releaseBatch(batchId: string, request: ReleaseBatchRequest): Observable<Batch> {
+  releaseBatch(batchId: number, request: ReleaseBatchRequest): Observable<Batch> {
     return this._batchEndpoint.releaseBatch(batchId, request);
   }
 
   /**
    * Rejects a production batch due to quality control failures.
    *
-   * @param batchId - The unique identifier of the batch to be rejected
+   * @param batchId - The unique numeric identifier of the batch to be rejected
    * @param request - The payload containing the rejection justification and date
    * @returns An Observable emitting the updated Batch domain entity
    *
@@ -110,7 +110,7 @@ export class BatchApi extends BaseApi {
    * Submits the non-compliance data to transition the batch state to 'REJECTED'
    * in accordance with Good Manufacturing Practices (BPM/GMP).
    */
-  rejectBatch(batchId: string, request: RejectBatchRequest): Observable<Batch> {
+  rejectBatch(batchId: number, request: RejectBatchRequest): Observable<Batch> {
     return this._batchEndpoint.rejectBatch(batchId, request);
   }
 
@@ -119,21 +119,21 @@ export class BatchApi extends BaseApi {
   /**
    * Retrieves all raw material consumption records for a specific batch.
    *
-   * @param batchId - The unique identifier of the batch
+   * @param batchId - The unique numeric identifier of the batch
    * @returns An Observable emitting an array of RawMaterialUsage domain entities
    *
    * @remarks
    * Fetches the full traceability log of materials consumed during the specified
    * production batch run.
    */
-  getRawMaterialUsage(batchId: string): Observable<RawMaterialUsage[]> {
+  getRawMaterialUsage(batchId: number): Observable<RawMaterialUsage[]> {
     return this._usageEndpoint.getUsageByBatch(batchId);
   }
 
   /**
    * Allocates and links a raw material to an ongoing production batch.
    *
-   * @param batchId - The unique identifier of the batch consuming the material
+   * @param batchId - The unique numeric identifier of the batch consuming the material
    * @param request - The payload containing material identifiers and consumption quantities
    * @returns An Observable emitting the newly registered RawMaterialUsage domain entity
    *
@@ -141,7 +141,7 @@ export class BatchApi extends BaseApi {
    * Sends an HTTP POST request to record the physical usage of a raw material,
    * establishing a vital genealogical link for quality control tracking.
    */
-  linkRawMaterial(batchId: string, request: LinkRawMaterialRequest): Observable<RawMaterialUsage> {
+  linkRawMaterial(batchId: number, request: LinkRawMaterialRequest): Observable<RawMaterialUsage> {
     return this._usageEndpoint.linkRawMaterial(batchId, request);
   }
 }

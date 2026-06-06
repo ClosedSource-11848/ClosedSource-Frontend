@@ -12,14 +12,14 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  * @example
  * ```typescript
  * const usageRecord = new RawMaterialUsage({
- *   id: 'usage-789a-4b2c',
- *   batchId: '123e4567-e89b-12d3-a456-426614174000',
- *   rawMaterialId: 'mat-045',
- *   rawMaterialName: 'Purified Water',
- *   quantityUsed: 150.5,
- *   unit: 'liters',
- *   usageDate: '2026-05-12T09:30:00Z',
- *   createdAt: '2026-05-12T09:35:00Z'
+ * id: 1,
+ * batchId: 101,
+ * rawMaterialId: 45,
+ * rawMaterialName: 'Purified Water',
+ * quantityUsed: 150.5,
+ * unit: 'liters',
+ * usageDate: '2026-05-12T09:30:00Z',
+ * createdAt: '2026-05-12T09:35:00Z'
  * });
  *
  * console.log(`Consumed ${usageRecord.quantityUsed} ${usageRecord.unit} of ${usageRecord.rawMaterialName}`);
@@ -29,19 +29,19 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  */
 export class RawMaterialUsage implements BaseEntity {
   /**
-   * The unique identifier for this material usage record.
+   * The unique numeric identifier for this material usage record.
    */
-  id: string;
+  id: number;
 
   /**
-   * The identifier of the production batch that consumed the material.
+   * The numeric identifier of the production batch that consumed the material.
    */
-  batchId: string;
+  batchId: number;
 
   /**
-   * The identifier of the specific raw material being consumed.
+   * The numeric identifier of the specific raw material being consumed.
    */
-  rawMaterialId: string;
+  rawMaterialId: number;
 
   /**
    * The display name of the raw material.
@@ -72,9 +72,9 @@ export class RawMaterialUsage implements BaseEntity {
    * Creates a new RawMaterialUsage entity.
    *
    * @param params - Initialization properties
-   * @param params.id - The unique identifier for the usage record
-   * @param params.batchId - The target batch identifier
-   * @param params.rawMaterialId - The consumed raw material identifier
+   * @param params.id - The unique numeric identifier for the usage record
+   * @param params.batchId - The target numeric batch identifier
+   * @param params.rawMaterialId - The consumed numeric raw material identifier
    * @param params.rawMaterialName - The name of the raw material
    * @param params.quantityUsed - The amount consumed
    * @param params.unit - The unit of measurement
@@ -86,9 +86,9 @@ export class RawMaterialUsage implements BaseEntity {
    * It requires full traceability data linking the batch and the material to be instantiated.
    */
   constructor(params: {
-    id: string;
-    batchId: string;
-    rawMaterialId: string;
+    id: number;
+    batchId: number;
+    rawMaterialId: number;
     rawMaterialName: string;
     quantityUsed: number;
     unit: string;

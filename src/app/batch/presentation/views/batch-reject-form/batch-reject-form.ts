@@ -42,15 +42,16 @@ export class BatchRejectForm implements OnInit {
   rejectForm!: FormGroup;
 
   /**
-   * The unique identifier of the batch to be rejected.
+   * The unique numeric identifier of the batch to be rejected.
    */
-  batchId!: string;
+  batchId!: number;
 
   /**
    * Initializes the component and sets up the rejection form.
    */
   ngOnInit(): void {
-    this.batchId = this.route.snapshot.paramMap.get('id') || '';
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.batchId = idParam ? Number(idParam) : 0;
 
     this.rejectForm = this.fb.group({
       rejectionDate: [new Date().toISOString().substring(0, 10), Validators.required],

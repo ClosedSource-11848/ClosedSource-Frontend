@@ -14,35 +14,35 @@ import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-res
  * @example
  * ```typescript
  * const resource: RawMaterialUsageResource = {
- *   id: 'usage-789a-4b2c',
- *   batchId: '123e4567-e89b-12d3-a456-426614174000',
- *   rawMaterialId: 'mat-045',
- *   rawMaterialName: 'Purified Water',
- *   quantityUsed: 150.5,
- *   unit: 'liters',
- *   usageDate: '2026-05-12T09:30:00Z',
- *   createdAt: '2026-05-12T09:35:00Z'
+ * id: 1,
+ * batchId: 101,
+ * rawMaterialId: 45,
+ * rawMaterialName: 'Purified Water',
+ * quantityUsed: 150.5,
+ * unit: 'liters',
+ * usageDate: '2026-05-12T09:30:00Z',
+ * createdAt: '2026-05-12T09:35:00Z'
  * };
  *
- ```
+ * ```
  *
  * @author Qualitrack
  */
 export interface RawMaterialUsageResource extends BaseResource {
   /**
-   * The unique identifier for the raw material usage resource.
+   * The unique numeric identifier for the raw material usage resource.
    */
-  id: string;
+  id: number;
 
   /**
-   * The identifier of the production batch associated with this usage.
+   * The numeric identifier of the production batch associated with this usage.
    */
-  batchId: string;
+  batchId: number;
 
   /**
-   * The identifier of the specific raw material consumed.
+   * The numeric identifier of the specific raw material consumed.
    */
-  rawMaterialId: string;
+  rawMaterialId: number;
 
   /**
    * The display name of the raw material.
@@ -83,13 +83,13 @@ export interface RawMaterialUsageResource extends BaseResource {
  * @example
  * ```typescript
  * const apiResponse: RawMaterialUsagesResponse = {
- *   rawMaterialUsages: [
- *     { id: 'usage-1', rawMaterialName: 'Solvent A', ... },
- *     { id: 'usage-2', rawMaterialName: 'Active Ingredient B', ... }
- *   ]
+ * rawMaterialUsages: [
+ * { id: 1, rawMaterialName: 'Solvent A', ... },
+ * { id: 2, rawMaterialName: 'Active Ingredient B', ... }
+ * ]
  * };
  *
- ```
+ * ```
  *
  * @author Qualitrack
  */

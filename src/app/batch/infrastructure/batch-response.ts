@@ -13,37 +13,37 @@ import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-res
  * @example
  * ```typescript
  * const resource: BatchResource = {
- *   id: '123e4567-e89b-12d3-a456-426614174000',
- *   labId: 'lab-001',
- *   productId: 'prod-890',
- *   productName: 'Ibuprofen 400mg',
- *   batchNumber: 'LOTE-2026A',
- *   quantity: 5000,
- *   unit: 'units',
- *   status: 'IN_PROGRESS',
- *   startDate: '2026-05-12T08:00:00Z',
- *   createdAt: '2026-05-12T07:30:00Z'
+ * id: 1,
+ * labId: 101,
+ * productId: 890,
+ * productName: 'Ibuprofen 400mg',
+ * batchNumber: 'LOTE-2026A',
+ * quantity: 5000,
+ * unit: 'units',
+ * status: 'IN_PROGRESS',
+ * startDate: '2026-05-12T08:00:00Z',
+ * createdAt: '2026-05-12T07:30:00Z'
  * };
  *
- ```
+ * ```
  *
  * @author Qualitrack
  */
 export interface BatchResource extends BaseResource {
   /**
-   * The unique identifier for the batch resource.
+   * The unique numeric identifier for the batch resource.
    */
-  id: string;
+  id: number;
 
   /**
-   * The identifier of the laboratory responsible for this batch.
+   * The numeric identifier of the laboratory responsible for this batch.
    */
-  labId: string;
+  labId: number;
 
   /**
-   * The identifier of the product being manufactured.
+   * The numeric identifier of the product being manufactured.
    */
-  productId: string;
+  productId: number;
 
   /**
    * The display name of the product.
@@ -103,13 +103,13 @@ export interface BatchResource extends BaseResource {
  * @example
  * ```typescript
  * const apiResponse: BatchesResponse = {
- *   batches: [
- *     { id: '123...', batchNumber: 'LOTE-2026A', ... }
- *     // ... additional BatchResource objects
- *   ]
+ * batches: [
+ * { id: 1, batchNumber: 'LOTE-2026A', ... }
+ * // ... additional BatchResource objects
+ * ]
  * };
  *
- ```
+ * ```
  *
  * @author Qualitrack
  */
