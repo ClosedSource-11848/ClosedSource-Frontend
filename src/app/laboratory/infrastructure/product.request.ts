@@ -26,8 +26,7 @@
  */
 export interface CreateProductRequest {
   /** The numeric identifier of the laboratory under which the product will be registered. */
-  labId: number;
-
+  laboratoryId: number;
   /**
    * The internal catalog code that will uniquely identify the product
    * within the laboratory's inventory system.

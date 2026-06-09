@@ -32,7 +32,7 @@ export interface StaffMemberResource extends BaseResource {
   id: number;
 
   /** The numeric identifier of the laboratory this staff member belongs to. */
-  labId: number;
+  laboratoryId: number;
 
   /**
    * The full legal name of the staff member as stored on the server.

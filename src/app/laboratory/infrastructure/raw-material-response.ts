@@ -36,7 +36,7 @@ export interface RawMaterialResource extends BaseResource {
   id: number;
 
   /** The numeric identifier of the laboratory that owns this raw material. */
-  labId: number;
+  laboratoryId: number;
 
   /** The common or chemical name of the raw material. */
   name: string;
@@ -73,7 +73,7 @@ export interface RawMaterialResource extends BaseResource {
    * Expressed in the unit defined by the {@link unit} field. Reflects the
    * stock level as last recorded by the server.
    */
-  quantityInStock: number;
+  currentStock: number;
 
   /**
    * The unit of measurement for stock quantities of this raw material.
@@ -92,7 +92,7 @@ export interface RawMaterialResource extends BaseResource {
    * stock falls at or below this value, procurement or alert workflows should
    * be initiated.
    */
-  minimumStock: number;
+  minimumThreshold: number;
 
   /** The ISO 8601 timestamp indicating when the raw material record was created on the server. */
   createdAt: string;
