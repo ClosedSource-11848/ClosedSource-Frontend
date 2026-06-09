@@ -66,7 +66,7 @@ export class BatchAssembler implements BaseAssembler<Batch, BatchResource, Batch
       startDate: resource.startDate,
       endDate: resource.endDate,
       notes: resource.notes,
-      createdAt: resource.createdAt,
+      createdAt: resource.createdAt ?? ''
     });
   }
 

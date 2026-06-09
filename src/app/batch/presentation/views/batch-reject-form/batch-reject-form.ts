@@ -36,19 +36,9 @@ export class BatchRejectForm implements OnInit {
   private readonly router = inject(Router);
   protected readonly store = inject(BatchStore);
 
-  /**
-   * Reactive form group for batch rejection data.
-   */
   rejectForm!: FormGroup;
-
-  /**
-   * The unique numeric identifier of the batch to be rejected.
-   */
   batchId!: number;
 
-  /**
-   * Initializes the component and sets up the rejection form.
-   */
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.batchId = idParam ? Number(idParam) : 0;
@@ -59,18 +49,15 @@ export class BatchRejectForm implements OnInit {
     });
   }
 
-  /**
-   * Processes the form submission to reject the batch.
-   */
   onSubmit(): void {
-    if (this.rejectForm.valid && this.batchId) {
-      const command: RejectBatchCommand = {
-        batchId: this.batchId,
-        ...this.rejectForm.value,
-      };
+    if (this.rejectForm.invalid || !this.batchId) return;
 
-      this.store.rejectBatch(this.batchId, command);
-      this.router.navigate(['/batches/batch-list']).then();
-    }
+    const command: RejectBatchCommand = {
+      rejectionDate: this.rejectForm.value.rejectionDate,
+      reason: this.rejectForm.value.reason,
+    };
+
+    this.store.rejectBatch(this.batchId, command);
+    this.router.navigate(['/batches/batch-list']).then();
   }
 }

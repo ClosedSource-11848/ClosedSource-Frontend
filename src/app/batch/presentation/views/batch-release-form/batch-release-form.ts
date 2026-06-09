@@ -36,19 +36,9 @@ export class BatchReleaseForm implements OnInit {
   private readonly router = inject(Router);
   protected readonly store = inject(BatchStore);
 
-  /**
-   * Reactive form group for batch release data.
-   */
   releaseForm!: FormGroup;
-
-  /**
-   * The unique numeric identifier of the batch to be released.
-   */
   batchId!: number;
 
-  /**
-   * Initializes the component and sets up the release form.
-   */
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.batchId = idParam ? Number(idParam) : 0;
@@ -59,18 +49,15 @@ export class BatchReleaseForm implements OnInit {
     });
   }
 
-  /**
-   * Processes the form submission to release the batch.
-   */
   onSubmit(): void {
-    if (this.releaseForm.valid && this.batchId) {
-      const command: ReleaseBatchCommand = {
-        batchId: this.batchId,
-        ...this.releaseForm.value,
-      };
+    if (this.releaseForm.invalid || !this.batchId) return;
 
-      this.store.releaseBatch(this.batchId, command);
-      this.router.navigate(['/batches/batch-list']).then();
-    }
+    const command: ReleaseBatchCommand = {
+      releaseDate: this.releaseForm.value.releaseDate,
+      notes: this.releaseForm.value.notes,
+    };
+
+    this.store.releaseBatch(this.batchId, command);
+    this.router.navigate(['/batches/batch-list']).then();
   }
 }
