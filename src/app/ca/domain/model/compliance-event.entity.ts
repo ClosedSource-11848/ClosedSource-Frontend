@@ -59,7 +59,7 @@ export class ComplianceEvent implements BaseEntity {
   /**
    * The timestamp indicating when this record was persisted in the system.
    */
-  createdAt: string;
+  createdAt?: string;
 
   /**
    * Creates a new ComplianceEvent entity.
@@ -84,7 +84,7 @@ export class ComplianceEvent implements BaseEntity {
     description: string;
     timestamp: string;
     resolvedBy?: number;
-    createdAt: string;
+    createdAt?: string;
   }) {
     this.id = params.id;
     this.relatedEntityId = params.relatedEntityId;

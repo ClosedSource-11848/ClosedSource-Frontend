@@ -1,4 +1,5 @@
 import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-response';
+import { AlertSeverity, AlertStatus } from '../domain/model/deviation-alert.entity';
 
 /**
  * Resource representation of a deviation alert for API communication.
@@ -53,17 +54,17 @@ export interface AlertResource extends BaseResource {
   /**
    * The urgency or impact level of the alert.
    */
-  severity: string;
+  severity: AlertSeverity;
 
   /**
    * The current status of the alert in the system.
    */
-  status: string;
+  status: AlertStatus;
 
   /**
    * The timestamp of when the resource was created.
    */
-  createdAt: string;
+  createdAt?: string;
 }
 
 /**

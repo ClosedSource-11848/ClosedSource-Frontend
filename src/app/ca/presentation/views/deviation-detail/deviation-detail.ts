@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, Signal } from '@angular/core';
+import { Component, OnInit, Signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -33,27 +33,17 @@ export class DeviationDetail implements OnInit {
   private readonly route = inject(ActivatedRoute);
   protected readonly store = inject(CaStore);
 
-  /**
-   * The unique numeric identifier of the alert being viewed, retrieved from the URL.
-   */
   alertId: number = 0;
-
-  /**
-   * Reactive Signal containing the details of the specific deviation alert.
-   */
   alert!: Signal<DeviationAlert | undefined>;
 
-  /**
-   * Initializes the component by extracting the ID from the route and binding the data from the store.
-   */
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.alertId = idParam ? Number(idParam) : 0;
 
     this.alert = this.store.getAlertById(this.alertId);
 
-    if (this.store.alerts().length === 0) {
-      this.store.loadAlerts();
+    if (this.alertId) {
+      this.store.loadAlertById(this.alertId);
     }
   }
 }
