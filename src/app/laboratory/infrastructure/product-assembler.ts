@@ -63,7 +63,7 @@ PharmaceuticalProductsResponse
   toEntityFromResource(resource: PharmaceuticalProductResource): PharmaceuticalProduct {
     return new PharmaceuticalProduct({
       id: resource.id,
-      labId: resource.labId,
+      labId: resource.laboratoryId,
       code: resource.code,
       name: resource.name,
       description: resource.description,
@@ -90,7 +90,7 @@ PharmaceuticalProductsResponse
   toResourceFromEntity(entity: PharmaceuticalProduct): PharmaceuticalProductResource {
     return {
       id: entity.id,
-      labId: entity.labId,
+      laboratoryId: entity.labId,
       code: entity.code,
       name: entity.name,
       description: entity.description,

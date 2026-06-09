@@ -9,7 +9,7 @@ export const environment = {
   iamRecoverPasswordEndpointPath: '/authentication/recover-password',
 
   // Laboratory
-  laboratoryLabsEndpointPath: '/labs',
+  laboratoryLabsEndpointPath: '/laboratories',
   laboratoryStaffEndpointPath: '/staff',
   laboratoryProductsEndpointPath: '/products',
   laboratoryRawMaterialsEndpointPath: '/raw-materials',

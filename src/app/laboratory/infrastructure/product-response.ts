@@ -34,8 +34,7 @@ export interface PharmaceuticalProductResource extends BaseResource {
   id: number;
 
   /** The numeric identifier of the laboratory that owns this product. */
-  labId: number;
-
+  laboratoryId: number;
   /** The internal catalog code that uniquely identifies this product within the laboratory. */
   code: string;
 

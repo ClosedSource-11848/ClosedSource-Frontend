@@ -29,7 +29,7 @@
  */
 export interface CreateRawMaterialRequest {
   /** The numeric identifier of the laboratory under which the raw material will be registered. */
-  labId: number;
+  laboratoryId: number;
 
   /** The common or chemical name of the raw material. */
   name: string;

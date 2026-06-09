@@ -6,6 +6,7 @@ import { StaffMember } from '../domain/model/staff-member.entity';
 import { StaffMemberResource, StaffMembersResponse } from './staff-response';
 import { StaffAssembler } from './staff-assembler';
 import { RegisterStaffRequest } from './staff.request';
+import { MessageResource } from '../../shared/infrastructure/message-response';
 
 /**
  * Base URL for all laboratory-related HTTP endpoints, composed from the
@@ -69,8 +70,10 @@ export class StaffApiEndpoint extends BaseApiEndpoint<
    * through the base class error handler.
    */
   getStaffByLab(labId: number): Observable<StaffMember[]> {
-    return this.http.get<StaffMembersResponse>(`${this.endpointUrl}/${labId}/staff`).pipe(
-      map((response) => this.assembler.toEntitiesFromResponse(response)),
+    return this.http.get<StaffMemberResource[]>(`${this.endpointUrl}/${labId}/staff`).pipe(
+      map((resources) =>
+        resources.map((resource) => this.assembler.toEntityFromResource(resource)),
+      ),
       catchError(this.handleError(`Failed to fetch staff for lab ${labId}`)),
     );
   }
@@ -91,11 +94,10 @@ export class StaffApiEndpoint extends BaseApiEndpoint<
    * {@link StaffAssembler.toEntityFromResource}. Errors are forwarded through
    * the base class error handler.
    */
-  registerStaff(labId: number, request: RegisterStaffRequest): Observable<StaffMember> {
-    return this.http.post<StaffMemberResource>(`${this.endpointUrl}/${labId}/staff`, request).pipe(
-      map((resource) => this.assembler.toEntityFromResource(resource)),
-      catchError(this.handleError('Failed to register staff member')),
-    );
+  registerStaff(labId: number, request: RegisterStaffRequest): Observable<MessageResource> {
+    return this.http
+      .post<MessageResource>(`${this.endpointUrl}/${labId}/staff`, request)
+      .pipe(catchError(this.handleError('Failed to register staff member')));
   }
 
   /**
@@ -114,8 +116,10 @@ export class StaffApiEndpoint extends BaseApiEndpoint<
    * the base class error handler.
    */
   deactivateStaff(labId: number, staffId: number): Observable<void> {
+    const staffEndpointUrl = `${environment.serverBasePath}${environment.laboratoryStaffEndpointPath}`;
+
     return this.http
-      .delete<void>(`${this.endpointUrl}/${labId}/staff/${staffId}`)
+      .put<void>(`${staffEndpointUrl}/${staffId}/deactivation`, {})
       .pipe(catchError(this.handleError(`Failed to deactivate staff member ${staffId}`)));
   }
 }
