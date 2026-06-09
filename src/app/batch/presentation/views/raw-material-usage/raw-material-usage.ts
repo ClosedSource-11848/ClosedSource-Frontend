@@ -85,7 +85,6 @@ export class RawMaterialUsageComponent implements OnInit {
     if (this.usageForm.valid && this.batchId) {
       const command = {
         ...this.usageForm.value,
-        batchId: this.batchId,
       };
       this.store.linkMaterial(this.batchId, command);
       this.usageForm.reset({ quantityUsed: 0 });

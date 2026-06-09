@@ -50,6 +50,7 @@ export class BatchDetail implements OnInit {
     this.batchId = idParam ? Number(idParam) : 0;
 
     if (this.batchId) {
+      this.store.loadBatchById(this.batchId);
       this.store.loadBatchUsage(this.batchId);
     }
   }
@@ -59,6 +60,10 @@ export class BatchDetail implements OnInit {
    * @returns The Batch domain entity or undefined.
    */
   get currentBatch() {
-    return this.store.batches().find((b) => b.id === this.batchId);
+    const selected = this.store.selectedBatch();
+
+    return selected?.id === this.batchId
+      ? selected
+      : this.store.batches().find((b) => b.id === this.batchId);
   }
 }
