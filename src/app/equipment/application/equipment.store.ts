@@ -196,7 +196,7 @@ export class EquipmentStore {
    */
   readonly needsMaintenance = computed(() =>
     this._equipmentList().filter(
-      (e) => e.status === 'MAINTENANCE' || e.status === 'CALIBRATION_REQUIRED',
+      (e) => e.status === 'MAINTENANCE' || e.status === 'OUT_OF_SERVICE',
     ),
   );
 
@@ -310,12 +310,13 @@ export class EquipmentStore {
   configureBpm(command: ConfigureBpmCommand): void {
     this._isLoading.set(true);
     this._error.set(null);
+
     this.api
       .configureBpm(command as any)
       .pipe(retry(2))
       .subscribe({
-        next: (config: BpmParameterConfig) => {
-          this._bpmConfigs.update((list) => [...list, config]);
+        next: () => {
+          this.loadBpmConfig(command.equipmentId);
           this._successMsg.set('BPM parameter configured successfully');
           this._isLoading.set(false);
         },
@@ -373,12 +374,13 @@ export class EquipmentStore {
   registerMaintenance(command: RegisterMaintenanceCommand): void {
     this._isLoading.set(true);
     this._error.set(null);
+
     this.api
       .registerMaintenance(command as any)
       .pipe(retry(2))
       .subscribe({
-        next: (record: MaintenanceRecord) => {
-          this._maintenanceHistory.update((list) => [...list, record]);
+        next: () => {
+          this.loadMaintenanceHistory(command.equipmentId);
           this._successMsg.set('Maintenance record registered successfully');
           this._isLoading.set(false);
         },

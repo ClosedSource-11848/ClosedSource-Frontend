@@ -14,6 +14,7 @@ import { MaintenanceApiEndpoint } from './maintenance-api-endpoint';
 import { RegisterEquipmentRequest } from './equipment.request';
 import { ConfigureBpmRequest } from './bpm-config.request';
 import { RegisterMaintenanceRequest } from './maintenance.request';
+import { MessageResource } from '../../shared/infrastructure/message-response';
 
 /**
  * Facade service for equipment-related API operations.
@@ -152,7 +153,7 @@ export class EquipmentApi extends BaseApi {
    * It is used to define valid operating ranges for measurable parameters
    * associated with an equipment.
    */
-  configureBpm(request: ConfigureBpmRequest): Observable<BpmParameterConfig> {
+  configureBpm(request: ConfigureBpmRequest): Observable<MessageResource> {
     return this._bpmEndpoint.configureBpm(request);
   }
 
@@ -184,7 +185,7 @@ export class EquipmentApi extends BaseApi {
    * MaintenanceApiEndpoint. The request includes the equipment identifier,
    * maintenance date, technician name, description, and maintenance type.
    */
-  registerMaintenance(request: RegisterMaintenanceRequest): Observable<MaintenanceRecord> {
+  registerMaintenance(request: RegisterMaintenanceRequest): Observable<MessageResource> {
     return this._maintenanceEndpoint.registerMaintenance(request);
   }
 }
