@@ -82,8 +82,10 @@ export class EquipmentApiEndpoint extends BaseApiEndpoint<
    * If the request fails, the inherited handleError method manages the error.
    */
   getEquipmentByLab(labId: number): Observable<Equipment[]> {
-    return this.http.get<EquipmentsResponse>(`${this.endpointUrl}/lab/${labId}`).pipe(
-      map((response) => this.assembler.toEntitiesFromResponse(response)),
+    return this.http.get<EquipmentResource[]>(`${this.endpointUrl}?labId=${labId}`).pipe(
+      map((resources) =>
+        resources.map((resource) => this.assembler.toEntityFromResource(resource)),
+      ),
       catchError(this.handleError(`Failed to fetch equipment for lab ${labId}`)),
     );
   }

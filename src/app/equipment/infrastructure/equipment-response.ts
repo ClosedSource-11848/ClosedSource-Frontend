@@ -38,8 +38,7 @@ export interface EquipmentResource extends BaseResource {
    * This value links the equipment to a specific laboratory registered
    * in the system.
    */
-  labId: number;
-
+  laboratoryId: number;
   /**
    * The display name of the equipment.
    *
@@ -85,13 +84,15 @@ export interface EquipmentResource extends BaseResource {
    */
   status: string;
 
+  sensorExternalId?: string;
+
   /**
    * The creation date of the equipment resource.
    *
    * @remarks
    * This value is stored as a string, commonly using ISO 8601 date format.
    */
-  createdAt: string;
+  createdAt?: string;
 }
 
 /**

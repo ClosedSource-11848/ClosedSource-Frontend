@@ -28,7 +28,7 @@ export interface RegisterEquipmentCommand {
    * @remarks
    * This value links the equipment to a specific laboratory within the system.
    */
-  labId: number;
+  laboratoryId: number;
 
   /**
    * The display name of the equipment.

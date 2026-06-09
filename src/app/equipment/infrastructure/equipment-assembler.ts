@@ -66,13 +66,14 @@ export class EquipmentAssembler implements BaseAssembler<
   toEntityFromResource(resource: EquipmentResource): Equipment {
     return new Equipment({
       id: resource.id,
-      labId: resource.labId,
+      labId: resource.laboratoryId,
       name: resource.name,
       type: resource.type,
       model: resource.model,
       serialNumber: resource.serialNumber,
       status: resource.status,
-      createdAt: resource.createdAt,
+      sensorExternalId: resource.sensorExternalId,
+      createdAt: resource.createdAt ?? ''
     });
   }
 
@@ -89,12 +90,13 @@ export class EquipmentAssembler implements BaseAssembler<
   toResourceFromEntity(entity: Equipment): EquipmentResource {
     return {
       id: entity.id,
-      labId: entity.labId,
+      laboratoryId: entity.labId,
       name: entity.name,
       type: entity.type,
       model: entity.model,
       serialNumber: entity.serialNumber,
       status: entity.status,
+      sensorExternalId: entity.sensorExternalId,
       createdAt: entity.createdAt,
     } as EquipmentResource;
   }

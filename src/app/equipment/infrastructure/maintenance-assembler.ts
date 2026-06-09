@@ -70,7 +70,7 @@ export class MaintenanceAssembler implements BaseAssembler<
       technicianName: resource.technicianName,
       description: resource.description,
       type: resource.type,
-      createdAt: resource.createdAt,
+      createdAt: resource.createdAt ?? ''
     });
   }
 
