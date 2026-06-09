@@ -92,12 +92,14 @@
       "minimum-severity": "Severidad Mínima"
     },
     "severity": {
+      "low": "Baja",
       "info": "Informativo",
       "warning": "Advertencia",
       "critical": "Crítico"
     },
     "status": {
       "unresolved": "No Resuelto",
+      "acknowledged": "Reconocida",
       "resolved": "Resuelto",
       "ignored": "Ignorado"
     },

@@ -92,12 +92,14 @@
       "minimum-severity": "Minimum Severity"
     },
     "severity": {
+      "low": "Low",
       "info": "Info",
       "warning": "Warning",
       "critical": "Critical"
     },
     "status": {
       "unresolved": "Unresolved",
+      "acknowledged": "Acknowledged",
       "resolved": "Resolved",
       "ignored": "Ignored"
     },
