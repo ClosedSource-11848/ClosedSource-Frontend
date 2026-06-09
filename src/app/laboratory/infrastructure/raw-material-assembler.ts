@@ -62,15 +62,15 @@ RawMaterialsResponse
   toEntityFromResource(resource: RawMaterialResource): RawMaterial {
     return new RawMaterial({
       id: resource.id,
-      labId: resource.labId,
+      labId: resource.laboratoryId,
       name: resource.name,
       code: resource.code,
       supplier: resource.supplier,
       batchNumber: resource.batchNumber,
       expirationDate: resource.expirationDate,
-      quantityInStock: resource.quantityInStock,
+      quantityInStock: resource.currentStock,
       unit: resource.unit,
-      minimumStock: resource.minimumStock,
+      minimumStock: resource.minimumThreshold,
       createdAt: resource.createdAt,
     });
   }
@@ -89,15 +89,15 @@ RawMaterialsResponse
   toResourceFromEntity(entity: RawMaterial): RawMaterialResource {
     return {
       id: entity.id,
-      labId: entity.labId,
+      laboratoryId: entity.labId,
       name: entity.name,
       code: entity.code,
       supplier: entity.supplier,
       batchNumber: entity.batchNumber,
       expirationDate: entity.expirationDate,
-      quantityInStock: entity.quantityInStock,
+      currentStock: entity.quantityInStock,
       unit: entity.unit,
-      minimumStock: entity.minimumStock,
+      minimumThreshold: entity.minimumStock,
       createdAt: entity.createdAt,
     } as RawMaterialResource;
   }

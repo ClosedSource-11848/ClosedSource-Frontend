@@ -17,6 +17,7 @@ import { UpdateLaboratoryRequest } from './laboratory.request';
 import { RegisterStaffRequest } from './staff.request';
 import { CreateProductRequest } from './product.request';
 import { CreateRawMaterialRequest } from './raw-material.request';
+import { MessageResource } from '../../shared/infrastructure/message-response';
 
 /**
  * Unified API facade for all HTTP operations within the Laboratory domain.
@@ -128,7 +129,7 @@ export class LaboratoryApi extends BaseApi {
    * @returns An `Observable` that emits the newly created {@link StaffMember}
    * entity as returned by the server.
    */
-  registerStaff(labId: number, request: RegisterStaffRequest): Observable<StaffMember> {
+  registerStaff(labId: number, request: RegisterStaffRequest): Observable<MessageResource> {
     return this._staffEndpoint.registerStaff(labId, request);
   }
 
@@ -171,7 +172,7 @@ export class LaboratoryApi extends BaseApi {
    * @returns An `Observable` that emits the newly created {@link PharmaceuticalProduct}
    * entity as returned by the server.
    */
-  createProduct(labId: number, request: CreateProductRequest): Observable<PharmaceuticalProduct> {
+  createProduct(labId: number, request: CreateProductRequest): Observable<MessageResource> {
     return this._productsEndpoint.createProduct(labId, request);
   }
 
@@ -214,7 +215,7 @@ export class LaboratoryApi extends BaseApi {
    * @returns An `Observable` that emits the newly created {@link RawMaterial}
    * entity as returned by the server.
    */
-  createRawMaterial(labId: number, request: CreateRawMaterialRequest): Observable<RawMaterial> {
+  createRawMaterial(labId: number, request: CreateRawMaterialRequest): Observable<MessageResource> {
     return this._materialsEndpoint.createRawMaterial(labId, request);
   }
 }

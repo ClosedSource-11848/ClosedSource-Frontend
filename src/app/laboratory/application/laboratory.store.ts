@@ -315,12 +315,13 @@ export class LaboratoryStore {
   registerStaff(labId: number, command: RegisterStaffCommand): void {
     this._isLoading.set(true);
     this._error.set(null);
+
     this.api
       .registerStaff(labId, command as any)
       .pipe(retry(2))
       .subscribe({
-        next: (member: StaffMember) => {
-          this._staffList.update((list) => [...list, member]);
+        next: () => {
+          this.loadStaff(labId);
           this._successMsg.set('Staff member registered successfully');
           this._isLoading.set(false);
         },
@@ -443,8 +444,8 @@ export class LaboratoryStore {
       .createProduct(labId, command as any)
       .pipe(retry(2))
       .subscribe({
-        next: (product: PharmaceuticalProduct) => {
-          this._products.update((list) => [...list, product]);
+        next: () => {
+          this.loadProducts(labId);
           this._successMsg.set('Product created successfully');
           this._isLoading.set(false);
         },
@@ -543,12 +544,13 @@ export class LaboratoryStore {
   createRawMaterial(labId: number, command: CreateRawMaterialCommand): void {
     this._isLoading.set(true);
     this._error.set(null);
+
     this.api
       .createRawMaterial(labId, command as any)
       .pipe(retry(2))
       .subscribe({
-        next: (material: RawMaterial) => {
-          this._rawMaterials.update((list) => [...list, material]);
+        next: () => {
+          this.loadRawMaterials(labId);
           this._successMsg.set('Raw material registered successfully');
           this._isLoading.set(false);
         },

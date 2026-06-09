@@ -33,8 +33,7 @@ export interface RegisterStaffRequest {
    * ensuring that their role and responsibilities are contained within the correct
    * organizational context.
    */
-  labId: number;
-
+  laboratoryId: number;
   /**
    * The full legal name of the staff member being registered.
    *
