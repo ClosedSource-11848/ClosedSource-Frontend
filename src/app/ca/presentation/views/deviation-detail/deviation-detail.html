@@ -72,13 +72,27 @@
             }
 
           </div>
+
+          @if (alert()?.status === 'UNRESOLVED') {
+            <form [formGroup]="resolutionForm" class="resolution-form">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>{{ 'ca-alerts.fields.resolution-notes' | translate }}</mat-label>
+                <textarea matInput rows="3" formControlName="resolutionNotes"></textarea>
+              </mat-form-field>
+            </form>
+          }
         </mat-card-content>
 
         <mat-card-actions align="end" class="actions-container">
           <button mat-button routerLink="../../alert-dashboard">
             {{ 'common.cancel' | translate }}
           </button>
-          <button mat-raised-button color="primary" [disabled]="alert()?.status !== 'UNRESOLVED'">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="resolveAlert()"
+            [disabled]="alert()?.status !== 'UNRESOLVED' || resolutionForm.invalid || store.loading()"
+          >
             <mat-icon>check_circle</mat-icon>
             {{ 'ca-alerts.actions.resolve' | translate }}
           </button>
