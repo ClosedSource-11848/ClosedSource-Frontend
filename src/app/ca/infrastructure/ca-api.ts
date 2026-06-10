@@ -11,6 +11,8 @@ import { AlertSeverity, AlertStatus, DeviationAlert } from '../domain/model/devi
 import { ComplianceEvent } from '../domain/model/compliance-event.entity';
 import { NotificationPreference } from '../domain/model/notification-preference.entity';
 import { UpdateNotificationPreferenceRequest } from './notification-preference.request';
+import { AcknowledgeAlertRequest } from './acknowledge-alert.request';
+import { ResolveAlertRequest } from './resolve-alert.request';
 
 /**
  * Infrastructure service facade for Compliance and Alerts (CA) external API operations.
@@ -99,6 +101,34 @@ export class CaApi extends BaseApi {
    */
   getAlertById(alertId: number): Observable<DeviationAlert> {
     return this._alertEndpoint.getAlertById(alertId);
+  }
+
+  /**
+   * Acknowledges a deviation alert.
+   *
+   * @param alertId - The unique numeric identifier of the deviation alert
+   * @param request - DTO containing the user acknowledging the alert
+   * @returns Observable stream emitting the updated DeviationAlert domain entity
+   *
+   * @remarks
+   * Delegates the acknowledgement operation to the alert endpoint client.
+   */
+  acknowledgeAlert(alertId: number, request: AcknowledgeAlertRequest): Observable<DeviationAlert> {
+    return this._alertEndpoint.acknowledgeAlert(alertId, request);
+  }
+
+  /**
+   * Resolves a deviation alert.
+   *
+   * @param alertId - The unique numeric identifier of the deviation alert
+   * @param request - DTO containing the user and resolution notes
+   * @returns Observable stream emitting the updated DeviationAlert domain entity
+   *
+   * @remarks
+   * Delegates the resolution operation to the alert endpoint client.
+   */
+  resolveAlert(alertId: number, request: ResolveAlertRequest): Observable<DeviationAlert> {
+    return this._alertEndpoint.resolveAlert(alertId, request);
   }
 
   /**
