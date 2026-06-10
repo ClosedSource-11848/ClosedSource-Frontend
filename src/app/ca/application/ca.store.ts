@@ -7,6 +7,8 @@ import { ComplianceEvent } from '../domain/model/compliance-event.entity';
 import { NotificationPreference } from '../domain/model/notification-preference.entity';
 import { CaApi } from '../infrastructure/ca-api';
 import { UpdateNotificationPreferenceRequest } from '../infrastructure/notification-preference.request';
+import { AcknowledgeAlertRequest } from '../infrastructure/acknowledge-alert.request';
+import { ResolveAlertRequest } from '../infrastructure/resolve-alert.request';
 
 /**
  * Application store for managing Compliance and Alerts (CA) state.
@@ -150,11 +152,65 @@ export class CaStore {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (alert) => {
-          this._selectedAlertSignal.set(alert);
+          this.replaceAlert(alert);
           this._loadingSignal.set(false);
         },
         error: (err) => {
           this._errorSignal.set(this.formatError(err, `Failed to load deviation alert ${alertId}`));
+          this._loadingSignal.set(false);
+        },
+      });
+  }
+
+  /**
+   * Acknowledges a deviation alert and updates local state.
+   *
+   * @param alertId - The unique numeric identifier of the deviation alert.
+   * @param request - DTO containing the user acknowledging the alert.
+   */
+  acknowledgeAlert(alertId: number, request: AcknowledgeAlertRequest): void {
+    if (!alertId) return;
+
+    this._loadingSignal.set(true);
+    this._errorSignal.set(null);
+
+    this.caApi
+      .acknowledgeAlert(alertId, request)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (updatedAlert) => {
+          this.replaceAlert(updatedAlert);
+          this._loadingSignal.set(false);
+        },
+        error: (err) => {
+          this._errorSignal.set(this.formatError(err, 'Failed to acknowledge deviation alert'));
+          this._loadingSignal.set(false);
+        },
+      });
+  }
+
+  /**
+   * Resolves a deviation alert and updates local state.
+   *
+   * @param alertId - The unique numeric identifier of the deviation alert.
+   * @param request - DTO containing the user and resolution notes.
+   */
+  resolveAlert(alertId: number, request: ResolveAlertRequest): void {
+    if (!alertId) return;
+
+    this._loadingSignal.set(true);
+    this._errorSignal.set(null);
+
+    this.caApi
+      .resolveAlert(alertId, request)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (updatedAlert) => {
+          this.replaceAlert(updatedAlert);
+          this._loadingSignal.set(false);
+        },
+        error: (err) => {
+          this._errorSignal.set(this.formatError(err, 'Failed to resolve deviation alert'));
           this._loadingSignal.set(false);
         },
       });
@@ -236,6 +292,26 @@ export class CaStore {
           this._loadingSignal.set(false);
         },
       });
+  }
+
+  /**
+   * Replaces an alert in the local collection and marks it as the selected alert.
+   *
+   * @param updatedAlert - The latest version of the deviation alert.
+   * @private
+   */
+  private replaceAlert(updatedAlert: DeviationAlert): void {
+    this._selectedAlertSignal.set(updatedAlert);
+
+    this._alertsSignal.update((alerts) => {
+      const exists = alerts.some((alert) => alert.id === updatedAlert.id);
+
+      if (!exists) {
+        return [updatedAlert, ...alerts];
+      }
+
+      return alerts.map((alert) => (alert.id === updatedAlert.id ? updatedAlert : alert));
+    });
   }
 
   /**
