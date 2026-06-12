@@ -82,14 +82,12 @@
       "critical": "Desviaciones Críticas"
     },
     "fields": {
-      "timestamp": "Fecha / Hora",
-      "parameter": "Parámetro Desviado",
       "severity": "Severidad",
+      "recorded": "Valor registrado",
+      "threshold": "Valor límite",
       "equipment": "Equipo",
-      "recorded": "Valor Registrado",
-      "threshold": "Límite Tolerado",
       "batch": "Lote",
-      "minimum-severity": "Severidad Mínima"
+      "resolution-notes": "Notas de resolución"
     },
     "severity": {
       "low": "Baja",
