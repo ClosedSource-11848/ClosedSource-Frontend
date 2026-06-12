@@ -1,20 +1,30 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
+  AbstractControl,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
-  Validators,
-  AbstractControl,
   ValidationErrors,
-  FormControl,
+  Validators,
 } from '@angular/forms';
-import { Router, RouterLink, ActivatedRoute } from '@angular/router';
-import { IamStore } from '../../../application/iam.store';
-import { SignUpCommand } from '../../../domain/model/sign-up.command';
-import { Toolbar } from '../../../../shared/presentation/components/toolbar/toolbar';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+import { IamStore } from '../../../application/iam.store';
+import { SignUpCommand } from '../../../domain/model/sign-up.command';
+import { Toolbar } from '../../../../shared/presentation/components/toolbar/toolbar';
+
+/**
+ * Component responsible for rendering and processing the sign-up form.
+ *
+ * @remarks
+ * This standalone component belongs to the IAM presentation layer. It validates
+ * account registration data through a reactive form, resolves the selected role
+ * from route query parameters, builds a SignUpCommand, and delegates
+ * registration to IamStore.
+ */
 @Component({
   selector: 'app-sign-up',
   standalone: true,
@@ -30,16 +40,40 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   styleUrls: ['./sign-up-form.css'],
 })
 export class SignUpForm {
-  protected store = inject(IamStore);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
+  /**
+   * Store responsible for authentication state and registration operations.
+   */
+  protected readonly store = inject(IamStore);
 
-  role: string = 'lab-operator';
+  /**
+   * Router used to navigate after successful registration.
+   */
+  private readonly router = inject(Router);
 
-  selectedRole: string = 'ROLE_LAB_OPERATOR';
-  displayRoleName: string = 'Lab Operator';
+  /**
+   * Activated route used to read the desired registration role.
+   */
+  private readonly route = inject(ActivatedRoute);
 
-  form = new FormGroup(
+  /**
+   * Current registration mode passed through the route.
+   */
+  protected role: string = 'lab-operator';
+
+  /**
+   * Backend role selected for the new account.
+   */
+  protected selectedRole: string = 'ROLE_LAB_OPERATOR';
+
+  /**
+   * Translation key suffix used to display the selected role.
+   */
+  protected selectedRoleKey: 'manager' | 'operator' = 'operator';
+
+  /**
+   * Reactive form used to capture sign-up data.
+   */
+  protected readonly form = new FormGroup(
     {
       username: new FormControl<string>('', {
         nonNullable: true,
@@ -57,71 +91,142 @@ export class SignUpForm {
     { validators: this.passwordMatchValidator },
   );
 
-  hidePassword = true;
-  hideConfirmPassword = true;
+  /**
+   * Indicates whether the password input should be visually hidden.
+   */
+  protected hidePassword = true;
 
+  /**
+   * Indicates whether the confirm-password input should be visually hidden.
+   */
+  protected hideConfirmPassword = true;
+
+  /**
+   * Creates the sign-up component and resolves the registration role from query params.
+   */
   constructor() {
     this.route.queryParams.subscribe((params) => {
       if (params['role'] === 'qa-manager') {
         this.role = 'qa-manager';
         this.selectedRole = 'ROLE_QA_MANAGER';
-        this.displayRoleName = 'QA Manager / Supervisor';
-      } else {
-        this.role = 'lab-operator';
-        this.selectedRole = 'ROLE_LAB_OPERATOR';
-        this.displayRoleName = 'Lab Operator';
+        this.selectedRoleKey = 'manager';
+        return;
       }
+
+      this.role = 'lab-operator';
+      this.selectedRole = 'ROLE_LAB_OPERATOR';
+      this.selectedRoleKey = 'operator';
     });
   }
 
-  private passwordStrengthValidator(control: AbstractControl): ValidationErrors | null {
-    const value = control.value;
-    if (!value) return null;
-    const passwordValid = /[0-9]/.test(value) && /[a-zA-Z]/.test(value);
-    return !passwordValid ? { passwordStrength: true } : null;
+  /**
+   * Submits the sign-up form.
+   */
+  protected onSubmit(): void {
+    if (this.form.invalid) {
+      this.markFormGroupTouched(this.form);
+      return;
+    }
+
+    const command: SignUpCommand = {
+      username: this.form.controls.username.value,
+      password: this.form.controls.password.value,
+      roles: [this.selectedRole],
+    };
+
+    this.store.signUp(command, this.router);
   }
 
+  /**
+   * Toggles password visibility in the form.
+   */
+  protected togglePasswordVisibility(): void {
+    this.hidePassword = !this.hidePassword;
+  }
+
+  /**
+   * Toggles confirm-password visibility in the form.
+   */
+  protected toggleConfirmPasswordVisibility(): void {
+    this.hideConfirmPassword = !this.hideConfirmPassword;
+  }
+
+  /**
+   * Resolves the translation key for username validation errors.
+   *
+   * @returns Translation key for the current username validation error
+   */
+  protected getUsernameErrorKey(): string {
+    const control = this.form.controls.username;
+
+    if (control.hasError('required')) return 'iam.sign-up.errors.username-required';
+    if (control.hasError('minlength')) return 'iam.sign-up.errors.username-minlength';
+
+    return '';
+  }
+
+  /**
+   * Resolves the translation key for password validation errors.
+   *
+   * @returns Translation key for the current password validation error
+   */
+  protected getPasswordErrorKey(): string {
+    const control = this.form.controls.password;
+
+    if (control.hasError('required')) return 'iam.sign-up.errors.password-required';
+    if (control.hasError('minlength')) return 'iam.sign-up.errors.password-minlength';
+    if (control.hasError('passwordStrength')) return 'iam.sign-up.errors.password-strength';
+
+    return '';
+  }
+
+  /**
+   * Resolves the translation key for confirm-password validation errors.
+   *
+   * @returns Translation key for the current confirm-password validation error
+   */
+  protected getConfirmPasswordErrorKey(): string {
+    const control = this.form.controls.confirmPassword;
+
+    if (control.hasError('required')) return 'iam.sign-up.errors.confirm-password-required';
+    if (this.form.hasError('passwordMismatch')) return 'iam.sign-up.errors.password-mismatch';
+
+    return '';
+  }
+
+  /**
+   * Validates whether the password contains at least one letter and one number.
+   *
+   * @param control - Password form control
+   * @returns Validation error object or null
+   */
+  private passwordStrengthValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+
+    if (!value) return null;
+
+    const passwordValid = /[0-9]/.test(value) && /[a-zA-Z]/.test(value);
+    return passwordValid ? null : { passwordStrength: true };
+  }
+
+  /**
+   * Validates whether password and confirm-password fields match.
+   *
+   * @param group - Form group containing password fields
+   * @returns Validation error object or null
+   */
   private passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
     return group.get('password')?.value === group.get('confirmPassword')?.value
       ? null
       : { passwordMismatch: true };
   }
 
-  onSubmit(): void {
-    if (this.form.valid) {
-      const signUpCommand = new SignUpCommand({
-        username: this.form.value.username!,
-        password: this.form.value.password!,
-        roles: [this.selectedRole],
-      });
-      this.store.signUp(signUpCommand, this.router);
-    } else {
-      this.markFormGroupTouched(this.form);
-    }
-  }
-
-  togglePasswordVisibility(): void {
-    this.hidePassword = !this.hidePassword;
-  }
-  toggleConfirmPasswordVisibility(): void {
-    this.hideConfirmPassword = !this.hideConfirmPassword;
-  }
-
+  /**
+   * Marks every control inside a form group as touched.
+   *
+   * @param formGroup - Form group to update
+   */
   private markFormGroupTouched(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach((key) => formGroup.get(key)?.markAsTouched());
-  }
-
-  getUsernameError(): string {
-    const control = this.form.get('username');
-    if (control?.hasError('required')) return 'Username is required';
-    if (control?.hasError('minlength')) return 'Min 3 characters';
-    return '';
-  }
-
-  getPasswordError(): string {
-    const control = this.form.get('password');
-    if (control?.hasError('required')) return 'Password is required';
-    if (control?.hasError('passwordStrength')) return 'Must contain letters and numbers';
-    return '';
   }
 }

@@ -1,33 +1,30 @@
 /**
- * Command to sign in a user with a username and password.
- * @author QualiTrack
+ * Command for signing in an existing user.
+ *
+ * @remarks
+ * In a Domain-Driven Design (DDD) architecture, this command belongs to the
+ * application layer. It represents the user's intention to authenticate by
+ * providing credentials through the presentation layer.
+ *
+ * The command is later mapped into an infrastructure request DTO before being
+ * sent to the backend API.
+ *
+ * @example
+ * ```typescript
+ * const command: SignInCommand = {
+ *   username: 'qa.manager',
+ *   password: 'Secure123'
+ * };
+ * ```
  */
-export class SignInCommand {
-  private _username: string;
-  private _password: string;
+export interface SignInCommand {
+  /**
+   * The username used to authenticate the user.
+   */
+  username: string;
 
   /**
-   * Creates a new SignInCommand instance.
-   * @param resource - The sign-in data containing username and password.
+   * The password associated with the user account.
    */
-  constructor(resource: { username: string; password: string }) {
-    this._username = resource.username;
-    this._password = resource.password;
-  }
-
-  get username(): string {
-    return this._username;
-  }
-
-  set username(value: string) {
-    this._username = value;
-  }
-
-  get password(): string {
-    return this._password;
-  }
-
-  set password(value: string) {
-    this._password = value;
-  }
+  password: string;
 }

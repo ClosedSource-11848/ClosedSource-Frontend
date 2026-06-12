@@ -1,21 +1,28 @@
 import { SignInResource, SignInResponse } from './sign-in-response';
-import { SignInCommand } from '../domain/model/sign-in.command';
-import { SignInRequest } from './sign-in.request';
 
+/**
+ * Assembler for converting sign-in API responses into infrastructure resources.
+ *
+ * @remarks
+ * This assembler belongs to the infrastructure layer. It converts the backend
+ * sign-in response into a SignInResource used by the IAM API facade.
+ *
+ * Command-to-request mapping is intentionally handled by the application store
+ * to keep the API endpoint focused on HTTP communication.
+ */
 export class SignInAssembler {
+  /**
+   * Converts a sign-in HTTP response into a sign-in resource.
+   *
+   * @param response - Backend response returned by the sign-in endpoint
+   * @returns Infrastructure resource containing authenticated session data
+   */
   toResourceFromResponse(response: SignInResponse): SignInResource {
     return {
       id: response.id,
       username: response.username,
       roles: response.roles,
       token: response.token,
-    } as SignInResource;
-  }
-
-  toRequestFromCommand(command: SignInCommand): SignInRequest {
-    return {
-      username: command.username,
-      password: command.password,
-    } as SignInRequest;
+    };
   }
 }

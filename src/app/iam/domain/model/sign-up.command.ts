@@ -1,43 +1,36 @@
 /**
- * Command to sign up a new user with a username, password, and roles.
- * @author QualiTrack
+ * Command for registering a new user account.
+ *
+ * @remarks
+ * In a Domain-Driven Design (DDD) architecture, this command belongs to the
+ * application layer. It captures the intent to create a new IAM user with a
+ * username, password, and assigned authorization roles.
+ *
+ * The command is consumed by the application store and mapped into an
+ * infrastructure request before being sent to the backend API.
+ *
+ * @example
+ * ```typescript
+ * const command: SignUpCommand = {
+ *   username: 'lab.operator',
+ *   password: 'Secure123',
+ *   roles: ['ROLE_LAB_OPERATOR']
+ * };
+ * ```
  */
-export class SignUpCommand {
-  private _username: string;
-  private _password: string;
-  private _roles: string[];
+export interface SignUpCommand {
+  /**
+   * The username to assign to the new account.
+   */
+  username: string;
 
   /**
-   * Creates a new SignUpCommand instance.
-   * @param resource - The sign-up data containing username, password, and roles.
+   * The password for the new account.
    */
-  constructor(resource: { username: string; password: string; roles?: string[] }) {
-    this._username = resource.username;
-    this._password = resource.password;
-    this._roles = resource.roles || ['ROLE_LAB_OPERATOR'];
-  }
+  password: string;
 
-  get username(): string {
-    return this._username;
-  }
-
-  set username(value: string) {
-    this._username = value;
-  }
-
-  get password(): string {
-    return this._password;
-  }
-
-  set password(value: string) {
-    this._password = value;
-  }
-
-  get roles(): string[] {
-    return this._roles;
-  }
-
-  set roles(value: string[]) {
-    this._roles = value;
-  }
+  /**
+   * Authorization roles assigned to the new user.
+   */
+  roles: string[];
 }
