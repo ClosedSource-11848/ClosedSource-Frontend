@@ -38,4 +38,10 @@ export const environment = {
   raKpisEndpointPath: '/kpis',
   raAuditLogEndpointPath: '/audit-log',
   raDeviationTrendsEndpointPath: '/deviation-trends',
+
+  // Payments
+  subscriptionPlansEndpointPath: '/api/v1/subscription-plans',
+  subscriptionsEndpointPath: '/api/v1/subscriptions',
+  paymentsEndpointPath: '/api/v1/payments',
+  checkoutEndpointPath: '/api/v1/checkout',
 };
