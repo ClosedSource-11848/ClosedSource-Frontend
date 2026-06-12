@@ -1,18 +1,19 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { RouterModule } from '@angular/router';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
+
 import { EquipmentStore } from '../../../application/equipment.store';
 import { IamStore } from '../../../../iam/application/iam.store';
 import { RegisterEquipmentCommand } from '../../../domain/model/register-equipment.command';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 /**
  * Component responsible for displaying and handling the equipment registration form.
@@ -26,7 +27,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
  * registration command to the application layer.
  *
  * The component also obtains the laboratory identifier from IamStore, which is
- * used as the labId when creating the RegisterEquipmentCommand.
+ * used as the laboratoryId when creating the RegisterEquipmentCommand.
  *
  * @example
  * ```html
@@ -55,37 +56,26 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export class EquipmentForm {
   /**
    * FormBuilder instance used to create and configure the reactive form.
-   *
-   * @remarks
-   * This dependency is injected using Angular's inject function and is used
-   * to define the form controls, default values, and validation rules.
    */
   private readonly fb = inject(FormBuilder);
 
   /**
+   * Router used to navigate after successful form submission.
+   */
+  private readonly router = inject(Router);
+
+  /**
    * Store responsible for equipment-related state and operations.
-   *
-   * @remarks
-   * The store is used to register new equipment and expose loading, success,
-   * and error states that can be consumed by the component template.
    */
   protected readonly store = inject(EquipmentStore);
 
   /**
    * Store responsible for identity and access management state.
-   *
-   * @remarks
-   * This store is used to obtain the current numeric user identifier, which is treated
-   * as the laboratory identifier when registering equipment.
    */
   private readonly iamStore = inject(IamStore);
 
   /**
    * List of available equipment types displayed in the form.
-   *
-   * @remarks
-   * These values are used as selectable options so the user can classify the
-   * equipment being registered according to its technical or operational type.
    */
   protected readonly equipmentTypes = [
     'Autoclave',
@@ -113,27 +103,39 @@ export class EquipmentForm {
   });
 
   /**
+   * Gets the current laboratory identifier from the authenticated user context.
+   *
+   * @returns The current laboratory numeric identifier.
+   *
+   * @remarks
+   * The application currently uses the authenticated user ID as the laboratory
+   * context. If no user ID is available, it falls back to 1 to keep local
+   * development and seeded demo scenarios usable.
+   */
+  private get currentLabId(): number {
+    const id = this.iamStore.currentUserId();
+    return id ? Number(id) : 1;
+  }
+
+  /**
    * Saves the equipment registration form.
    *
    * @remarks
-   * This method first validates the form. Then, it retrieves the current labId
-   * from IamStore. If both the form and labId are valid, it creates a
-   * RegisterEquipmentCommand and sends it to EquipmentStore.
+   * This method first validates the form. Then it creates a
+   * RegisterEquipmentCommand using the current laboratory context and sends it
+   * to EquipmentStore.
    *
-   * The actual registration process is handled by the application layer through
-   * the store.
+   * After dispatching the command, the user is redirected to the equipment list.
    */
   protected onSave(): void {
     if (this.form.invalid) return;
 
-    const labId = this.iamStore.currentUserId();
-    if (!labId) return;
-
     const command: RegisterEquipmentCommand = {
-      ...this.form.value,
-      laboratoryId: Number(labId),
+      laboratoryId: this.currentLabId,
+      ...this.form.getRawValue(),
     };
 
     this.store.registerEquipment(command);
+    this.router.navigate(['/equipments/equipment-list']).then();
   }
 }

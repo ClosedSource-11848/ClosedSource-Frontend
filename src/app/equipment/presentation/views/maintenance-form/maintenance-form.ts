@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,8 +11,10 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { TranslatePipe } from '@ngx-translate/core';
+
 import { EquipmentStore } from '../../../application/equipment.store';
 import { RegisterMaintenanceCommand } from '../../../domain/model/register-maintenance.command';
+import { MatProgressSpinnerModule, MatSpinner } from '@angular/material/progress-spinner';
 
 /**
  * Component responsible for displaying and handling the maintenance registration form.
@@ -49,6 +51,7 @@ import { RegisterMaintenanceCommand } from '../../../domain/model/register-maint
     MatDatepickerModule,
     MatNativeDateModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     MatCardModule,
     RouterModule,
     TranslatePipe,
@@ -59,28 +62,21 @@ import { RegisterMaintenanceCommand } from '../../../domain/model/register-maint
 export class MaintenanceForm implements OnInit {
   /**
    * FormBuilder instance used to create and configure the reactive form.
-   *
-   * @remarks
-   * This dependency is injected using Angular's inject function and is used
-   * to define the form controls, default values, and validation rules.
    */
   private readonly fb = inject(FormBuilder);
 
   /**
    * ActivatedRoute instance used to access route parameters.
-   *
-   * @remarks
-   * This component uses the current route to obtain the equipment identifier
-   * from the URL parameter named id.
    */
   private readonly route = inject(ActivatedRoute);
 
   /**
+   * Router used to navigate after registering maintenance.
+   */
+  private readonly router = inject(Router);
+
+  /**
    * Store responsible for equipment-related state and operations.
-   *
-   * @remarks
-   * The store is used to register the maintenance record and expose loading,
-   * success, and error states that can be consumed by the component template.
    */
   protected readonly store = inject(EquipmentStore);
 
@@ -101,10 +97,10 @@ export class MaintenanceForm implements OnInit {
    * label shown to the user in the select field.
    */
   protected readonly maintenanceTypes = [
-    { value: 'PREVENTIVE', label: 'Preventivo' },
-    { value: 'CORRECTIVE', label: 'Correctivo' },
-    { value: 'CALIBRATION', label: 'Calibración' },
-    { value: 'INSPECTION', label: 'Inspección' },
+    { value: 'PREVENTIVE', label: 'Preventive' },
+    { value: 'CORRECTIVE', label: 'Corrective' },
+    { value: 'CALIBRATION', label: 'Calibration' },
+    { value: 'INSPECTION', label: 'Inspection' },
   ];
 
   /**
@@ -132,7 +128,10 @@ export class MaintenanceForm implements OnInit {
    */
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
-    if (idParam) this.equipmentId.set(Number(idParam));
+
+    if (idParam) {
+      this.equipmentId.set(Number(idParam));
+    }
   }
 
   /**
@@ -142,22 +141,30 @@ export class MaintenanceForm implements OnInit {
    * This method validates the form and verifies that an equipment identifier
    * exists before creating the RegisterMaintenanceCommand.
    *
-   * The maintenance date is converted to ISO string format before sending
-   * the command to the EquipmentStore. The actual registration process is
-   * handled by the application layer.
+   * The maintenance date is normalized to ISO string format before sending the
+   * command to the EquipmentStore. After dispatching the command, the user is
+   * redirected to the equipment detail view.
    */
   protected onSave(): void {
-    if (this.form.invalid || !this.equipmentId()) return;
+    const equipmentId = this.equipmentId();
 
-    const formValue = this.form.value;
+    if (this.form.invalid || !equipmentId) return;
+
+    const formValue = this.form.getRawValue();
+    const maintenanceDate =
+      formValue.maintenanceDate instanceof Date
+        ? formValue.maintenanceDate.toISOString()
+        : new Date(formValue.maintenanceDate).toISOString();
+
     const command: RegisterMaintenanceCommand = {
-      equipmentId: this.equipmentId()!,
+      equipmentId,
+      maintenanceDate,
       technicianName: formValue.technicianName,
       type: formValue.type,
       description: formValue.description,
-      maintenanceDate: formValue.maintenanceDate.toISOString(),
     };
 
     this.store.registerMaintenance(command);
+    this.router.navigate(['/equipments/equipment-detail', equipmentId]).then();
   }
 }

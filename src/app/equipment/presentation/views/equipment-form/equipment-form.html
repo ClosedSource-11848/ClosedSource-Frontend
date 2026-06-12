@@ -1,7 +1,6 @@
 <div class="form-container">
   <mat-card class="equipment-card">
     <mat-card-header>
-      <!-- Títulos del formulario en minúsculas -->
       <mat-card-title>{{ 'equipment-form.title' | translate }}</mat-card-title>
       <mat-card-subtitle>{{ 'equipment-form.subtitle' | translate }}</mat-card-subtitle>
     </mat-card-header>
@@ -9,16 +8,22 @@
     <form [formGroup]="form" (ngSubmit)="onSave()" class="equipment-form">
       <mat-card-content>
         <div class="form-grid">
-          <!-- Equipment Name -->
           <mat-form-field appearance="outline">
             <mat-label>{{ 'equipment-list.fields.name' | translate }}</mat-label>
-            <input matInput formControlName="name" [placeholder]="'equipment-form.placeholders.name' | translate">
+            <input
+              matInput
+              formControlName="name"
+              [placeholder]="'equipment-form.placeholders.name' | translate">
+
             @if (form.get('name')?.hasError('required')) {
-              <mat-error>{{ 'common.errors.required' | translate }}</mat-error>
+              <mat-error>{{ 'common.required' | translate }}</mat-error>
+            }
+
+            @if (form.get('name')?.hasError('minlength')) {
+              <mat-error>{{ 'equipment-form.errors.name-minlength' | translate }}</mat-error>
             }
           </mat-form-field>
 
-          <!-- Equipment Type -->
           <mat-form-field appearance="outline">
             <mat-label>{{ 'equipment-list.fields.type' | translate }}</mat-label>
             <mat-select formControlName="type">
@@ -26,18 +31,38 @@
                 <mat-option [value]="type">{{ type }}</mat-option>
               }
             </mat-select>
+
+            @if (form.get('type')?.hasError('required')) {
+              <mat-error>{{ 'common.required' | translate }}</mat-error>
+            }
           </mat-form-field>
 
-          <!-- Model -->
           <mat-form-field appearance="outline">
             <mat-label>{{ 'equipment-list.fields.model' | translate }}</mat-label>
-            <input matInput formControlName="model" [placeholder]="'equipment-form.placeholders.model' | translate">
+            <input
+              matInput
+              formControlName="model"
+              [placeholder]="'equipment-form.placeholders.model' | translate">
+
+            @if (form.get('model')?.hasError('required')) {
+              <mat-error>{{ 'common.required' | translate }}</mat-error>
+            }
           </mat-form-field>
 
-          <!-- Serial Number -->
           <mat-form-field appearance="outline">
             <mat-label>{{ 'equipment-list.fields.serial' | translate }}</mat-label>
-            <input matInput formControlName="serialNumber" [placeholder]="'equipment-form.placeholders.serial' | translate">
+            <input
+              matInput
+              formControlName="serialNumber"
+              [placeholder]="'equipment-form.placeholders.serial' | translate">
+
+            @if (form.get('serialNumber')?.hasError('required')) {
+              <mat-error>{{ 'common.required' | translate }}</mat-error>
+            }
+
+            @if (form.get('serialNumber')?.hasError('pattern')) {
+              <mat-error>{{ 'equipment-form.errors.serial-pattern' | translate }}</mat-error>
+            }
           </mat-form-field>
         </div>
 
@@ -51,15 +76,17 @@
 
       <mat-card-actions align="end">
         <button mat-button type="button" routerLink="../equipment-list">
-          {{ 'common.actions.cancel' | translate }}
+          {{ 'common.cancel' | translate }}
         </button>
+
         <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || store.isLoading()">
           @if (store.isLoading()) {
-            <mat-icon><mat-spinner diameter="18"></mat-spinner></mat-icon>
+            <mat-spinner diameter="18"></mat-spinner>
           } @else {
             <mat-icon>save</mat-icon>
           }
-          {{ 'common.actions.save' | translate }}
+
+          {{ 'common.save' | translate }}
         </button>
       </mat-card-actions>
     </form>
