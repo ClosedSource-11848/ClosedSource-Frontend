@@ -373,7 +373,13 @@
       "OPERATIONAL": "Operational",
       "WARNING": "Warning",
       "CRITICAL": "Critical",
-      "OFFLINE": "Offline"
+      "OFFLINE": "Offline",
+      "operational": "Operational",
+      "warning": "Warning",
+      "critical": "Critical",
+      "offline": "Offline",
+      "unknown-equipment": "Unknown Equipment",
+      "waiting-telemetry": "Waiting for telemetry..."
     },
     "dashboard": {
       "title": "Telemetry Dashboard",

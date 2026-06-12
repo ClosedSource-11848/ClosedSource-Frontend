@@ -373,7 +373,13 @@
       "OPERATIONAL": "Operativo",
       "WARNING": "Advertencia",
       "CRITICAL": "Crítico",
-      "OFFLINE": "Desconectado"
+      "OFFLINE": "Desconectado",
+      "operational": "Operativo",
+      "warning": "Advertencia",
+      "critical": "Crítico",
+      "offline": "Desconectado",
+      "unknown-equipment": "Equipo desconocido",
+      "waiting-telemetry": "Esperando telemetría..."
     },
     "dashboard": {
       "title": "Panel de Telemetría",
