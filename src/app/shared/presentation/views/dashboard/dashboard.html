@@ -145,6 +145,60 @@
         </div>
       </mat-card-content>
     </mat-card>
+
+    <mat-card class="subscription-card">
+      <mat-card-header>
+        <mat-card-title>{{ 'dashboard.subscription.title' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'dashboard.subscription.subtitle' | translate }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div
+          class="subscription-status"
+          [ngClass]="subscriptionStore.hasActiveSubscription() ? 'subscription-active' : 'subscription-inactive'">
+          <mat-icon>
+            {{ subscriptionStore.hasActiveSubscription() ? 'verified' : 'workspace_premium' }}
+          </mat-icon>
+
+          <div>
+            <span>{{ 'dashboard.subscription.current-status' | translate }}</span>
+            <strong>
+              {{
+                subscriptionStore.hasActiveSubscription()
+                  ? ('dashboard.subscription.active' | translate)
+                  : ('dashboard.subscription.inactive' | translate)
+              }}
+            </strong>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="mini-stats">
+          <div>
+            <strong>{{ subscriptionStore.payments().length }}</strong>
+            <span>{{ 'dashboard.subscription.payments' | translate }}</span>
+          </div>
+
+          <div>
+            <strong>{{ subscriptionStore.currentSubscription()?.planId || '-' }}</strong>
+            <span>{{ 'dashboard.subscription.plan' | translate }}</span>
+          </div>
+        </div>
+
+        <div class="subscription-actions">
+          <button mat-stroked-button (click)="navigateTo('/subscriptions/billing-summary')">
+            <mat-icon>receipt_long</mat-icon>
+            {{ 'dashboard.subscription.billing' | translate }}
+          </button>
+
+          <button mat-flat-button color="primary" (click)="navigateTo('/subscriptions/plans')">
+            <mat-icon>workspace_premium</mat-icon>
+            {{ 'dashboard.subscription.plans' | translate }}
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
   </section>
 
   <section class="quick-actions">
@@ -176,6 +230,11 @@
     <button mat-stroked-button (click)="navigateTo('/tracking/dashboard')">
       <mat-icon>sensors</mat-icon>
       {{ 'dashboard.quick-actions.tracking' | translate }}
+    </button>
+
+    <button mat-stroked-button (click)="navigateTo('/subscriptions/billing-summary')">
+      <mat-icon>payments</mat-icon>
+      {{ 'dashboard.quick-actions.subscription' | translate }}
     </button>
   </section>
 </div>

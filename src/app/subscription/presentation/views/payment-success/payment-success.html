@@ -1,0 +1,23 @@
+<div class="payment-result-container">
+  <mat-card class="result-card success mat-elevation-z2">
+    <mat-card-content>
+      <div class="icon-wrapper">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+
+      <h1>{{ 'subscription.payment-success.title' | translate }}</h1>
+      <p>{{ 'subscription.payment-success.subtitle' | translate }}</p>
+
+      <div class="actions">
+        <button mat-raised-button color="primary" routerLink="/dashboard">
+          <mat-icon>dashboard</mat-icon>
+          {{ 'subscription.payment-success.go-dashboard' | translate }}
+        </button>
+
+        <button mat-button routerLink="/subscriptions/billing-summary">
+          {{ 'subscription.payment-success.view-billing' | translate }}
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

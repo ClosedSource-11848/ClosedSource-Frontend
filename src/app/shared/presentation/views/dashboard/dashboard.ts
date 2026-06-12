@@ -21,6 +21,7 @@ import { BatchStore } from '../../../../batch/application/batch.store';
 import { CaStore } from '../../../../ca/application/ca.store';
 import { RaStore } from '../../../../ra/application/ra.store';
 import { TrackingStore } from '../../../../tracking/application/tracking.store';
+import { SubscriptionStore } from '../../../../subscription/application/subscription.store';
 
 /**
  * Main operational dashboard for QualiTrack.
@@ -28,7 +29,7 @@ import { TrackingStore } from '../../../../tracking/application/tracking.store';
  * @remarks
  * Aggregates information from the main bounded contexts to provide a professional
  * overview of laboratory operations, compliance alerts, equipment status,
- * production batches, KPI health, and telemetry activity.
+ * production batches, KPI health, telemetry activity, and subscription state.
  */
 @Component({
   selector: 'app-dashboard',
@@ -55,6 +56,7 @@ export class Dashboard implements OnInit, OnDestroy {
   protected readonly caStore = inject(CaStore);
   protected readonly raStore = inject(RaStore);
   protected readonly trackingStore = inject(TrackingStore);
+  protected readonly subscriptionStore = inject(SubscriptionStore);
 
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
@@ -111,7 +113,8 @@ export class Dashboard implements OnInit, OnDestroy {
       this.batchStore.isLoading() ||
       this.caStore.loading() ||
       this.raStore.isLoading() ||
-      this.trackingStore.isLoading(),
+      this.trackingStore.isLoading() ||
+      this.subscriptionStore.isLoading(),
   );
 
   protected readonly healthScore = computed(
@@ -168,6 +171,17 @@ export class Dashboard implements OnInit, OnDestroy {
       icon: 'science',
       className: 'card-amber',
       route: '/laboratories/raw-material-list',
+    },
+    {
+      labelKey: 'dashboard.cards.subscription',
+      value: this.subscriptionStore.hasActiveSubscription() ? 1 : 0,
+      detailKey: this.subscriptionStore.hasActiveSubscription()
+        ? 'dashboard.cards.active-subscription'
+        : 'dashboard.cards.no-subscription',
+      detailParams: {},
+      icon: 'payments',
+      className: 'card-green',
+      route: '/subscriptions/billing-summary',
     },
   ]);
 
@@ -259,11 +273,18 @@ export class Dashboard implements OnInit, OnDestroy {
         icon: 'sensors',
         route: '/tracking/history',
       },
+      {
+        labelKey: 'dashboard.attention.subscription-required',
+        value: this.subscriptionStore.hasActiveSubscription() ? 0 : 1,
+        icon: 'payments',
+        route: '/subscriptions/plans',
+      },
     ].filter((item) => item.value > 0),
   );
 
   ngOnInit(): void {
     const labId = this.currentLabId;
+    const userId = this.iamStore.currentUserId();
 
     this.langSubscription = this.translate.onLangChange.subscribe(() => {
       this.languageVersion.update((value) => value + 1);
@@ -278,6 +299,11 @@ export class Dashboard implements OnInit, OnDestroy {
     this.batchStore.loadBatches(labId);
     this.caStore.loadAlerts();
     this.raStore.loadDashboard(labId);
+
+    if (userId) {
+      this.subscriptionStore.loadCurrentSubscription(Number(userId));
+      this.subscriptionStore.loadPayments(Number(userId));
+    }
 
     this.initializeTelemetryFromFirstEquipment();
   }

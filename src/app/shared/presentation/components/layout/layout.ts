@@ -120,6 +120,15 @@ export class Layout {
         { label: 'tracking.analysis.title', link: '/tracking/analysis' },
       ],
     },
+    {
+      label: 'nav.subscription',
+      icon: 'payments',
+      link: '/subscriptions',
+      children: [
+        { label: 'subscription.billing.title', link: '/subscriptions/billing-summary' },
+        { label: 'subscription.plans.title', link: '/subscriptions/plans' },
+      ],
+    },
   ];
 
   /**
