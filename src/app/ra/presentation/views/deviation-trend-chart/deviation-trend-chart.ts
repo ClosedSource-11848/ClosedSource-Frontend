@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, Input } from '@angular/core';
+import { Component, Input, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatCardModule } from '@angular/material/card';
@@ -8,14 +8,18 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 
 import { RaStore } from '../../../application/ra.store';
+import { TrendDirection } from '../../../domain/model/deviation-trend.entity';
 
 /**
  * Component responsible for visualizing historical deviation trends for specific equipment.
  *
  * @remarks
  * In the presentation layer, this component subscribes to the reactive state managed
- * by the `RaStore` to display a tabular analysis of parameter trends over time.
- * It highlights measurements that breach defined operational thresholds.
+ * by {@link RaStore} to display tabular trend analysis for equipment process parameters.
+ * It highlights measurements that breach their configured operational thresholds.
+ *
+ * The component expects an `equipmentId` input. If no equipment ID is provided,
+ * it does not issue a backend request.
  */
 @Component({
   selector: 'app-deviation-trend-chart',
@@ -34,12 +38,12 @@ import { RaStore } from '../../../application/ra.store';
 })
 export class DeviationTrendChartComponent implements OnInit {
   /**
-   * The application store managing the state for the Reporting and Analysis (RA) domain.
+   * The application store managing the state for the Reporting and Analysis bounded context.
    */
   protected readonly store = inject(RaStore);
 
   /**
-   * Configuration for the columns displayed in the trend data table.
+   * Column identifiers displayed in the trend data table.
    */
   protected readonly displayedColumns = [
     'timestamp',
@@ -51,57 +55,66 @@ export class DeviationTrendChartComponent implements OnInit {
 
   /**
    * The unique numeric identifier of the equipment to analyze.
-   * Passed in as a component input. Defaults to 1001 for demonstration.
+   *
+   * @remarks
+   * This value should be provided by the parent component or route context.
+   * A value of `0` means no equipment has been selected yet.
    */
-  @Input() equipmentId: number = 1001;
+  @Input() equipmentId: number = 0;
 
   /**
-   * Reactive signal holding the currently selected equipment numeric ID.
+   * Reactive signal holding the currently selected equipment numeric identifier.
    */
-  protected selectedEquipmentId = signal<number>(0);
+  protected readonly selectedEquipmentId = signal<number>(0);
 
   /**
-   * Lifecycle hook that initializes the component by setting the equipment ID
-   * signal and triggering the initial data load.
+   * Lifecycle hook that initializes the component and loads trends when an equipment is selected.
    */
   ngOnInit(): void {
-    this.selectedEquipmentId.set(this.equipmentId);
+    this.selectedEquipmentId.set(Number(this.equipmentId) || 0);
     this.loadTrends();
   }
 
   /**
-   * Triggers a request to the store to load trend data for the currently selected equipment.
+   * Loads trend data for the currently selected equipment.
+   *
+   * @remarks
+   * The method skips the request when no valid equipment ID is available.
    */
-  loadTrends(): void {
-    this.store.loadDeviationTrends(this.selectedEquipmentId());
+  protected loadTrends(): void {
+    const equipmentId = this.selectedEquipmentId();
+    if (!equipmentId) return;
+
+    this.store.loadDeviationTrends(equipmentId);
   }
 
   /**
-   * Resolves the appropriate Material icon name based on the detected trend direction.
+   * Resolves the Material icon name based on the detected trend direction.
    *
-   * @param direction - The string representation of the trend ('INCREASING', 'DECREASING', or 'STABLE')
+   * @param direction - The detected trend direction
    * @returns The corresponding Material Design icon identifier
    */
-  getTrendIcon(direction: string): string {
+  protected getTrendIcon(direction: TrendDirection): string {
     switch (direction) {
       case 'INCREASING':
         return 'trending_up';
       case 'DECREASING':
         return 'trending_down';
+      case 'STABLE':
       default:
         return 'trending_flat';
     }
   }
 
   /**
-   * Evaluates whether a specific measurement falls outside its acceptable operational thresholds.
+   * Evaluates whether a specific measurement falls outside its acceptable thresholds.
    *
    * @param value - The recorded measurement value
    * @param min - The lower acceptable threshold bound
    * @param max - The upper acceptable threshold bound
-   * @returns True if the value represents a deviation (out of bounds), false otherwise
+   * @returns `true` when the value is outside the accepted range; otherwise `false`
    */
-  isDeviated(value: number, min: number, max: number): boolean {
+  protected isDeviated(value: number, min: number, max: number): boolean {
     return value < min || value > max;
   }
 }

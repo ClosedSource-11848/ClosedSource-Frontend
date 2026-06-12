@@ -1,14 +1,9 @@
 /**
- * Command to trigger the export of an equipment log report.
+ * Command to trigger the export of historical equipment logs.
  *
  * @remarks
- * In Domain-Driven Design, this interface represents a command pattern used
- * to request an export of historical logs for a specific piece of equipment.
- * It specifies the target equipment, the time window for the logs,
- * the desired output format, and the requester's identity.
- *
- * This command is processed by application services to compile maintenance
- * records and operational telemetry for the specified equipment.
+ * In Domain-Driven Design, this command represents the user's intent to export
+ * audit or operational records for a specific equipment within a date range.
  */
 export interface ExportEquipmentLogCommand {
   /**
@@ -17,22 +12,22 @@ export interface ExportEquipmentLogCommand {
   equipmentId: number;
 
   /**
-   * The start date and time of the logging period (ISO string format).
+   * The start date and time of the exported period.
    */
   startDate: string;
 
   /**
-   * The end date and time of the logging period (ISO string format).
+   * The end date and time of the exported period.
    */
   endDate: string;
 
   /**
-   * The requested output format for the generated document.
+   * The requested output format for the exported file.
    */
   format: 'PDF' | 'CSV';
 
   /**
-   * The numeric identifier of the user or system requesting the report.
+   * The numeric identifier of the user requesting the export.
    */
   requestedBy: number;
 }

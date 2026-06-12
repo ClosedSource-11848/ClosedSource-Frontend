@@ -17,13 +17,18 @@ import { RaStore } from '../../../application/ra.store';
 import { IamStore } from '../../../../iam/application/iam.store';
 
 /**
- * Component responsible for providing a user interface to request various operational reports.
+ * Component responsible for providing a user interface to request operational reports.
  *
  * @remarks
- * In the presentation layer, this component acts as a command dispatcher for document
- * generation. It collects user parameters (dates, target entities, export formats)
- * through template-driven forms and dispatches the corresponding commands to the
- * `RaStore` to trigger backend report generation (PDF or CSV downloads).
+ * In the presentation layer, this component acts as a command dispatcher for
+ * document generation. It collects user parameters through template-driven forms
+ * and sends command objects to {@link RaStore}, which coordinates the backend
+ * request and file download.
+ *
+ * Supported report operations:
+ * - Production batch report generation
+ * - Regulatory compliance report generation
+ * - Equipment log export
  */
 @Component({
   selector: 'app-report-generator',
@@ -47,49 +52,72 @@ import { IamStore } from '../../../../iam/application/iam.store';
 })
 export class ReportGeneratorComponent {
   /**
-   * The application store managing the state for the Reporting and Analysis (RA) domain.
+   * The application store managing the state for the Reporting and Analysis bounded context.
    */
   protected readonly store = inject(RaStore);
 
   /**
-   * The identity and access management store, used to retrieve the current user's context.
+   * The identity and access management store used to retrieve the current session context.
    */
   protected readonly iamStore = inject(IamStore);
 
   /**
    * Form state for generating production batch reports.
+   *
+   * @remarks
+   * `batchId` is numeric because the backend contract identifies batches by ID.
    */
-  batchForm = {
-    batchId: null as number | null,
+  protected batchForm: {
+    batchId: number | null;
+    includeTelemetry: boolean;
+    includeDeviations: boolean;
+    format: 'PDF' | 'CSV';
+  } = {
+    batchId: null,
     includeTelemetry: true,
     includeDeviations: true,
-    format: 'PDF' as 'PDF' | 'CSV',
+    format: 'PDF',
   };
 
   /**
    * Form state for generating regulatory compliance reports.
    */
-  complianceForm = {
-    startDate: null as Date | null,
-    endDate: null as Date | null,
-    format: 'PDF' as 'PDF' | 'CSV',
+  protected complianceForm: {
+    startDate: Date | null;
+    endDate: Date | null;
+    format: 'PDF' | 'CSV';
+  } = {
+    startDate: null,
+    endDate: null,
+    format: 'PDF',
   };
 
   /**
    * Form state for exporting equipment maintenance and operational logs.
+   *
+   * @remarks
+   * `equipmentId` is numeric because the backend contract identifies equipment by ID.
    */
-  equipmentForm = {
-    equipmentId: null as number | null,
-    startDate: null as Date | null,
-    endDate: null as Date | null,
-    format: 'CSV' as 'PDF' | 'CSV',
+  protected equipmentForm: {
+    equipmentId: number | null;
+    startDate: Date | null;
+    endDate: Date | null;
+    format: 'PDF' | 'CSV';
+  } = {
+    equipmentId: null,
+    startDate: null,
+    endDate: null,
+    format: 'CSV',
   };
 
   /**
-   * Retrieves the current user ID based on the authenticated context.
-   * * @remarks
-   * Converts the ID to a number to align with domain entity definitions.
-   * Defaults to a generic system ID (e.g., 1) if no session exists.
+   * Retrieves the current user ID from the active session context.
+   *
+   * @returns The numeric user identifier used as the report requester
+   *
+   * @remarks
+   * Defaults to `1` when no user ID is available, matching the temporary
+   * convention used by the current frontend context.
    */
   private get currentUserId(): number {
     const id = this.iamStore.currentUserId();
@@ -97,21 +125,28 @@ export class ReportGeneratorComponent {
   }
 
   /**
-   * Retrieves the current laboratory ID based on the authenticated user's context.
-   * * @remarks
-   * Converts the ID to a numeric value for domain consistency. Defaults to 1.
+   * Retrieves the current laboratory ID from the active application context.
+   *
+   * @returns The numeric laboratory identifier used for compliance reports
+   *
+   * @remarks
+   * The current frontend context stores only the signed-in user ID. Until IAM exposes
+   * a dedicated laboratory ID, the app keeps the existing convention used by the
+   * other bounded contexts and falls back to `1` when no session value is available.
    */
-  private get currentLabId(): number {
+  private get currentLaboratoryId(): number {
     const id = this.iamStore.currentUserId();
     return id ? Number(id) : 1;
   }
 
-  // ── Actions ─────────────────────────────────────────────────────────────
-
   /**
-   * Dispatches the command to generate a batch report using the current form values.
+   * Dispatches the command to generate a production batch report.
+   *
+   * @remarks
+   * The command includes the selected batch, requested sections, file format,
+   * and requester identity.
    */
-  onGenerateBatchReport(): void {
+  protected onGenerateBatchReport(): void {
     if (!this.batchForm.batchId) return;
 
     this.store.generateBatchReport({
@@ -125,12 +160,15 @@ export class ReportGeneratorComponent {
 
   /**
    * Dispatches the command to generate a regulatory compliance report.
+   *
+   * @remarks
+   * The command uses `laboratoryId`, matching the domain model and backend API contract.
    */
-  onGenerateComplianceReport(): void {
+  protected onGenerateComplianceReport(): void {
     if (!this.complianceForm.startDate || !this.complianceForm.endDate) return;
 
     this.store.generateComplianceReport({
-      labId: this.currentLabId,
+      laboratoryId: this.currentLaboratoryId,
       startDate: this.complianceForm.startDate.toISOString(),
       endDate: this.complianceForm.endDate.toISOString(),
       format: this.complianceForm.format,
@@ -139,9 +177,13 @@ export class ReportGeneratorComponent {
   }
 
   /**
-   * Dispatches the command to export the historical log of a specific piece of equipment.
+   * Dispatches the command to export historical logs for a specific equipment.
+   *
+   * @remarks
+   * The command includes the equipment identifier, requested date range,
+   * output format, and requester identity.
    */
-  onExportEquipmentLog(): void {
+  protected onExportEquipmentLog(): void {
     if (
       !this.equipmentForm.equipmentId ||
       !this.equipmentForm.startDate ||

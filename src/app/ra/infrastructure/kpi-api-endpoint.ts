@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, map } from 'rxjs';
 import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
 import { environment } from '../../../environments/environment';
@@ -12,12 +12,11 @@ const kpiEndpointUrl = `${environment.serverBasePath}${environment.raKpisEndpoin
  * HTTP endpoint client for KPI dashboard operations.
  *
  * @remarks
- * This endpoint encapsulates all HTTP communication for the KpiDashboard entity
- * within the Reporting and Analysis (RA) domain. It extends {@link BaseApiEndpoint}
- * to leverage standard data access patterns with KPI-specific configuration.
+ * This endpoint encapsulates HTTP communication for KPI dashboard data within
+ * the Reporting and Analysis bounded context.
  *
- * The endpoint handles retrieving performance metrics and health scores
- * for specific laboratories to support operational monitoring.
+ * Endpoint contract:
+ * - GET /kpis?laboratoryId={laboratoryId}
  */
 export class KpiApiEndpoint extends BaseApiEndpoint<
   KpiDashboard,
@@ -29,11 +28,6 @@ export class KpiApiEndpoint extends BaseApiEndpoint<
    * Creates an instance of KpiApiEndpoint.
    *
    * @param http - Angular HttpClient for making HTTP requests
-   *
-   * @remarks
-   * Initializes the endpoint with the configured server base path and the
-   * KPI dashboards endpoint path. The KpiAssembler is used to map between
-   * infrastructure resources and domain entities.
    */
   constructor(http: HttpClient) {
     super(http, kpiEndpointUrl, new KpiAssembler());
@@ -42,17 +36,19 @@ export class KpiApiEndpoint extends BaseApiEndpoint<
   /**
    * Retrieves the current KPI dashboard snapshot for a specific laboratory.
    *
-   * @param labId - The unique numeric identifier of the laboratory
-   * @returns Observable stream emitting the KpiDashboard domain entity
+   * @param laboratoryId - The unique numeric identifier of the laboratory
+   * @returns Observable stream emitting the KPI dashboard domain entity
    *
    * @remarks
-   * Performs a GET request to fetch the aggregated performance metrics
-   * and overall health score for a given lab facility.
+   * Performs a GET request using `laboratoryId` as a query parameter to match
+   * the API style used by other bounded contexts.
    */
-  getDashboardByLab(labId: number): Observable<KpiDashboard> {
-    return this.http.get<KpiDashboardResource>(`${this.endpointUrl}/lab/${labId}`).pipe(
+  getDashboardByLaboratory(laboratoryId: number): Observable<KpiDashboard> {
+    const params = new HttpParams().set('laboratoryId', String(laboratoryId));
+
+    return this.http.get<KpiDashboardResource>(this.endpointUrl, { params }).pipe(
       map((resource) => this.assembler.toEntityFromResource(resource)),
-      catchError(this.handleError(`Failed to fetch KPI Dashboard for lab ${labId}`)),
+      catchError(this.handleError(`Failed to fetch KPI dashboard for laboratory ${laboratoryId}`)),
     );
   }
 }

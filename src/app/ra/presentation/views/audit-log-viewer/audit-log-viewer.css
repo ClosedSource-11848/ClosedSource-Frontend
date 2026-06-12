@@ -17,19 +17,19 @@
 }
 
 .title-icon {
-  color: #1a3a5c;
-  font-size: 32px;
   width: 32px;
   height: 32px;
+  color: #1a3a5c;
+  font-size: 32px;
 }
 
 .title-group h2 {
   margin: 0;
-  font-weight: 700;
   color: #1a3a5c;
+  font-weight: 700;
 }
 
-/* Loading & Error */
+/* Loading and errors */
 .loading-shade {
   display: flex;
   justify-content: center;
@@ -41,24 +41,24 @@
   align-items: center;
   gap: 8px;
   padding: 16px;
-  background-color: #fee2e2;
-  color: #b91c1c;
-  border-radius: 8px;
   margin-bottom: 24px;
+  color: #b91c1c;
+  background-color: #fee2e2;
+  border-radius: 8px;
 }
 
-/* Filter Card */
+/* Filters */
 .filter-card {
   margin-bottom: 24px;
-  border-radius: 8px;
   border: 1px solid #e0e0e0;
+  border-radius: 8px;
 }
 
 .filter-content {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
   align-items: center;
+  gap: 16px;
   padding: 16px 24px;
 }
 
@@ -72,21 +72,21 @@
 }
 
 .filter-content mat-form-field {
-  margin-bottom: -1.25em; /* Compensate for mat-form-field default bottom padding */
+  margin-bottom: -1.25em;
 }
 
 .filter-actions {
   display: flex;
   gap: 12px;
-  margin-left: auto; /* Empuja los botones a la derecha */
+  margin-left: auto;
 }
 
-/* Table Styles */
+/* Table */
 .table-card {
-  background: white;
-  border-radius: 8px;
   overflow: hidden;
+  background: white;
   border: 1px solid #e0e0e0;
+  border-radius: 8px;
 }
 
 .full-width-table {
@@ -97,7 +97,7 @@
   background-color: #f8fafc;
 }
 
-/* Timestamp Cell */
+/* Timestamp */
 .date-time-container {
   display: flex;
   flex-direction: column;
@@ -108,90 +108,144 @@
 }
 
 .time-text {
-  font-size: 0.8rem;
   color: #5f6368;
+  font-size: 0.8rem;
 }
 
-/* Action Badges */
+/* Action badges */
 .action-badge {
+  display: inline-block;
   padding: 4px 10px;
   border-radius: 6px;
+  font-family: monospace;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.05em;
-  display: inline-block;
-  font-family: monospace;
 }
 
-.badge-create { background-color: #dbeafe; color: #1e40af; }
-.badge-update { background-color: #fef3c7; color: #b45309; }
-.badge-delete { background-color: #fee2e2; color: #b91c1c; }
-.badge-success { background-color: #d1fae5; color: #047857; }
-.badge-danger { background-color: #fce8e6; color: #d32f2f; }
-.badge-default { background-color: #f1f5f9; color: #475569; }
+.badge-create {
+  color: #1e40af;
+  background-color: #dbeafe;
+}
 
-/* Entity Info */
+.badge-update {
+  color: #b45309;
+  background-color: #fef3c7;
+}
+
+.badge-delete {
+  color: #b91c1c;
+  background-color: #fee2e2;
+}
+
+.badge-success {
+  color: #047857;
+  background-color: #d1fae5;
+}
+
+.badge-danger {
+  color: #d32f2f;
+  background-color: #fce8e6;
+}
+
+.badge-default {
+  color: #475569;
+  background-color: #f1f5f9;
+}
+
+/* Entity */
 .entity-info {
   display: flex;
   flex-direction: column;
 }
 
 .entity-type {
-  font-size: 0.75rem;
-  text-transform: uppercase;
   color: #5f6368;
+  font-size: 0.75rem;
   font-weight: 600;
+  text-transform: uppercase;
 }
 
 .entity-id {
-  font-family: monospace;
-  font-weight: 600;
-  color: #1a3a5c;
-  background-color: #e8f4fd;
-  padding: 2px 6px;
-  border-radius: 4px;
   display: inline-block;
   width: fit-content;
+  padding: 2px 6px;
   margin-top: 2px;
+  color: #1a3a5c;
+  font-family: monospace;
+  font-weight: 600;
+  background-color: #e8f4fd;
+  border-radius: 4px;
 }
 
-/* Performed By Cell */
+/* Performed by */
 .user-chip {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-weight: 500;
   color: #1e293b;
+  font-weight: 500;
 }
 
 .user-icon {
-  font-size: 18px;
   width: 18px;
   height: 18px;
   color: #94a3b8;
+  font-size: 18px;
 }
 
-/* Details Cell */
+/* Details */
 .details-cell {
+  max-width: 300px;
+  overflow: hidden;
   color: #475569;
   font-size: 0.875rem;
-  max-width: 300px;
-  white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* Empty State */
+/* Empty state */
 .empty-state {
   padding: 48px;
-  text-align: center;
   color: #5f6368;
+  text-align: center;
 }
 
 .empty-state mat-icon {
-  font-size: 48px;
   width: 48px;
   height: 48px;
   margin-bottom: 16px;
+  font-size: 48px;
   opacity: 0.5;
+}
+
+@media (max-width: 760px) {
+  .viewer-container {
+    padding: 16px;
+  }
+
+  .filter-content {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .filter-field,
+  .date-field {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .filter-actions {
+    justify-content: flex-end;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .table-card {
+    overflow-x: auto;
+  }
+
+  .details-cell {
+    max-width: 220px;
+  }
 }

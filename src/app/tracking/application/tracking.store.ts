@@ -1,4 +1,4 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { retry } from 'rxjs';
 import { TrackingApi } from '../infrastructure/tracking-api';
 
@@ -10,86 +10,135 @@ import { TelemetryHistoryPoint } from '../domain/model/telemetry-history-point.e
  * Application store for managing Tracking and Telemetry state.
  *
  * @remarks
- * This store acts as the central state management for the telemetry domain, using
- * Angular Signals for reactive, glitch-free data flow. It coordinates between the
- * infrastructure layer (API) and the presentation layer, handling real-time
- * measurements, equipment health statuses, and historical IoT data.
+ * This store acts as the central state manager for the Tracking bounded context.
+ * It coordinates API calls through the infrastructure facade and exposes
+ * reactive Angular signals for measurements, equipment status, historical
+ * telemetry, loading state, and UI messages.
  */
 @Injectable({ providedIn: 'root' })
 export class TrackingStore {
+  /**
+   * Infrastructure facade used to access Tracking API endpoints.
+   */
   private readonly api = inject(TrackingApi);
 
-  // ── State ────────────────────────────────────────────────────────────────
+  /**
+   * Internal signal containing the latest telemetry measurements.
+   */
   private readonly _measurements = signal<Measurement[]>([]);
-  private readonly _currentEquipmentStatus = signal<EquipmentStatus | null>(null);
-  private readonly _telemetryHistory = signal<TelemetryHistoryPoint[]>([]);
-
-  private readonly _isLoading = signal<boolean>(false);
-  private readonly _error = signal<string | null>(null);
-  private readonly _successMsg = signal<string | null>(null);
-
-  // ── Selectors (readonly) ─────────────────────────────────────────────────
-  readonly measurements = this._measurements.asReadonly();
-  readonly currentEquipmentStatus = this._currentEquipmentStatus.asReadonly();
-  readonly telemetryHistory = this._telemetryHistory.asReadonly();
-
-  readonly isLoading = this._isLoading.asReadonly();
-  readonly error = this._error.asReadonly();
-  readonly successMsg = this._successMsg.asReadonly();
-
-  // ── Computed Selectors (Deriving UI and Chart State) ─────────────────────
 
   /**
-   * Computed signal to quickly determine if the currently tracked equipment is online.
+   * Internal signal containing the current telemetry status of the selected equipment.
+   */
+  private readonly _currentEquipmentStatus = signal<EquipmentStatus | null>(null);
+
+  /**
+   * Internal signal containing historical telemetry points.
+   */
+  private readonly _telemetryHistory = signal<TelemetryHistoryPoint[]>([]);
+
+  /**
+   * Internal signal indicating whether a tracking operation is currently loading.
+   */
+  private readonly _isLoading = signal<boolean>(false);
+
+  /**
+   * Internal signal containing the latest error message, if any.
+   */
+  private readonly _error = signal<string | null>(null);
+
+  /**
+   * Internal signal containing the latest success message, if any.
+   */
+  private readonly _successMsg = signal<string | null>(null);
+
+  /**
+   * Readonly signal exposing the latest telemetry measurements.
+   */
+  readonly measurements = this._measurements.asReadonly();
+
+  /**
+   * Readonly signal exposing the current equipment telemetry status.
+   */
+  readonly currentEquipmentStatus = this._currentEquipmentStatus.asReadonly();
+
+  /**
+   * Readonly signal exposing historical telemetry points.
+   */
+  readonly telemetryHistory = this._telemetryHistory.asReadonly();
+
+  /**
+   * Readonly signal exposing the loading state.
+   */
+  readonly isLoading = this._isLoading.asReadonly();
+
+  /**
+   * Readonly signal exposing the current error message.
+   */
+  readonly error = this._error.asReadonly();
+
+  /**
+   * Readonly signal exposing the current success message.
+   */
+  readonly successMsg = this._successMsg.asReadonly();
+
+  /**
+   * Computed signal indicating whether the selected equipment is currently online.
    */
   readonly isEquipmentOnline = computed(() => this._currentEquipmentStatus()?.isOnline ?? false);
 
   /**
-   * Computed signal returning the specific operational state (e.g., 'OPERATIONAL', 'WARNING', 'CRITICAL', 'OFFLINE').
+   * Computed signal exposing the current telemetry status of the selected equipment.
    */
   readonly equipmentTelemetryStatus = computed(
     () => this._currentEquipmentStatus()?.currentStatus ?? 'OFFLINE',
   );
 
   /**
-   * Computed signal that filters the historical telemetry to expose only data points
-   * that were identified as anomalies or deviations.
+   * Computed signal exposing only historical telemetry points marked as anomalies.
    */
   readonly anomaliesHistory = computed(() =>
     this._telemetryHistory().filter((point) => point.isAnomaly),
   );
 
-  // ── Telemetry & IoT Methods ──────────────────────────────────────────────
-
   /**
-   * Fetches the latest batch of raw telemetry measurements from the system.
+   * Fetches the latest telemetry measurements.
+   *
+   * @param equipmentId - Optional numeric identifier used to filter measurements by equipment
+   *
+   * @remarks
+   * When an equipment ID is provided, the backend should return only the latest
+   * measurements for that specific equipment. This keeps dashboards and charts
+   * aligned with the currently selected device.
    */
-  loadLatestMeasurements(): void {
+  loadLatestMeasurements(equipmentId?: number): void {
     this._isLoading.set(true);
     this._error.set(null);
+
     this.api
-      .getLatestMeasurements()
+      .getLatestMeasurements(equipmentId)
       .pipe(retry(2))
       .subscribe({
         next: (measurements: Measurement[]) => {
           this._measurements.set(measurements);
           this._isLoading.set(false);
         },
-        error: (err: any) => {
-          this._error.set(this.formatError(err, 'Failed to load latest measurements'));
+        error: (error: unknown) => {
+          this._error.set(this.formatError(error, 'Failed to load latest measurements'));
           this._isLoading.set(false);
         },
       });
   }
 
   /**
-   * Fetches the real-time operational status for a specific piece of equipment.
+   * Fetches the current telemetry status for a specific equipment.
    *
-   * @param equipmentId - The unique numeric identifier of the equipment
+   * @param equipmentId - Numeric identifier of the equipment
    */
   loadEquipmentStatus(equipmentId: number): void {
     this._isLoading.set(true);
     this._error.set(null);
+
     this.api
       .getEquipmentStatus(equipmentId)
       .pipe(retry(2))
@@ -98,24 +147,25 @@ export class TrackingStore {
           this._currentEquipmentStatus.set(status);
           this._isLoading.set(false);
         },
-        error: (err: any) => {
-          this._error.set(this.formatError(err, 'Failed to load equipment status'));
+        error: (error: unknown) => {
+          this._error.set(this.formatError(error, 'Failed to load equipment status'));
           this._isLoading.set(false);
         },
       });
   }
 
   /**
-   * Fetches historical telemetry data points based on provided filters.
+   * Fetches historical telemetry points using optional filters.
    *
-   * @param filters - Optional criteria to filter the history logs
-   * @param filters.equipmentId - Numeric identifier of the specific equipment
-   * @param filters.from - Start date and time (ISO string format)
-   * @param filters.to - End date and time (ISO string format)
+   * @param filters - Optional criteria used to filter telemetry history
+   * @param filters.equipmentId - Numeric identifier of the equipment
+   * @param filters.from - Start timestamp in ISO string format
+   * @param filters.to - End timestamp in ISO string format
    */
   loadTelemetryHistory(filters?: { equipmentId?: number; from?: string; to?: string }): void {
     this._isLoading.set(true);
     this._error.set(null);
+
     this.api
       .getTelemetryHistory(filters)
       .pipe(retry(2))
@@ -124,17 +174,15 @@ export class TrackingStore {
           this._telemetryHistory.set(history);
           this._isLoading.set(false);
         },
-        error: (err: any) => {
-          this._error.set(this.formatError(err, 'Failed to load telemetry history'));
+        error: (error: unknown) => {
+          this._error.set(this.formatError(error, 'Failed to load telemetry history'));
           this._isLoading.set(false);
         },
       });
   }
 
-  // ── Helpers ──────────────────────────────────────────────────────────────
-
   /**
-   * Clears any active error or success messages in the state.
+   * Clears active UI messages from the store.
    */
   clearMessages(): void {
     this._error.set(null);
@@ -142,18 +190,19 @@ export class TrackingStore {
   }
 
   /**
-   * Formats an error object into a user-friendly string message.
+   * Converts an unknown error object into a user-facing message.
    *
-   * @param error - The caught error object
-   * @param fallback - A default message to use if specific details aren't available
-   * @returns A formatted error string
+   * @param error - Error value caught from an Observable subscription
+   * @param fallback - Default message used when the error cannot be parsed
+   * @returns A formatted error message
    */
-  private formatError(error: any, fallback: string): string {
+  private formatError(error: unknown, fallback: string): string {
     if (error instanceof Error) {
       return error.message.includes('Resource not found')
         ? `${fallback}: Not Found`
         : error.message;
     }
+
     return fallback;
   }
 }

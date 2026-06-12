@@ -1,12 +1,13 @@
 import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-response';
+import { AuditAction } from '../domain/model/audit-log-entry.entity';
 
 /**
  * Resource representation of an audit log entry for API communication.
  *
  * @remarks
- * In DDD, this acts as the infrastructure-level contract that represents
- * the audit log data as it appears in HTTP responses. It bridges
- * the gap between external API consumers and the internal AuditLogEntry entity.
+ * In DDD, this resource belongs to the infrastructure layer and represents
+ * the audit log payload as it appears in HTTP responses. It is converted into
+ * an {@link AuditLogEntry} domain entity by the audit log assembler.
  */
 export interface AuditLogEntryResource extends BaseResource {
   /**
@@ -15,12 +16,12 @@ export interface AuditLogEntryResource extends BaseResource {
   id: number;
 
   /**
-   * The action performed (e.g., 'CREATE', 'UPDATE', 'DELETE').
+   * The action performed.
    */
-  action: string;
+  action: AuditAction;
 
   /**
-   * The type of domain entity affected (e.g., 'Equipment', 'DeviationAlert').
+   * The type of domain entity affected.
    */
   entityType: string;
 
@@ -49,8 +50,9 @@ export interface AuditLogEntryResource extends BaseResource {
  * Response envelope for audit log collection queries.
  *
  * @remarks
- * This interface defines the structure of API responses that return multiple audit logs.
- * It allows for consistent metadata handling across collection endpoints.
+ * Kept for compatibility with the shared {@link BaseAssembler} contract.
+ * For the aligned backend, the list endpoint should preferably return
+ * a direct {@link AuditLogEntryResource} array.
  */
 export interface AuditLogEntriesResponse extends BaseResponse {
   /**

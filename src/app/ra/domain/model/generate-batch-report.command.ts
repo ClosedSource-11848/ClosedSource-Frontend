@@ -2,13 +2,9 @@
  * Command to trigger the generation of a production batch report.
  *
  * @remarks
- * In Domain-Driven Design, this interface represents a command pattern used
- * to encapsulate the instructions for generating an operational report.
- * It specifies the target batch, data inclusions (telemetry and deviations),
- * the output format, and the requester's identity.
- *
- * This command is typically sent to an application service that coordinates
- * the report assembly process.
+ * In Domain-Driven Design, this command represents the user's intent to generate
+ * an operational report for a specific production batch. It carries the selected
+ * batch, output format, included sections, and requester identity.
  */
 export interface GenerateBatchReportCommand {
   /**
@@ -17,12 +13,12 @@ export interface GenerateBatchReportCommand {
   batchId: number;
 
   /**
-   * Flag indicating whether to include sensor/process telemetry in the report.
+   * Indicates whether sensor and process telemetry should be included.
    */
   includeTelemetry: boolean;
 
   /**
-   * Flag indicating whether to include logged deviation alerts in the report.
+   * Indicates whether deviation alerts should be included.
    */
   includeDeviations: boolean;
 
@@ -32,7 +28,7 @@ export interface GenerateBatchReportCommand {
   format: 'PDF' | 'CSV';
 
   /**
-   * The numeric identifier of the user or system requesting the report.
+   * The numeric identifier of the user requesting the report.
    */
   requestedBy: number;
 }

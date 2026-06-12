@@ -1,11 +1,12 @@
 import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-response';
+import { TrendDirection } from '../domain/model/deviation-trend.entity';
 
 /**
  * Resource representation of a single measurement data point.
  *
  * @remarks
- * Used within a trend resource to transfer historical parameter data
- * and its associated reference thresholds over the API.
+ * This resource is used inside a deviation trend response to transfer
+ * historical parameter measurements and their thresholds over HTTP.
  */
 export interface DataPointResource {
   /**
@@ -14,17 +15,17 @@ export interface DataPointResource {
   timestamp: string;
 
   /**
-   * The actual value recorded at the given timestamp.
+   * The actual measured value at the given timestamp.
    */
   recordedValue: number;
 
   /**
-   * The upper acceptable limit for the parameter at this timestamp.
+   * The upper acceptable threshold for the measured parameter.
    */
   upperThreshold: number;
 
   /**
-   * The lower acceptable limit for the parameter at this timestamp.
+   * The lower acceptable threshold for the measured parameter.
    */
   lowerThreshold: number;
 }
@@ -33,9 +34,9 @@ export interface DataPointResource {
  * Resource representation of a deviation trend for API communication.
  *
  * @remarks
- * In DDD, this acts as the infrastructure-level contract that represents
- * the trend analysis data as it appears in HTTP responses. It bridges
- * the gap between external API consumers and the internal DeviationTrend entity.
+ * In DDD, this is an infrastructure-level resource contract. It represents
+ * the trend analysis payload returned by the backend and is converted into
+ * a {@link DeviationTrend} domain entity by the deviation trend assembler.
  */
 export interface DeviationTrendResource extends BaseResource {
   /**
@@ -44,7 +45,7 @@ export interface DeviationTrendResource extends BaseResource {
   id: number;
 
   /**
-   * The name of the process parameter being analyzed (e.g., 'Temperature').
+   * The name of the process parameter being analyzed.
    */
   parameterName: string;
 
@@ -54,9 +55,9 @@ export interface DeviationTrendResource extends BaseResource {
   equipmentId: number;
 
   /**
-   * The string representation of the identified trend direction (e.g., 'STABLE', 'INCREASING').
+   * The detected direction of the trend.
    */
-  trendDirection: string;
+  trendDirection: TrendDirection;
 
   /**
    * The collection of temporal measurements that make up the trend analysis.
@@ -68,8 +69,9 @@ export interface DeviationTrendResource extends BaseResource {
  * Response envelope for deviation trend collection queries.
  *
  * @remarks
- * This interface defines the structure of API responses that return multiple trend analyses.
- * It allows for consistent metadata handling across collection endpoints.
+ * Kept for compatibility with the shared {@link BaseAssembler} contract.
+ * For the aligned backend, the list endpoint should preferably return
+ * a direct {@link DeviationTrendResource} array.
  */
 export interface DeviationTrendsResponse extends BaseResponse {
   /**
