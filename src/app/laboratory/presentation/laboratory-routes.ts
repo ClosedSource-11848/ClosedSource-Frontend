@@ -2,9 +2,9 @@ import { Routes } from '@angular/router';
 import { Layout } from '../../shared/presentation/components/layout/layout';
 
 const labProfile = () => import('./views/lab-profile/lab-profile').then((m) => m.LabProfile);
+const labForm = () => import('./views/lab-form/lab-form').then((m) => m.LabForm);
 
 const staffList = () => import('./views/staff-list/staff-list').then((m) => m.StaffList);
-
 const staffForm = () => import('./views/staff-form/staff-form').then((m) => m.StaffForm);
 
 const productCatalog = () =>
@@ -18,12 +18,13 @@ const rawMaterialList = () =>
 const rawMaterialForm = () =>
   import('./views/raw-material-form/raw-material-form').then((m) => m.RawMaterialForm);
 
-const laboratoryRoutes: Routes = [
+export const laboratoryRoutes: Routes = [
   {
     path: '',
     component: Layout,
     children: [
       { path: 'lab-profile', loadComponent: labProfile },
+      { path: 'lab-form', loadComponent: labForm },
       { path: 'staff-list', loadComponent: staffList },
       { path: 'staff-form', loadComponent: staffForm },
       { path: 'product-catalog', loadComponent: productCatalog },
@@ -34,5 +35,3 @@ const laboratoryRoutes: Routes = [
     ],
   },
 ];
-
-export { laboratoryRoutes };

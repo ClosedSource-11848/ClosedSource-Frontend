@@ -8,33 +8,13 @@ import { ProductAssembler } from './product-assembler';
 import { CreateProductRequest } from './product.request';
 import { MessageResource } from '../../shared/infrastructure/message-response';
 
-/**
- * Base URL for all laboratory-related HTTP endpoints, composed from the
- * server base path and the laboratory-specific path defined in the
- * environment configuration. Resolved once at module load time.
- */
-const labEndpointUrl = `${environment.serverBasePath}${environment.laboratoryLabsEndpointPath}`;
+const laboratoriesEndpointUrl = `${environment.serverBasePath}${environment.laboratoryLabsEndpointPath}`;
 
 /**
- * HTTP endpoint handler for pharmaceutical product operations within the Laboratory domain.
+ * HTTP endpoint client for pharmaceutical product operations.
  *
  * @remarks
- * `ProductApiEndpoint` extends {@link BaseApiEndpoint} specializing it with
- * {@link PharmaceuticalProduct} as the domain entity, {@link PharmaceuticalProductResource}
- * as the single resource shape, {@link PharmaceuticalProductsResponse} as the collection
- * response shape, and {@link ProductAssembler} for mapping between both representations.
- *
- * This class is not managed by Angular's DI container and is instantiated
- * directly by {@link LaboratoryApi}, which owns its lifecycle and provides
- * the shared {@link HttpClient} instance. Each method maps the raw API resource
- * to a domain entity via the assembler and delegates error handling to the
- * base class `handleError` utility.
- *
- * @example
- * ```typescript
- * const endpoint = new ProductApiEndpoint(http);
- * endpoint.getProductsByLab(123).subscribe(products => console.log(products.length));
- * ```
+ * This endpoint handles product listing and creation under a laboratory.
  */
 export class ProductApiEndpoint extends BaseApiEndpoint<
   PharmaceuticalProduct,
@@ -43,62 +23,41 @@ export class ProductApiEndpoint extends BaseApiEndpoint<
   ProductAssembler
 > {
   /**
-   * Creates an instance of `ProductApiEndpoint`.
+   * Creates a new ProductApiEndpoint instance.
    *
-   * @param http - The Angular `HttpClient` instance forwarded from {@link LaboratoryApi},
-   * passed to the base class to perform HTTP requests.
-   *
-   * @remarks
-   * The {@link ProductAssembler} is instantiated here rather than injected,
-   * as this class operates outside Angular's DI container.
+   * @param http - Angular HttpClient used to perform HTTP requests
    */
   constructor(http: HttpClient) {
-    super(http, labEndpointUrl, new ProductAssembler());
+    super(http, laboratoriesEndpointUrl, new ProductAssembler());
   }
 
   /**
-   * Retrieves all pharmaceutical products registered under a specific laboratory.
+   * Retrieves all pharmaceutical products registered under a laboratory.
    *
-   * @param labId - The unique numeric identifier of the laboratory whose products to retrieve.
-   * @returns An `Observable` that emits an array of {@link PharmaceuticalProduct}
-   * domain entities mapped from the server response.
-   *
-   * @remarks
-   * Performs an HTTP `GET` to `{labEndpointUrl}/{labId}/products`. The raw
-   * {@link PharmaceuticalProductsResponse} is mapped via
-   * {@link ProductAssembler.toEntitiesFromResponse}. Errors are forwarded
-   * through the base class error handler.
+   * @param laboratoryId - Numeric identifier of the laboratory
+   * @returns Observable stream emitting PharmaceuticalProduct domain entities
    */
-  getProductsByLab(labId: number): Observable<PharmaceuticalProduct[]> {
+  getProductsByLaboratoryId(laboratoryId: number): Observable<PharmaceuticalProduct[]> {
     return this.http
-      .get<PharmaceuticalProductResource[]>(`${this.endpointUrl}/${labId}/products`)
+      .get<PharmaceuticalProductResource[]>(`${this.endpointUrl}/${laboratoryId}/products`)
       .pipe(
         map((resources) =>
           resources.map((resource) => this.assembler.toEntityFromResource(resource)),
         ),
-        catchError(this.handleError(`Failed to fetch products for lab ${labId}`)),
+        catchError(this.handleError(`Failed to fetch products for laboratory ${laboratoryId}`)),
       );
   }
 
   /**
-   * Creates a new pharmaceutical product under a specific laboratory.
+   * Creates a new pharmaceutical product under a laboratory.
    *
-   * @param labId - The unique numeric identifier of the laboratory to register the product under.
-   * @param request - The {@link CreateProductRequest} payload containing
-   * the new product's details.
-   * @returns An `Observable` that emits the newly created {@link PharmaceuticalProduct}
-   * domain entity as returned by the server.
-   *
-   * @remarks
-   * Performs an HTTP `POST` to `{labEndpointUrl}/{labId}/products` with the request
-   * body serialized as JSON. The server is expected to return the created
-   * {@link PharmaceuticalProductResource}, which is then mapped via
-   * {@link ProductAssembler.toEntityFromResource}. Errors are forwarded
-   * through the base class error handler.
+   * @param laboratoryId - Numeric identifier of the laboratory
+   * @param request - Request payload containing product creation data
+   * @returns Observable stream emitting a message response
    */
-  createProduct(labId: number, request: CreateProductRequest): Observable<MessageResource> {
+  createProduct(laboratoryId: number, request: CreateProductRequest): Observable<MessageResource> {
     return this.http
-      .post<MessageResource>(`${this.endpointUrl}/${labId}/products`, request)
+      .post<MessageResource>(`${this.endpointUrl}/${laboratoryId}/products`, request)
       .pipe(catchError(this.handleError('Failed to create pharmaceutical product')));
   }
 }

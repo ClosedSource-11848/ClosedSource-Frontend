@@ -3,7 +3,7 @@
     <mat-card-header>
       <mat-icon mat-card-avatar class="header-icon">add_box</mat-icon>
       <mat-card-title>{{ 'product-form.title' | translate }}</mat-card-title>
-      <mat-card-subtitle>Register a new pharmaceutical item into the laboratory master data</mat-card-subtitle>
+      <mat-card-subtitle>{{ 'product-form.subtitle' | translate }}</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
@@ -20,6 +20,7 @@
             <mat-label>{{ 'product-form.code' | translate }}</mat-label>
             <input matInput formControlName="code" placeholder="PRD-XXXX">
             <mat-icon matPrefix>qr_code</mat-icon>
+
             @if (form.get('code')?.hasError('required')) {
               <mat-error>{{ 'common.required' | translate }}</mat-error>
             }
@@ -29,6 +30,7 @@
             <mat-label>{{ 'product-form.name' | translate }}</mat-label>
             <input matInput formControlName="name" placeholder="Name of the product">
             <mat-icon matPrefix>medication</mat-icon>
+
             @if (form.get('name')?.hasError('required')) {
               <mat-error>{{ 'common.required' | translate }}</mat-error>
             }
@@ -37,20 +39,36 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ 'product-form.description' | translate }}</mat-label>
-          <textarea matInput formControlName="description" rows="2" placeholder="Brief therapeutic description"></textarea>
+          <textarea
+            matInput
+            formControlName="description"
+            rows="2"
+            placeholder="Brief therapeutic description"
+          ></textarea>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ 'product-form.specifications' | translate }}</mat-label>
-          <textarea matInput formControlName="specifications" rows="4" placeholder="Technical specifications for quality control"></textarea>
-          <mat-hint>Detail BPM parameters required for this product.</mat-hint>
+          <textarea
+            matInput
+            formControlName="specifications"
+            rows="4"
+            placeholder="Technical specifications for quality control"
+          ></textarea>
+          <mat-hint>{{ 'product-form.specifications-hint' | translate }}</mat-hint>
         </mat-form-field>
 
         <div class="form-actions">
           <button mat-button type="button" (click)="onCancel()">
             {{ 'common.cancel' | translate }}
           </button>
-          <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || store.isLoading()">
+
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            [disabled]="form.invalid || store.isLoading()"
+          >
             @if (store.isLoading()) {
               <mat-spinner diameter="20"></mat-spinner>
             } @else {
