@@ -1,26 +1,47 @@
+import { HttpClient } from '@angular/common/http';
+import { Observable, catchError, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ErrorHandlingEnabledBaseType } from '../../shared/infrastructure/error-handling-enabled-base-type';
-import { HttpClient } from '@angular/common/http';
 import { SignInAssembler } from './sign-in-assembler';
-import { SignInCommand } from '../domain/model/sign-in.command';
-import { catchError, map, Observable } from 'rxjs';
+import { SignInRequest } from './sign-in.request';
 import { SignInResource, SignInResponse } from './sign-in-response';
 
 const signInApiEndpointUrl = `${environment.serverBasePath}${environment.iamSignInEndpointPath}`;
 
+/**
+ * HTTP endpoint client for user sign-in operations.
+ *
+ * @remarks
+ * This endpoint belongs to the infrastructure layer and encapsulates the HTTP
+ * communication with the backend sign-in endpoint.
+ *
+ * It receives a SignInRequest DTO, sends it to the API, and delegates response
+ * transformation to SignInAssembler.
+ */
 export class SignInApiEndpoint extends ErrorHandlingEnabledBaseType {
+  /**
+   * Creates a new SignInApiEndpoint instance.
+   *
+   * @param http - Angular HttpClient used to execute HTTP requests
+   * @param assembler - Assembler used to map backend responses into resources
+   */
   constructor(
-    private http: HttpClient,
-    private assembler: SignInAssembler,
+    private readonly http: HttpClient,
+    private readonly assembler: SignInAssembler,
   ) {
     super();
   }
 
-  signIn(signInCommand: SignInCommand): Observable<SignInResource> {
-    const signInRequest = this.assembler.toRequestFromCommand(signInCommand);
-    return this.http.post<SignInResponse>(signInApiEndpointUrl, signInRequest).pipe(
+  /**
+   * Authenticates an existing user.
+   *
+   * @param request - Sign-in request payload containing username and password
+   * @returns Observable stream emitting the authenticated session resource
+   */
+  signIn(request: SignInRequest): Observable<SignInResource> {
+    return this.http.post<SignInResponse>(signInApiEndpointUrl, request).pipe(
       map((response) => this.assembler.toResourceFromResponse(response)),
-      catchError(this.handleError('Failed to sign-in')),
+      catchError(this.handleError('Failed to sign in')),
     );
   }
 }
