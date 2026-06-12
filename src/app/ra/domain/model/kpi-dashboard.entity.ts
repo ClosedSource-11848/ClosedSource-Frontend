@@ -11,7 +11,18 @@ import { KpiMetric } from './kpi-metric.entity';
  * availability, and quality compliance.
  *
  * This entity is primarily used for management dashboards and trend analysis
- * within the laboratory operational context.
+ * within the Reporting and Analysis bounded context.
+ *
+ * @example
+ * ```typescript
+ * const dashboard = new KpiDashboard({
+ *   id: 1,
+ *   laboratoryId: 10,
+ *   timestamp: '2026-05-12T11:00:00Z',
+ *   overallHealthScore: 92,
+ *   metrics: []
+ * });
+ * ```
  */
 export class KpiDashboard implements BaseEntity {
   /**
@@ -22,7 +33,7 @@ export class KpiDashboard implements BaseEntity {
   /**
    * The numeric identifier of the laboratory associated with these KPIs.
    */
-  labId: number;
+  laboratoryId: number;
 
   /**
    * The timestamp when these metrics were aggregated.
@@ -44,20 +55,20 @@ export class KpiDashboard implements BaseEntity {
    *
    * @param params - Initialization properties
    * @param params.id - Unique numeric identifier for the dashboard
-   * @param params.labId - Numeric ID of the laboratory
-   * @param params.timestamp - Aggregation time
-   * @param params.overallHealthScore - Computed health index
-   * @param params.metrics - Detailed list of performance indicators
+   * @param params.laboratoryId - Numeric ID of the laboratory
+   * @param params.timestamp - Aggregation timestamp
+   * @param params.overallHealthScore - Computed health score
+   * @param params.metrics - Detailed list of KPI metrics
    */
   constructor(params: {
     id: number;
-    labId: number;
+    laboratoryId: number;
     timestamp: string;
     overallHealthScore: number;
     metrics: KpiMetric[];
   }) {
     this.id = params.id;
-    this.labId = params.labId;
+    this.laboratoryId = params.laboratoryId;
     this.timestamp = params.timestamp;
     this.overallHealthScore = params.overallHealthScore;
     this.metrics = params.metrics;

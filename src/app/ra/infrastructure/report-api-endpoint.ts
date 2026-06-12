@@ -13,13 +13,13 @@ const reportEndpointUrl = `${environment.serverBasePath}${environment.raReportsE
  * HTTP endpoint client for report generation and export operations.
  *
  * @remarks
- * This endpoint encapsulates all HTTP communication related to generating
- * document reports (PDF, CSV) within the Reporting and Analysis (RA) domain.
- * It handles requests for production batches, compliance audits, and equipment logs.
+ * This endpoint encapsulates HTTP communication for binary report generation
+ * within the Reporting and Analysis bounded context.
  *
- * Unlike standard API endpoints that return JSON resources, these methods
- * configure the HttpClient to expect binary data streams (`Blob`) representing
- * the generated files.
+ * Endpoint contract:
+ * - POST /reports/batches
+ * - POST /reports/compliance
+ * - POST /reports/equipment-logs
  */
 export class ReportApiEndpoint {
   /**
@@ -27,21 +27,17 @@ export class ReportApiEndpoint {
    *
    * @param http - Angular HttpClient for making HTTP requests
    */
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   /**
    * Requests the generation of a production batch report.
    *
-   * @param request - The DTO containing batch selection and format preferences
-   * @returns Observable stream emitting the generated report as a binary Blob
-   *
-   * @remarks
-   * Sends a POST request to trigger the server-side assembly of batch telemetry
-   * and deviations into the requested file format.
+   * @param request - DTO containing batch report generation parameters
+   * @returns Observable stream emitting the generated report as a Blob
    */
   generateBatchReport(request: GenerateBatchReportRequest): Observable<Blob> {
     return this.http
-      .post(`${reportEndpointUrl}/batch`, request, { responseType: 'blob' })
+      .post(`${reportEndpointUrl}/batches`, request, { responseType: 'blob' })
       .pipe(
         catchError((err) =>
           throwError(() => new Error('Failed to generate batch report', { cause: err })),
@@ -50,10 +46,10 @@ export class ReportApiEndpoint {
   }
 
   /**
-   * Requests the generation of a regulatory compliance audit report.
+   * Requests the generation of a regulatory compliance report.
    *
-   * @param request - The DTO containing lab selection, date ranges, and format preferences
-   * @returns Observable stream emitting the generated audit report as a binary Blob
+   * @param request - DTO containing compliance report generation parameters
+   * @returns Observable stream emitting the generated report as a Blob
    */
   generateComplianceReport(request: GenerateComplianceReportRequest): Observable<Blob> {
     return this.http
@@ -68,12 +64,12 @@ export class ReportApiEndpoint {
   /**
    * Requests the export of historical equipment logs.
    *
-   * @param request - The DTO containing equipment selection, date ranges, and format preferences
-   * @returns Observable stream emitting the exported logs as a binary Blob
+   * @param request - DTO containing equipment log export parameters
+   * @returns Observable stream emitting the exported logs as a Blob
    */
   exportEquipmentLog(request: ExportEquipmentLogRequest): Observable<Blob> {
     return this.http
-      .post(`${reportEndpointUrl}/equipment-log`, request, { responseType: 'blob' })
+      .post(`${reportEndpointUrl}/equipment-logs`, request, { responseType: 'blob' })
       .pipe(
         catchError((err) =>
           throwError(() => new Error('Failed to export equipment log', { cause: err })),

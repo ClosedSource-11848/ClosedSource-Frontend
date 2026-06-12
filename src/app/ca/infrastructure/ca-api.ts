@@ -7,10 +7,12 @@ import { AlertApiEndpoint } from './alert-api-endpoint';
 import { ComplianceEventApiEndpoint } from './compliance-event-api-endpoint';
 import { NotificationPreferenceApiEndpoint } from './notification-preference-api-endpoint';
 
-import { DeviationAlert } from '../domain/model/deviation-alert.entity';
+import { AlertSeverity, AlertStatus, DeviationAlert } from '../domain/model/deviation-alert.entity';
 import { ComplianceEvent } from '../domain/model/compliance-event.entity';
 import { NotificationPreference } from '../domain/model/notification-preference.entity';
 import { UpdateNotificationPreferenceRequest } from './notification-preference.request';
+import { AcknowledgeAlertRequest } from './acknowledge-alert.request';
+import { ResolveAlertRequest } from './resolve-alert.request';
 
 /**
  * Infrastructure service facade for Compliance and Alerts (CA) external API operations.
@@ -30,9 +32,9 @@ import { UpdateNotificationPreferenceRequest } from './notification-preference.r
  * constructor(private caApi: CaApi) {}
  *
  * loadAlerts() {
- * this.caApi.getAlerts({ severity: 'CRITICAL' }).subscribe(alerts => {
- * // Handle critical alerts
- * });
+ *   this.caApi.getAlerts({ severity: 'CRITICAL' }).subscribe(alerts => {
+ *     // Handle critical alerts
+ *   });
  * }
  * ```
  */
@@ -73,8 +75,6 @@ export class CaApi extends BaseApi {
     this._preferenceEndpoint = new NotificationPreferenceApiEndpoint(http);
   }
 
-  // ── Alerts ───────────────────────────────────────────────────────────
-
   /**
    * Retrieves deviation alerts based on optional filtering criteria.
    *
@@ -87,18 +87,54 @@ export class CaApi extends BaseApi {
   getAlerts(filters?: {
     equipmentId?: number;
     batchId?: number;
-    status?: string;
-    severity?: string;
+    status?: AlertStatus;
+    severity?: AlertSeverity;
   }): Observable<DeviationAlert[]> {
     return this._alertEndpoint.getAlerts(filters);
   }
 
-  // ── Compliance Events ────────────────────────────────────────────────
+  /**
+   * Retrieves a specific deviation alert by its unique numeric identifier.
+   *
+   * @param alertId - The unique numeric identifier of the deviation alert
+   * @returns Observable stream emitting the DeviationAlert domain entity
+   */
+  getAlertById(alertId: number): Observable<DeviationAlert> {
+    return this._alertEndpoint.getAlertById(alertId);
+  }
+
+  /**
+   * Acknowledges a deviation alert.
+   *
+   * @param alertId - The unique numeric identifier of the deviation alert
+   * @param request - DTO containing the user acknowledging the alert
+   * @returns Observable stream emitting the updated DeviationAlert domain entity
+   *
+   * @remarks
+   * Delegates the acknowledgement operation to the alert endpoint client.
+   */
+  acknowledgeAlert(alertId: number, request: AcknowledgeAlertRequest): Observable<DeviationAlert> {
+    return this._alertEndpoint.acknowledgeAlert(alertId, request);
+  }
+
+  /**
+   * Resolves a deviation alert.
+   *
+   * @param alertId - The unique numeric identifier of the deviation alert
+   * @param request - DTO containing the user and resolution notes
+   * @returns Observable stream emitting the updated DeviationAlert domain entity
+   *
+   * @remarks
+   * Delegates the resolution operation to the alert endpoint client.
+   */
+  resolveAlert(alertId: number, request: ResolveAlertRequest): Observable<DeviationAlert> {
+    return this._alertEndpoint.resolveAlert(alertId, request);
+  }
 
   /**
    * Retrieves all compliance events associated with a specific entity.
    *
-   * @param entityId - The unique numeric identifier of the related entity (e.g., User or Asset)
+   * @param entityId - The unique numeric identifier of the related entity
    * @returns Observable stream emitting an array of ComplianceEvent entities
    *
    * @remarks
@@ -107,8 +143,6 @@ export class CaApi extends BaseApi {
   getEventsByEntity(entityId: number): Observable<ComplianceEvent[]> {
     return this._complianceEventEndpoint.getEventsByEntity(entityId);
   }
-
-  // ── Notification Preferences ─────────────────────────────────────────
 
   /**
    * Retrieves the notification configuration for a specific user.
@@ -131,7 +165,7 @@ export class CaApi extends BaseApi {
    * @returns Observable stream emitting the updated NotificationPreference entity
    *
    * @remarks
-   * Persists changes to notification channels (email, SMS, in-app) and severity filters.
+   * Persists changes to notification channels and severity filters.
    */
   updatePreferences(
     userId: number,

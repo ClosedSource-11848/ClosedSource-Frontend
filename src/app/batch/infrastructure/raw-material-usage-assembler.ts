@@ -66,7 +66,7 @@ export class RawMaterialUsageAssembler implements BaseAssembler<
       quantityUsed: resource.quantityUsed,
       unit: resource.unit,
       usageDate: resource.usageDate,
-      createdAt: resource.createdAt,
+      createdAt: resource.createdAt ?? ''
     });
   }
 

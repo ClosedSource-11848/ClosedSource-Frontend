@@ -7,8 +7,7 @@ import { RawMaterialUsageResource, RawMaterialUsagesResponse } from './raw-mater
 import { RawMaterialUsageAssembler } from './raw-material-usage-assembler';
 import { LinkRawMaterialRequest } from './raw-material-usage.request';
 
-const usageEndpointUrl = `${environment.serverBasePath}${environment.batchRawMaterialUsageEndpointPath}`;
-
+const usageEndpointUrl = `${environment.serverBasePath}${environment.batchEndpointPath}`;
 /**
  * HTTP endpoint client for raw material usage and traceability operations.
  *
@@ -58,9 +57,11 @@ export class RawMaterialUsageApiEndpoint extends BaseApiEndpoint<
    */
   getUsageByBatch(batchId: number): Observable<RawMaterialUsage[]> {
     return this.http
-      .get<RawMaterialUsagesResponse>(`${this.endpointUrl}/${batchId}/materials`)
+      .get<RawMaterialUsageResource[]>(`${this.endpointUrl}/${batchId}/raw-materials`)
       .pipe(
-        map((response) => this.assembler.toEntitiesFromResponse(response)),
+        map((resources) =>
+          resources.map((resource) => this.assembler.toEntityFromResource(resource)),
+        ),
         catchError(this.handleError(`Failed to fetch raw material usage for batch ${batchId}`)),
       );
   }
@@ -78,7 +79,7 @@ export class RawMaterialUsageApiEndpoint extends BaseApiEndpoint<
    */
   linkRawMaterial(batchId: number, request: LinkRawMaterialRequest): Observable<RawMaterialUsage> {
     return this.http
-      .post<RawMaterialUsageResource>(`${this.endpointUrl}/${batchId}/materials`, request)
+      .post<RawMaterialUsageResource>(`${this.endpointUrl}/${batchId}/raw-materials`, request)
       .pipe(
         map((resource) => this.assembler.toEntityFromResource(resource)),
         catchError(this.handleError(`Failed to link raw material to batch ${batchId}`)),

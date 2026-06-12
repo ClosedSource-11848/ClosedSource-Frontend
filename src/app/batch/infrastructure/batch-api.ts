@@ -57,6 +57,10 @@ export class BatchApi extends BaseApi {
 
   // ── Batch Management ───────────────────────────────────────────────────
 
+  getBatchById(batchId: number): Observable<Batch> {
+    return this._batchEndpoint.getBatchById(batchId);
+  }
+
   /**
    * Retrieves all manufacturing batches associated with a specific laboratory.
    *

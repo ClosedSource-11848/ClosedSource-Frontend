@@ -58,6 +58,8 @@ export class BatchStore {
    */
   private readonly _successMsg = signal<string | null>(null);
 
+  private readonly _selectedBatch = signal<Batch | null>(null);
+
   // ── Selectors (Readonly Public Signals) ─────────────────────────────────────
 
   /** Exposed readonly signal of the batches list. */
@@ -91,7 +93,36 @@ export class BatchStore {
     this._batches().filter((b) => b.status === 'RELEASED' || b.status === 'REJECTED'),
   );
 
+  readonly selectedBatch = this._selectedBatch.asReadonly();
+
   // ── Batch Management ─────────────────────────────────────────────────────
+
+  loadBatchById(batchId: number): void {
+    this._isLoading.set(true);
+    this._error.set(null);
+
+    this.api
+      .getBatchById(batchId)
+      .pipe(retry(2))
+      .subscribe({
+        next: (batch: Batch) => {
+          this._selectedBatch.set(batch);
+
+          this._batches.update((list) => {
+            const exists = list.some((item) => item.id === batch.id);
+            return exists
+              ? list.map((item) => (item.id === batch.id ? batch : item))
+              : [...list, batch];
+          });
+
+          this._isLoading.set(false);
+        },
+        error: (err: any) => {
+          this._error.set(this.formatError(err, 'Failed to load batch detail'));
+          this._isLoading.set(false);
+        },
+      });
+  }
 
   /**
    * Fetches the list of batches from the API for a specific laboratory.

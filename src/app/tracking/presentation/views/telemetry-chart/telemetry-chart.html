@@ -37,10 +37,22 @@
       </mat-form-field>
 
       <div class="filter-actions">
-        <button mat-stroked-button (click)="clearFilters()" [disabled]="store.isLoading()">
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="clearFilters()"
+          [disabled]="store.isLoading() || !filters.equipmentId"
+        >
           {{ 'common.clear' | translate }}
         </button>
-        <button mat-flat-button color="primary" (click)="loadChartData()" [disabled]="store.isLoading() || !filters.equipmentId">
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          (click)="loadChartData()"
+          [disabled]="store.isLoading() || !filters.equipmentId"
+        >
           <mat-icon>search</mat-icon>
           {{ 'tracking.analysis.analyze-btn' | translate }}
         </button>
@@ -60,7 +72,10 @@
     <mat-card-header>
       <mat-card-title>{{ 'tracking.analysis.chart-title' | translate }}</mat-card-title>
       <mat-card-subtitle>
-        {{ 'tracking.analysis.displaying' | translate }} {{ store.telemetryHistory().length }} {{ 'tracking.analysis.points-for' | translate }} {{ filters.equipmentId }}
+        {{ 'tracking.analysis.displaying' | translate }}
+        {{ store.telemetryHistory().length }}
+        {{ 'tracking.analysis.points-for' | translate }}
+        {{ filters.equipmentId }}
         @if (filters.dateFrom && filters.dateTo) {
           ({{ filters.dateFrom | date:'shortDate' }} - {{ filters.dateTo | date:'shortDate' }})
         }
@@ -70,10 +85,12 @@
     <mat-card-content>
       @if (store.telemetryHistory().length > 0) {
         <div class="large-canvas-wrapper">
-          <canvas baseChart
-                  [data]="chartData()"
-                  [options]="chartOptions"
-                  [type]="'line'">
+          <canvas
+            baseChart
+            [data]="chartData()"
+            [options]="chartOptions"
+            [type]="'line'"
+          >
           </canvas>
         </div>
       } @else {

@@ -114,13 +114,14 @@ table {
   color: #b45309 !important;
 }
 
-.info, .resolved {
-  background-color: #e0e7ff !important;
-  color: #4338ca !important;
+.warning,
+.acknowledged {
+  background-color: #fef3c7 !important;
+  color: #b45309 !important;
 }
 
-
-.ignored {
-  background-color: #f1f5f9 !important;
-  color: #475569 !important;
+.low,
+.resolved {
+  background-color: #e0e7ff !important;
+  color: #4338ca !important;
 }

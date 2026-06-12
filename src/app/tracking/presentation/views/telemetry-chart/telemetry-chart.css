@@ -3,12 +3,13 @@
   position: relative;
 }
 
-/* Header */
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .title-group {
@@ -30,19 +31,16 @@
   color: #1a3a5c;
 }
 
-/* Loading & Error */
 .loading-shade {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.7);
+  inset: 0;
+  background: rgba(255, 255, 255, 0.72);
   z-index: 1000;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   padding-top: 100px;
+  border-radius: 8px;
 }
 
 .error-message {
@@ -56,7 +54,6 @@
   margin-bottom: 24px;
 }
 
-/* Filter Card */
 .filter-card {
   margin-bottom: 24px;
   border-radius: 8px;
@@ -90,7 +87,6 @@
   margin-left: auto;
 }
 
-/* Main Chart Area */
 .main-chart-card {
   background: white;
   border-radius: 8px;
@@ -105,11 +101,10 @@
 
 .large-canvas-wrapper {
   position: relative;
-  height: 500px; /* Gráfico más alto para mejor análisis de datos */
+  height: 500px;
   width: 100%;
 }
 
-/* Empty State */
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -125,4 +120,30 @@
   height: 64px;
   margin-bottom: 16px;
   opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .chart-view-container {
+    padding: 16px;
+  }
+
+  .filter-content {
+    padding: 16px;
+  }
+
+  .filter-field,
+  .date-field {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .filter-actions {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-end;
+  }
+
+  .large-canvas-wrapper {
+    height: 360px;
+  }
 }

@@ -1,15 +1,45 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
 
 /**
- * Represents an entry in the system's audit log.
+ * Represents an action recorded in the audit log.
+ *
+ * @remarks
+ * This type restricts audit action values to the states supported by the
+ * Reporting and Analysis bounded context and the backend API contract.
+ */
+export type AuditAction =
+  | 'CREATE'
+  | 'UPDATE'
+  | 'DELETE'
+  | 'REGISTER'
+  | 'RELEASE'
+  | 'REJECT'
+  | 'ACKNOWLEDGE'
+  | 'RESOLVE'
+  | 'EXPORT'
+  | 'GENERATE'
+  | 'UNKNOWN';
+
+/**
+ * Represents an entry in the system audit log.
  *
  * @remarks
  * In Domain-Driven Design, AuditLogEntry is an entity that captures a historical
- * record of a specific action performed within the system. It ensures non-repudiation
- * and provides traceability by linking actions to the actors who performed them
- * and the entities they affected.
+ * record of a specific action performed within the system. It ensures traceability
+ * by linking actions to the actors who performed them and the entities they affected.
  *
- * This entity is essential for security compliance and debugging system behavior.
+ * @example
+ * ```typescript
+ * const log = new AuditLogEntry({
+ *   id: 1,
+ *   action: 'RELEASE',
+ *   entityType: 'Batch',
+ *   entityId: 100,
+ *   performedBy: 5,
+ *   timestamp: '2026-05-12T11:00:00Z',
+ *   details: 'Batch released after quality validation'
+ * });
+ * ```
  */
 export class AuditLogEntry implements BaseEntity {
   /**
@@ -18,12 +48,12 @@ export class AuditLogEntry implements BaseEntity {
   id: number;
 
   /**
-   * The action performed (e.g., 'CREATE', 'UPDATE', 'DELETE').
+   * The action performed.
    */
-  action: string;
+  action: AuditAction;
 
   /**
-   * The type of domain entity affected (e.g., 'Equipment', 'DeviationAlert').
+   * The type of domain entity affected.
    */
   entityType: string;
 
@@ -53,15 +83,15 @@ export class AuditLogEntry implements BaseEntity {
    * @param params - Initialization properties
    * @param params.id - Unique numeric ID of the entry
    * @param params.action - The operation performed
-   * @param params.entityType - The domain object category
-   * @param params.entityId - Numeric ID of the targeted object
+   * @param params.entityType - The affected domain object category
+   * @param params.entityId - Numeric ID of the affected object
    * @param params.performedBy - Numeric ID of the actor
-   * @param params.timestamp - Occurrence time
+   * @param params.timestamp - Occurrence timestamp
    * @param params.details - Descriptive details of the action
    */
   constructor(params: {
     id: number;
-    action: string;
+    action: AuditAction;
     entityType: string;
     entityId: number;
     performedBy: number;

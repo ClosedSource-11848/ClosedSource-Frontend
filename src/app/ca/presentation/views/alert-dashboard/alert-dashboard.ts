@@ -31,49 +31,24 @@ import { CaStore } from '../../../application/ca.store';
   styleUrl: './alert-dashboard.css',
 })
 export class AlertDashboard implements OnInit {
-  /**
-   * The application store instance for Compliance and Alerts.
-   */
   protected readonly store = inject(CaStore);
-
-  /**
-   * Angular Router for handling navigation within the dashboard.
-   */
   private readonly router = inject(Router);
 
-  /**
-   * Configuration for the columns to be displayed in the Angular Material table.
-   */
   displayedColumns: string[] = ['timestamp', 'parameter', 'severity', 'status', 'actions'];
 
-  /**
-   * Initializes the component and triggers the data loading process.
-   */
   ngOnInit(): void {
     this.loadData();
   }
 
-  /**
-   * Refreshes the alerts data from the store.
-   */
   onRefresh(): void {
     this.loadData();
   }
 
-  /**
-   * Dispatches the loadAlerts action to the application store.
-   * @private
-   */
   private loadData(): void {
     this.store.loadAlerts();
   }
 
-  /**
-   * Navigates to the detailed view of a specific deviation alert.
-   *
-   * @param alertId - The unique numeric identifier of the alert to be viewed.
-   */
   viewDetails(alertId: number): void {
-    this.router.navigate(['/alerts/deviation-detail', alertId]);
+    this.router.navigate(['/alerts/deviation-detail', alertId]).then();
   }
 }

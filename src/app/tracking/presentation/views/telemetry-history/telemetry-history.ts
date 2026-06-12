@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -23,8 +23,8 @@ import { IamStore } from '../../../../iam/application/iam.store';
  *
  * @remarks
  * In the presentation layer, this component provides a detailed data grid view of
- * equipment sensor readings over time. It allows users to filter the time-series
- * data by specific date ranges and highlights recorded anomalies or threshold deviations.
+ * equipment sensor readings over time. It allows users to filter time-series data
+ * by equipment and date range, while highlighting measurements marked as anomalies.
  */
 @Component({
   selector: 'app-telemetry-history',
@@ -47,32 +47,33 @@ import { IamStore } from '../../../../iam/application/iam.store';
   templateUrl: './telemetry-history.html',
   styleUrl: './telemetry-history.css',
 })
-export class TelemetryHistoryComponent implements OnInit {
+export class TelemetryHistoryComponent implements OnInit, OnDestroy {
   /**
-   * The application store managing the state for the Tracking and Telemetry domain.
+   * Store that manages Tracking bounded context state.
    */
   protected readonly store = inject(TrackingStore);
 
   /**
-   * The application store managing the state for the Equipment domain.
+   * Store that manages Equipment bounded context state.
    */
   protected readonly equipmentStore = inject(EquipmentStore);
 
   /**
-   * The identity and access management store, used to retrieve user context.
+   * Store that exposes authenticated user context.
    */
   protected readonly iamStore = inject(IamStore);
 
   /**
-   * Configuration for the columns displayed in the Material data table.
+   * Columns displayed in the telemetry history table.
    */
   protected readonly displayedColumns = ['timestamp', 'parameterName', 'recordedValue', 'status'];
 
-  // ── Filters ──────────────────────────────────────────────────────────────
-
   /**
-   * Current filter state for querying historical telemetry records.
-   * Uses numeric types for IDs to maintain domain entity consistency.
+   * Current filter state used to query telemetry history.
+   *
+   * @remarks
+   * Equipment identifiers are numeric to stay aligned with the backend API and
+   * the domain model. Date values are converted to ISO strings before querying.
    */
   protected filters = {
     equipmentId: null as number | null,
@@ -81,63 +82,90 @@ export class TelemetryHistoryComponent implements OnInit {
   };
 
   /**
-   * Retrieves the current laboratory ID based on the authenticated user's context.
+   * Interval reference used while waiting for equipment data to be available.
+   */
+  private equipmentPollingId: ReturnType<typeof setInterval> | null = null;
+
+  /**
+   * Retrieves the current laboratory ID based on the authenticated context.
    *
    * @remarks
-   * Converts the ID to a numeric value for domain consistency. Defaults to 1.
+   * The value is converted to number to keep consistency with the backend API.
+   * Defaults to 1 when no authenticated context is available.
    */
   private get currentLabId(): number {
     const id = this.iamStore.currentUserId();
     return id ? Number(id) : 1;
   }
 
-  // ── Lifecycle ────────────────────────────────────────────────────────────
-
   /**
-   * Lifecycle hook that initializes the component.
+   * Lifecycle hook that loads available equipment and initializes history data.
    *
    * @remarks
-   * Initiates the load of available equipment for the dropdown filters. Uses a
-   * polling interval to wait for the equipment list to populate, automatically
-   * selecting the first item to display immediate data to the user.
+   * Once the equipment list is available, the first equipment is selected
+   * automatically and its telemetry history is loaded.
    */
   ngOnInit(): void {
     this.equipmentStore.loadEquipment(this.currentLabId);
-
-    const checkEquipment = setInterval(() => {
-      const list = this.equipmentStore.equipmentList();
-      if (list.length > 0) {
-        this.filters.equipmentId = list[0].id;
-        this.loadHistoryData();
-        clearInterval(checkEquipment);
-      }
-    }, 500);
+    this.waitForEquipmentAndLoadHistory();
   }
 
   /**
-   * Constructs the query payload based on the current filter state and dispatches
-   * the load command to the TrackingStore.
+   * Lifecycle hook that clears the equipment polling interval when the component is destroyed.
    */
-  loadHistoryData(): void {
+  ngOnDestroy(): void {
+    if (this.equipmentPollingId) {
+      clearInterval(this.equipmentPollingId);
+      this.equipmentPollingId = null;
+    }
+  }
+
+  /**
+   * Constructs the query payload from the current filters and loads telemetry history.
+   */
+  protected loadHistoryData(): void {
     if (!this.filters.equipmentId) return;
 
     const query: { equipmentId: number; from?: string; to?: string } = {
       equipmentId: this.filters.equipmentId,
     };
 
-    if (this.filters.dateFrom) query.from = this.filters.dateFrom.toISOString();
-    if (this.filters.dateTo) query.to = this.filters.dateTo.toISOString();
+    if (this.filters.dateFrom) {
+      query.from = this.filters.dateFrom.toISOString();
+    }
+
+    if (this.filters.dateTo) {
+      query.to = this.filters.dateTo.toISOString();
+    }
 
     this.store.loadTelemetryHistory(query);
   }
 
   /**
-   * Resets the date range filters to their default empty states and reloads
-   * the complete history log for the currently selected equipment.
+   * Clears the selected date range and reloads history for the selected equipment.
    */
-  clearFilters(): void {
+  protected clearFilters(): void {
     this.filters.dateFrom = null;
     this.filters.dateTo = null;
     this.loadHistoryData();
+  }
+
+  /**
+   * Waits until equipment data is available, then selects the first equipment and loads history.
+   */
+  private waitForEquipmentAndLoadHistory(): void {
+    this.equipmentPollingId = setInterval(() => {
+      const equipmentList = this.equipmentStore.equipmentList();
+
+      if (equipmentList.length === 0) return;
+
+      this.filters.equipmentId = equipmentList[0].id;
+      this.loadHistoryData();
+
+      if (this.equipmentPollingId) {
+        clearInterval(this.equipmentPollingId);
+        this.equipmentPollingId = null;
+      }
+    }, 500);
   }
 }

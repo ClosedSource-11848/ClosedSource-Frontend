@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, computed } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -21,12 +21,13 @@ import { EquipmentStore } from '../../../../equipment/application/equipment.stor
 import { IamStore } from '../../../../iam/application/iam.store';
 
 /**
- * Component responsible for providing detailed analytical charts for telemetry data.
+ * Component responsible for rendering analytical telemetry charts.
  *
  * @remarks
- * In the presentation layer, this component allows users to perform deeper historical
- * analysis of equipment telemetry. It features time-based filtering and advanced
- * visual indicators (like highlighting line segments that connect to anomalous data points).
+ * In the presentation layer, this component provides a detailed visual analysis
+ * of historical telemetry points for a selected equipment. It allows users to
+ * filter by equipment and date range, then renders the resulting time series
+ * with anomaly-aware visual indicators.
  */
 @Component({
   selector: 'app-telemetry-chart',
@@ -49,31 +50,33 @@ import { IamStore } from '../../../../iam/application/iam.store';
   templateUrl: './telemetry-chart.html',
   styleUrl: './telemetry-chart.css',
 })
-export class TelemetryChartComponent implements OnInit {
+export class TelemetryChartComponent implements OnInit, OnDestroy {
   /**
-   * The application store managing the state for the Tracking and Telemetry domain.
+   * Store that manages Tracking bounded context state.
    */
   protected readonly store = inject(TrackingStore);
 
   /**
-   * The application store managing the state for the Equipment domain.
+   * Store that manages Equipment bounded context state.
    */
   protected readonly equipmentStore = inject(EquipmentStore);
 
   /**
-   * The identity and access management store, used to retrieve user context.
+   * Store that exposes authenticated user context.
    */
   protected readonly iamStore = inject(IamStore);
 
   /**
-   * Service for handling internationalization and translation lookups.
+   * Translation service used to resolve dynamic chart labels and tooltip text.
    */
   private readonly translate = inject(TranslateService);
 
-  // ── Analytical Filters ───────────────────────────────────────────────────
-
   /**
-   * Current filter state for querying historical telemetry data.
+   * Current filter state used to query telemetry history for chart analysis.
+   *
+   * @remarks
+   * Equipment identifiers are numeric to stay aligned with the backend API.
+   * Date values are converted to ISO strings before being sent as query params.
    */
   protected filters = {
     equipmentId: null as number | null,
@@ -82,23 +85,26 @@ export class TelemetryChartComponent implements OnInit {
   };
 
   /**
-   * Retrieves the current laboratory ID based on the authenticated user's context.
+   * Interval reference used while waiting for equipment data to be available.
+   */
+  private equipmentPollingId: ReturnType<typeof setInterval> | null = null;
+
+  /**
+   * Retrieves the current laboratory ID based on the authenticated context.
    *
    * @remarks
-   * Converts the ID to a numeric value for domain consistency. Defaults to 1.
+   * The value is converted to number to keep consistency with the backend API.
+   * Defaults to 1 when no authenticated context is available.
    */
   private get currentLabId(): number {
     const id = this.iamStore.currentUserId();
     return id ? Number(id) : 1;
   }
 
-  // ── Chart.js Configuration ───────────────────────────────────────────────
-
   /**
-   * Advanced configuration options for the analytical Chart.js line chart.
-   * Features custom tooltips and nearest-neighbor interaction modes for better UX.
+   * Configuration options for the analytical telemetry line chart.
    */
-  public chartOptions: ChartOptions<'line'> = {
+  protected readonly chartOptions: ChartOptions<'line'> = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -128,27 +134,22 @@ export class TelemetryChartComponent implements OnInit {
   };
 
   /**
-   * Reactive computed signal that transforms historical telemetry points into
-   * a sophisticated analytical chart structure.
+   * Computed chart data generated from historical telemetry points.
    *
    * @remarks
-   * Sorts history chronologically, formats dates for X-axis readability, and dynamically
-   * colors both data points and the line segments connecting them. If a segment connects
-   * to a recorded anomaly, the line turns red to immediately draw the analyst's attention.
+   * The history is sorted chronologically before rendering. Anomalous points
+   * and the line segments connected to them are highlighted to make deviations
+   * visible during analysis.
    */
-  public chartData = computed<ChartConfiguration<'line'>['data']>(() => {
+  protected readonly chartData = computed<ChartConfiguration<'line'>['data']>(() => {
     const history = this.store.telemetryHistory();
-
-    // Sort chronologically for accurate line drawing
     const sortedHistory = [...history].sort(
       (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
     );
 
-    const datasetLabel = this.translate.instant('tracking.dashboard.chart-label');
-
     return {
-      labels: sortedHistory.map((p) =>
-        new Date(p.timestamp).toLocaleString([], {
+      labels: sortedHistory.map((point) =>
+        new Date(point.timestamp).toLocaleString([], {
           month: 'short',
           day: 'numeric',
           hour: '2-digit',
@@ -157,19 +158,21 @@ export class TelemetryChartComponent implements OnInit {
       ),
       datasets: [
         {
-          data: sortedHistory.map((p) => p.recordedValue),
-          label: datasetLabel,
+          data: sortedHistory.map((point) => point.recordedValue),
+          label: this.translate.instant('tracking.dashboard.chart-label'),
           fill: true,
-          borderColor: '#1a3a5c', // Standard branding color
+          borderColor: '#1a3a5c',
           backgroundColor: 'rgba(26, 58, 92, 0.05)',
-          pointBackgroundColor: sortedHistory.map((p) => (p.isAnomaly ? '#d32f2f' : '#1a3a5c')),
+          pointBackgroundColor: sortedHistory.map((point) =>
+            point.isAnomaly ? '#d32f2f' : '#1a3a5c',
+          ),
           pointBorderColor: '#ffffff',
           segment: {
-            borderColor: (ctx) => {
-              // Paints the segment red if it connects to or from an anomalous data point
-              const p1Anomaly = sortedHistory[ctx.p0DataIndex]?.isAnomaly;
-              const p2Anomaly = sortedHistory[ctx.p1DataIndex]?.isAnomaly;
-              return p1Anomaly || p2Anomaly ? '#d32f2f' : '#1a3a5c';
+            borderColor: (context) => {
+              const previousPointIsAnomaly = sortedHistory[context.p0DataIndex]?.isAnomaly;
+              const currentPointIsAnomaly = sortedHistory[context.p1DataIndex]?.isAnomaly;
+
+              return previousPointIsAnomaly || currentPointIsAnomaly ? '#d32f2f' : '#1a3a5c';
             },
           },
         },
@@ -177,52 +180,74 @@ export class TelemetryChartComponent implements OnInit {
     };
   });
 
-  // ── Lifecycle and Actions ────────────────────────────────────────────────
-
   /**
-   * Lifecycle hook that initializes the component.
+   * Lifecycle hook that loads equipment and initializes chart data.
    *
    * @remarks
-   * Initiates the load of available equipment. Polls the store briefly to
-   * auto-select the first available equipment and render the initial chart.
+   * Once equipment data is available, the first equipment is selected
+   * automatically and its historical telemetry is loaded.
    */
   ngOnInit(): void {
     this.equipmentStore.loadEquipment(this.currentLabId);
-
-    const checkEquipment = setInterval(() => {
-      const list = this.equipmentStore.equipmentList();
-      if (list.length > 0) {
-        this.filters.equipmentId = list[0].id;
-        this.loadChartData();
-        clearInterval(checkEquipment);
-      }
-    }, 500);
+    this.waitForEquipmentAndLoadChart();
   }
 
   /**
-   * Dispatches a command to load historical telemetry data based on the current
-   * state of the analytical filters (Equipment ID and Date Ranges).
+   * Lifecycle hook that clears the equipment polling interval when the component is destroyed.
    */
-  loadChartData(): void {
+  ngOnDestroy(): void {
+    if (this.equipmentPollingId) {
+      clearInterval(this.equipmentPollingId);
+      this.equipmentPollingId = null;
+    }
+  }
+
+  /**
+   * Loads historical telemetry data using the current chart filters.
+   */
+  protected loadChartData(): void {
     if (!this.filters.equipmentId) return;
 
     const query: { equipmentId: number; from?: string; to?: string } = {
       equipmentId: this.filters.equipmentId,
     };
 
-    if (this.filters.dateFrom) query.from = this.filters.dateFrom.toISOString();
-    if (this.filters.dateTo) query.to = this.filters.dateTo.toISOString();
+    if (this.filters.dateFrom) {
+      query.from = this.filters.dateFrom.toISOString();
+    }
+
+    if (this.filters.dateTo) {
+      query.to = this.filters.dateTo.toISOString();
+    }
 
     this.store.loadTelemetryHistory(query);
   }
 
   /**
-   * Resets the date range filters to their default empty states and reloads
-   * the chart with the full available history for the selected equipment.
+   * Clears the selected date range and reloads chart data for the selected equipment.
    */
-  clearFilters(): void {
+  protected clearFilters(): void {
     this.filters.dateFrom = null;
     this.filters.dateTo = null;
     this.loadChartData();
+  }
+
+  /**
+   * Waits until equipment data is available, then selects the first equipment and loads chart data.
+   */
+  private waitForEquipmentAndLoadChart(): void {
+    this.equipmentPollingId = setInterval(() => {
+      const equipmentList = this.equipmentStore.equipmentList();
+
+      if (equipmentList.length === 0) return;
+
+      this.filters.equipmentId = equipmentList[0].id;
+      this.loadChartData();
+
+      if (this.equipmentPollingId) {
+        clearInterval(this.equipmentPollingId);
+        this.equipmentPollingId = null;
+      }
+    }, 500);
   }
 }

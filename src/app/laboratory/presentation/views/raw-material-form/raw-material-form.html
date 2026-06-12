@@ -3,16 +3,24 @@
     <mat-card-header>
       <mat-icon mat-card-avatar class="header-icon">inventory_2</mat-icon>
       <mat-card-title>{{ 'raw-material-form.title' | translate }}</mat-card-title>
-      <mat-card-subtitle>Entry of new materials into the pharmaceutical inventory</mat-card-subtitle>
+      <mat-card-subtitle>{{ 'raw-material-form.subtitle' | translate }}</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
+      @if (store.error()) {
+        <div class="error-box" role="alert">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ store.error() }}</span>
+        </div>
+      }
+
       <form [formGroup]="form" (ngSubmit)="onSubmit()" class="raw-form">
         <div class="grid-row">
           <mat-form-field appearance="outline">
             <mat-label>{{ 'raw-material-form.name' | translate }}</mat-label>
             <input matInput formControlName="name">
           </mat-form-field>
+
           <mat-form-field appearance="outline">
             <mat-label>{{ 'raw-material-form.code' | translate }}</mat-label>
             <input matInput formControlName="code">
@@ -24,6 +32,7 @@
             <mat-label>{{ 'raw-material-form.supplier' | translate }}</mat-label>
             <input matInput formControlName="supplier">
           </mat-form-field>
+
           <mat-form-field appearance="outline">
             <mat-label>{{ 'raw-material-form.batchNumber' | translate }}</mat-label>
             <input matInput formControlName="batchNumber">
@@ -42,6 +51,7 @@
             <mat-label>{{ 'raw-material-form.quantityInStock' | translate }}</mat-label>
             <input matInput type="number" formControlName="quantityInStock">
           </mat-form-field>
+
           <mat-form-field appearance="outline">
             <mat-label>{{ 'raw-material-form.unit' | translate }}</mat-label>
             <mat-select formControlName="unit">
@@ -55,12 +65,20 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ 'raw-material-form.minimumStock' | translate }}</mat-label>
           <input matInput type="number" formControlName="minimumStock">
-          <mat-hint>Threshold for low stock alerts</mat-hint>
+          <mat-hint>{{ 'raw-material-form.minimumStockHint' | translate }}</mat-hint>
         </mat-form-field>
 
         <div class="form-actions">
-          <button mat-button type="button" (click)="onCancel()">{{ 'common.cancel' | translate }}</button>
-          <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || store.isLoading()">
+          <button mat-button type="button" (click)="onCancel()">
+            {{ 'common.cancel' | translate }}
+          </button>
+
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            [disabled]="form.invalid || store.isLoading()"
+          >
             @if (store.isLoading()) {
               <mat-spinner diameter="20"></mat-spinner>
             } @else {

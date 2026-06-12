@@ -68,10 +68,98 @@
     "home": "Inicio",
     "dashboard": "Panel de Control",
     "batches": "Gestión de Lotes",
-    "equipment": "Equipos Industriales",
+    "batch-list": "Lotes de Producción",
+    "batch-form": "Crear Lote",
+    "equipment": "Equipos",
+    "equipment-list": "Catálogo de Equipos",
+    "register-equipment": "Registrar Equipo",
     "alerts": "Alertas de Cumplimiento",
-    "reports": "Reportes y Auditoría",
-    "laboratory": "Laboratorio"
+    "alert-dashboard": "Panel de Alertas",
+    "alert-history": "Historial de Alertas",
+    "notification-settings": "Configuración de Notificaciones",
+    "reports": "Reportes y KPIs",
+    "kpi-dashboard": "Panel de KPIs",
+    "deviation-trends": "Tendencias de Desviación",
+    "report-generator": "Generador de Reportes",
+    "audit-log": "Registro de Auditoría",
+    "laboratory": "Laboratorio",
+    "lab-profile": "Perfil del Laboratorio",
+    "lab-form": "Crear Laboratorio",
+    "staff-list": "Gestión de Personal",
+    "staff-form": "Registrar Personal",
+    "product-catalog": "Catálogo de Productos Farmacéuticos",
+    "product-form": "Registrar Producto",
+    "raw-material-list": "Inventario de Materias Primas",
+    "raw-material-form": "Registrar Materia Prima",
+    "tracking": "Tracking y Telemetría",
+    "tracking-dashboard": "Panel de Telemetría",
+    "tracking-history": "Historial de Telemetría",
+    "tracking-analysis": "Análisis de Telemetría"
+  },
+  "dashboard": {
+    "command-center": "Centro de Control QualiTrack",
+    "fallback-title": "Operaciones del Laboratorio",
+    "subtitle": "Resumen operativo de laboratorio, equipos, lotes, cumplimiento, reportes y telemetría.",
+    "overall-health": "Salud General",
+    "health": {
+      "healthy": "Saludable",
+      "attention": "Requiere atención",
+      "critical": "Crítico"
+    },
+    "cards": {
+      "equipment": "Equipos",
+      "batches": "Lotes",
+      "alerts": "Alertas",
+      "raw-materials": "Materias Primas",
+      "operational": "{{count}} operativos",
+      "in-progress": "{{count}} en progreso",
+      "critical": "{{count}} críticas",
+      "low-stock": "{{count}} con stock bajo"
+    },
+    "charts": {
+      "distribution-title": "Distribución Operativa",
+      "distribution-subtitle": "Registros actuales por bounded context",
+      "risk-title": "Resumen de Riesgos",
+      "risk-subtitle": "Elementos que pueden requerir atención operativa",
+      "staff": "Personal",
+      "products": "Productos",
+      "raw-materials": "Materias primas",
+      "equipment": "Equipos",
+      "batches": "Lotes",
+      "no-data": "Sin datos",
+      "low-stock": "Stock bajo",
+      "maintenance": "Mantenimiento",
+      "critical-alerts": "Alertas críticas",
+      "critical-kpis": "KPIs críticos",
+      "anomalies": "Anomalías"
+    },
+    "attention": {
+      "title": "Requiere Atención",
+      "subtitle": "Señales prioritarias de tus bounded contexts",
+      "low-stock-materials": "Materias primas con stock bajo",
+      "equipment-maintenance": "Equipos que requieren mantenimiento",
+      "critical-compliance-alerts": "Alertas críticas de cumplimiento",
+      "telemetry-anomalies": "Anomalías de telemetría",
+      "pending": "{{count}} pendientes",
+      "empty-title": "Sin problemas urgentes",
+      "empty-subtitle": "Tus señales operativas se ven estables."
+    },
+    "telemetry": {
+      "title": "Telemetría en Vivo",
+      "subtitle": "Última señal de monitoreo del equipo",
+      "connection-status": "Estado de Conexión",
+      "measurements": "Mediciones",
+      "anomalies": "Anomalías",
+      "at-risk-kpis": "KPIs en riesgo"
+    },
+    "quick-actions": {
+      "laboratory": "Laboratorio",
+      "equipment": "Equipos",
+      "batches": "Lotes",
+      "alerts": "Alertas",
+      "reports": "Reportes",
+      "tracking": "Tracking"
+    }
   },
   "ca-alerts": {
     "subtitle": "Monitoreo en tiempo real de desviaciones BPM",
@@ -82,22 +170,22 @@
       "critical": "Desviaciones Críticas"
     },
     "fields": {
-      "timestamp": "Fecha / Hora",
-      "parameter": "Parámetro Desviado",
       "severity": "Severidad",
+      "recorded": "Valor registrado",
+      "threshold": "Valor límite",
       "equipment": "Equipo",
-      "recorded": "Valor Registrado",
-      "threshold": "Límite Tolerado",
       "batch": "Lote",
-      "minimum-severity": "Severidad Mínima"
+      "resolution-notes": "Notas de resolución"
     },
     "severity": {
+      "low": "Baja",
       "info": "Informativo",
       "warning": "Advertencia",
       "critical": "Crítico"
     },
     "status": {
       "unresolved": "No Resuelto",
+      "acknowledged": "Reconocida",
       "resolved": "Resuelto",
       "ignored": "Ignorado"
     },
@@ -236,6 +324,16 @@
     "regulations": "Regulaciones Aplicables",
     "edit": "Editar Perfil"
   },
+  "lab-form": {
+    "title": "Crear Laboratorio",
+    "subtitle": "Registra un nuevo perfil de laboratorio en QualiTrack.",
+    "name": "Nombre del Laboratorio",
+    "ruc": "RUC",
+    "address": "Dirección Física",
+    "phone": "Teléfono de Contacto",
+    "regulations": "Regulaciones Aplicables",
+    "submit": "Crear Laboratorio"
+  },
   "staff-list": {
     "title": "Gestión de Personal",
     "register": "Añadir Personal",
@@ -373,7 +471,13 @@
       "OPERATIONAL": "Operativo",
       "WARNING": "Advertencia",
       "CRITICAL": "Crítico",
-      "OFFLINE": "Desconectado"
+      "OFFLINE": "Desconectado",
+      "operational": "Operativo",
+      "warning": "Advertencia",
+      "critical": "Crítico",
+      "offline": "Desconectado",
+      "unknown-equipment": "Equipo desconocido",
+      "waiting-telemetry": "Esperando telemetría..."
     },
     "dashboard": {
       "title": "Panel de Telemetría",

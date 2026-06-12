@@ -4,15 +4,21 @@
   margin: 0 auto;
 }
 
+.container-with-spacing h2 {
+  margin: 0 0 16px;
+  color: #1a3a5c;
+  font-weight: 700;
+}
+
 .loading-container {
   display: flex;
   justify-content: center;
-  padding: 2rem 0;
+  padding: 32px 0;
 }
 
 .lab-card {
   margin-top: 16px;
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
@@ -33,20 +39,21 @@
 
 .lab-details p {
   margin-bottom: 12px;
+  overflow-wrap: anywhere;
 }
 
 .regulations-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 4px;
+  margin-top: 8px;
 }
 
 .tag {
   background-color: #e8eaed;
   color: #1a3a5c;
   padding: 4px 12px;
-  border-radius: 16px;
+  border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 600;
 }
@@ -65,6 +72,7 @@
   gap: 12px;
   margin-top: 16px;
   justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .alert {
@@ -95,4 +103,18 @@
   font-size: 0.95rem;
   margin: 0;
   font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .container-with-spacing {
+    padding: 16px;
+  }
+
+  .form-actions {
+    justify-content: stretch;
+  }
+
+  .form-actions button {
+    flex: 1;
+  }
 }

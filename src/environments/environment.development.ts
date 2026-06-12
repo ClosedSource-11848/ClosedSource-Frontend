@@ -29,7 +29,7 @@ export const environment = {
   trackingDeviceBindingsEndpointPath: '/device-bindings',
 
   // CA (Compliance & Alerting)
-  caComplianceEndpointPath: '/compliance',
+  caComplianceEndpointPath: '/compliance-events',
   caAlertsEndpointPath: '/alerts',
   caNotificationPrefsEndpointPath: '/notification-preferences',
 
