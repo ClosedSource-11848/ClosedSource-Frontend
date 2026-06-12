@@ -2,25 +2,25 @@
  * Represents the incoming payload required to register a new production batch.
  *
  * @remarks
- * In a Domain-Driven Design (DDD) architecture, this interface acts as a strict data contract
- * for the external presentation or infrastructure layer (e.g., an HTTP API request body).
- * It captures the raw input data from the client before it is validated and mapped
- * into a robust application Command (like `CreateBatchCommand`).
+ * In a Domain-Driven Design (DDD) architecture, this interface acts as an
+ * infrastructure-level request contract for the HTTP API. It captures the data
+ * sent to the backend when creating a production batch.
+ *
+ * This request mirrors the creation command used by the application layer, while
+ * remaining a plain DTO suitable for API communication.
  *
  * @example
  * ```typescript
  * const requestPayload: CreateBatchRequest = {
- * labId: 101,
- * productId: 890,
- * batchNumber: 'LOTE-2026A',
- * quantity: 5000,
- * startDate: '2026-05-12T08:00:00Z',
- * notes: 'Standard production run'
+ *   labId: 101,
+ *   productId: 890,
+ *   batchNumber: 'LOT-2026-001',
+ *   quantity: 5000,
+ *   unit: 'units',
+ *   startDate: '2026-05-12T08:00:00Z',
+ *   notes: 'Standard production run'
  * };
- *
  * ```
- *
- * @author Qualitrack
  */
 export interface CreateBatchRequest {
   /**
@@ -34,7 +34,7 @@ export interface CreateBatchRequest {
   productId: number;
 
   /**
-   * The specific alphanumeric traceability code to be assigned to this batch run.
+   * The specific alphanumeric traceability code assigned to this batch run.
    */
   batchNumber: string;
 
@@ -42,6 +42,11 @@ export interface CreateBatchRequest {
    * The intended total volume or amount to be produced in this batch.
    */
   quantity: number;
+
+  /**
+   * The unit of measurement for the batch quantity.
+   */
+  unit: string;
 
   /**
    * The ISO date string representing when the batch processing is scheduled to begin.
@@ -58,21 +63,17 @@ export interface CreateBatchRequest {
  * Represents the incoming payload required to officially release a production batch.
  *
  * @remarks
- * This interface defines the external data contract for client requests aiming to approve
- * a batch after quality control. Typically used in the presentation layer (e.g., an API route),
- * it captures the release details before being transformed into an application-level Command.
- * The target batch identifier is usually provided via route parameters rather than this payload.
+ * This interface defines the external data contract for client requests aiming
+ * to approve a batch after quality control. The target batch identifier is
+ * usually provided through the route parameter.
  *
  * @example
  * ```typescript
  * const releasePayload: ReleaseBatchRequest = {
- * releaseDate: '2026-05-12T11:30:00Z',
- * notes: 'All final quality control tests passed successfully.'
+ *   releaseDate: '2026-05-12T11:30:00Z',
+ *   notes: 'All final quality control tests passed successfully.'
  * };
- *
  * ```
- *
- * @author Qualitrack
  */
 export interface ReleaseBatchRequest {
   /**
@@ -90,21 +91,17 @@ export interface ReleaseBatchRequest {
  * Represents the incoming payload required to reject a production batch.
  *
  * @remarks
- * This interface defines the external data contract for client requests aiming to reject
- * a batch due to quality control failures or Good Manufacturing Practices (BPM) non-compliance.
- * Used at the presentation boundary, it captures the mandatory justification data before
- * mapping to an application Command.
+ * This interface defines the external data contract for client requests aiming
+ * to reject a batch due to quality control failures or Good Manufacturing
+ * Practices (BPM) non-compliance.
  *
  * @example
  * ```typescript
  * const rejectPayload: RejectBatchRequest = {
- * rejectionDate: '2026-05-12T10:00:00Z',
- * reason: 'Failed viscosity and pH tests during final validation phase.'
+ *   rejectionDate: '2026-05-12T10:00:00Z',
+ *   reason: 'Failed viscosity and pH tests during final validation phase.'
  * };
- *
  * ```
- *
- * @author Qualitrack
  */
 export interface RejectBatchRequest {
   /**

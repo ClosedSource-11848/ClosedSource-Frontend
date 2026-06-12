@@ -1,26 +1,31 @@
 /**
- * Represents the intention to allocate or associate a raw material with a manufacturing process.
+ * Represents the intention to link a raw material consumption record to a production batch.
  *
  * @remarks
- * In a Domain-Driven Design (DDD) architecture, this Command belongs to the application layer.
- * It encapsulates the specific intent to link raw materials (e.g., to a production Batch),
- * acting as a boundary contract for the use case.
+ * In a Domain-Driven Design (DDD) architecture, this command belongs to the
+ * application layer. It captures the required information to register the
+ * consumption of a raw material during a batch manufacturing process.
  *
- * Note: This structure is currently defined as an empty contract (marker interface) and
- * may be expanded with specific identity and quantity properties (such as `batchId`,
- * `materialId`, and `amount`) as the domain requirements evolve.
+ * The target batch identifier is provided by the route or caller context, while
+ * this command carries the material and quantity data that will be sent to the
+ * backend.
  *
  * @example
  * ```typescript
- * const command: LinkRawMaterialCommand = {};
- *
- * await linkRawMaterialUseCase.execute(command);
- *
- ```
- *
- * @author Qualitrack
+ * const command: LinkRawMaterialCommand = {
+ *   rawMaterialId: 45,
+ *   quantityUsed: 150.5
+ * };
+ * ```
  */
 export interface LinkRawMaterialCommand {
+  /**
+   * The numeric identifier of the raw material consumed by the batch.
+   */
   rawMaterialId: number;
+
+  /**
+   * The amount of raw material consumed during the batch process.
+   */
   quantityUsed: number;
 }

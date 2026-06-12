@@ -10,13 +10,23 @@
       <button mat-icon-button routerLink="../batch-list" color="primary">
         <mat-icon>arrow_back</mat-icon>
       </button>
-      <h1>{{ 'equipment-detail.title' | translate }}: {{ currentBatch?.batchNumber }}</h1>
+
+      <h1>
+        {{ 'batch-detail.title' | translate }}:
+        {{ currentBatch?.batchNumber || ('common.status-loading' | translate) }}
+      </h1>
     </div>
   </header>
 
+  @if (store.error()) {
+    <div class="error-container">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ store.error() }}</p>
+    </div>
+  }
+
   <mat-tab-group dynamicHeight>
-    <!-- Pestaña 1: Información General -->
-    <mat-tab [label]="'equipment-detail.tabs.general' | translate">
+    <mat-tab [label]="'batch-detail.tabs.general' | translate">
       <div class="tab-content">
         <mat-card class="info-card mat-elevation-z2">
           <mat-card-header>
@@ -28,16 +38,18 @@
             <div class="info-grid">
               <div class="info-item">
                 <span class="label">{{ 'common.status' | translate }}</span>
-                <span class="value status-text" [ngClass]="currentBatch?.status?.toLowerCase() || ''">
-                  {{ 'batches.status.' + (currentBatch?.status?.toLowerCase() || 'unknown') | translate }}
+                <span class="value status-text" [ngClass]="getStatusClass(currentBatch?.status)">
+                  {{ 'batches.status.' + getStatusKey(currentBatch?.status) | translate }}
                 </span>
               </div>
+
               <div class="info-item">
                 <span class="label">{{ 'batches.fields.quantity' | translate }}</span>
                 <span class="value">{{ currentBatch?.quantity }} {{ currentBatch?.unit }}</span>
               </div>
+
               <div class="info-item">
-                <span class="label">{{ 'maintenance-history.fields.date' | translate }}</span>
+                <span class="label">{{ 'batches.fields.date' | translate }}</span>
                 <span class="value">{{ currentBatch?.startDate | date:'mediumDate' }}</span>
               </div>
             </div>
@@ -45,18 +57,16 @@
             <mat-divider></mat-divider>
 
             <div class="notes-section">
-              <h3>{{ 'maintenance-history.fields.description' | translate }}</h3>
-              <p>{{ currentBatch?.notes || ('batches.empty' | translate) }}</p>
+              <h3>{{ 'batch-detail.notes' | translate }}</h3>
+              <p>{{ currentBatch?.notes || ('batch-detail.no-notes' | translate) }}</p>
             </div>
           </mat-card-content>
         </mat-card>
       </div>
     </mat-tab>
 
-    <!-- Pestaña 2: Materias Primas Utilizadas -->
-    <mat-tab [label]="'raw-material-list.title' | translate">
+    <mat-tab [label]="'batch-detail.tabs.materials' | translate">
       <div class="tab-content">
-        <!-- Componente incrustado para gestionar insumos del lote -->
         <app-raw-material-usage [batchId]="batchId"></app-raw-material-usage>
       </div>
     </mat-tab>

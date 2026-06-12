@@ -26,6 +26,24 @@
   color: #7f8c8d;
 }
 
+/* Feedback */
+.error-container {
+  background-color: #fdf2f2;
+  border: 1px solid #f8b4b4;
+  color: #9b1c1c;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.error-container p {
+  margin: 0;
+}
+
+/* Form */
 .form-card {
   background: white;
   padding: 32px;
@@ -52,14 +70,25 @@
   border-top: 1px solid #f0f2f5;
 }
 
-/* Responsive */
+mat-form-field {
+  margin-bottom: 8px;
+}
+
 @media (max-width: 600px) {
+  .batch-form-container {
+    padding: 16px;
+  }
+
+  .form-card {
+    padding: 24px;
+  }
+
   .form-row {
     grid-template-columns: 1fr;
   }
-}
 
-/* Validation styles similar to equipment module */
-mat-form-field {
-  margin-bottom: 8px;
+  .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
 }

@@ -13,41 +13,43 @@ import { CreateBatchRequest, ReleaseBatchRequest, RejectBatchRequest } from './b
 import { LinkRawMaterialRequest } from './raw-material-usage.request';
 
 /**
- * HTTP API client service for Batch and Raw Material Usage operations.
+ * HTTP API facade for Batch and Raw Material Usage operations.
  *
  * @remarks
- * In a Domain-Driven Design (DDD) architecture, this service acts as an infrastructure
- * facade. It encapsulates all HTTP communication for the Batch aggregate within the
- * manufacturing domain. By extending {@link BaseApi}, it delegates specific operations to
- * {@link BatchApiEndpoint} and {@link RawMaterialUsageApiEndpoint}, providing a
- * unified interface for the application layer to interact with external backend systems.
+ * In a Domain-Driven Design (DDD) architecture, this service belongs to the
+ * infrastructure layer and acts as a facade over HTTP endpoint clients.
  *
- * The service handles:
- * - Batch lifecycle management (Retrieval, Creation, Release, Rejection)
- * - Raw material traceability within batches (Usage retrieval, Linking materials)
+ * It exposes a clean API to the application layer while delegating concrete
+ * HTTP communication and resource-to-entity transformation to specialized
+ * endpoint classes.
  *
- * @author Qualitrack
+ * This facade coordinates:
+ * - Batch lifecycle operations
+ * - Raw material usage traceability operations
+ *
+ * @example
+ * ```typescript
+ * this.batchApi.getBatches(1).subscribe((batches) => {
+ *   console.log(batches);
+ * });
+ * ```
  */
 @Injectable({ providedIn: 'root' })
 export class BatchApi extends BaseApi {
   /**
-   * Dedicated endpoint handler for Batch lifecycle operations.
+   * Endpoint client responsible for batch lifecycle operations.
    */
   private readonly _batchEndpoint: BatchApiEndpoint;
 
   /**
-   * Dedicated endpoint handler for Raw Material Usage traceability.
+   * Endpoint client responsible for raw material usage operations.
    */
   private readonly _usageEndpoint: RawMaterialUsageApiEndpoint;
 
   /**
-   * Creates an instance of BatchApi.
+   * Creates a new BatchApi facade.
    *
-   * @param http - Angular HttpClient for making HTTP requests
-   *
-   * @remarks
-   * Initializes the API service by instantiating the specific endpoint handlers
-   * required to manage the Batch aggregate and its raw material dependencies.
+   * @param http - Angular HttpClient used by endpoint clients to perform HTTP requests
    */
   constructor(http: HttpClient) {
     super();
@@ -55,95 +57,74 @@ export class BatchApi extends BaseApi {
     this._usageEndpoint = new RawMaterialUsageApiEndpoint(http);
   }
 
-  // ── Batch Management ───────────────────────────────────────────────────
-
+  /**
+   * Retrieves a single production batch by its numeric identifier.
+   *
+   * @param batchId - The unique numeric identifier of the batch
+   * @returns Observable stream emitting the matching Batch domain entity
+   */
   getBatchById(batchId: number): Observable<Batch> {
     return this._batchEndpoint.getBatchById(batchId);
   }
 
   /**
-   * Retrieves all manufacturing batches associated with a specific laboratory.
+   * Retrieves all production batches associated with a laboratory.
    *
    * @param labId - The unique numeric identifier of the laboratory
-   * @returns An Observable emitting an array of Batch domain entities
-   *
-   * @remarks
-   * Delegates the HTTP GET request to the batch endpoint to fetch the collection
-   * and ensures the response is mapped into proper domain entities.
+   * @returns Observable stream emitting an array of Batch domain entities
    */
   getBatches(labId: number): Observable<Batch[]> {
     return this._batchEndpoint.getBatchesByLab(labId);
   }
 
   /**
-   * Initiates the creation of a new production batch.
+   * Registers a new production batch.
    *
-   * @param request - The payload containing the initial manufacturing parameters
-   * @returns An Observable emitting the newly created Batch domain entity
-   *
-   * @remarks
-   * Sends an HTTP POST request to register a new batch in the system based on the
-   * provided request contract.
+   * @param request - Request payload containing the batch creation data
+   * @returns Observable stream emitting the created Batch domain entity
    */
   createBatch(request: CreateBatchRequest): Observable<Batch> {
     return this._batchEndpoint.createBatch(request);
   }
 
   /**
-   * Officially approves and releases a production batch.
+   * Releases a production batch after successful quality control.
    *
-   * @param batchId - The unique numeric identifier of the batch to be released
-   * @param request - The payload containing final quality control remarks and release date
-   * @returns An Observable emitting the updated Batch domain entity
-   *
-   * @remarks
-   * Submits the required compliance data to transition the batch state to 'RELEASED'.
+   * @param batchId - The unique numeric identifier of the batch to release
+   * @param request - Request payload containing release date and quality notes
+   * @returns Observable stream emitting the updated Batch domain entity
    */
   releaseBatch(batchId: number, request: ReleaseBatchRequest): Observable<Batch> {
     return this._batchEndpoint.releaseBatch(batchId, request);
   }
 
   /**
-   * Rejects a production batch due to quality control failures.
+   * Rejects a production batch due to quality control or compliance failure.
    *
-   * @param batchId - The unique numeric identifier of the batch to be rejected
-   * @param request - The payload containing the rejection justification and date
-   * @returns An Observable emitting the updated Batch domain entity
-   *
-   * @remarks
-   * Submits the non-compliance data to transition the batch state to 'REJECTED'
-   * in accordance with Good Manufacturing Practices (BPM/GMP).
+   * @param batchId - The unique numeric identifier of the batch to reject
+   * @param request - Request payload containing rejection date and reason
+   * @returns Observable stream emitting the updated Batch domain entity
    */
   rejectBatch(batchId: number, request: RejectBatchRequest): Observable<Batch> {
     return this._batchEndpoint.rejectBatch(batchId, request);
   }
 
-  // ── Raw Material Usage ──────────────────────────────────────────────────
-
   /**
-   * Retrieves all raw material consumption records for a specific batch.
+   * Retrieves the raw material usage records associated with a batch.
    *
    * @param batchId - The unique numeric identifier of the batch
-   * @returns An Observable emitting an array of RawMaterialUsage domain entities
-   *
-   * @remarks
-   * Fetches the full traceability log of materials consumed during the specified
-   * production batch run.
+   * @returns Observable stream emitting an array of RawMaterialUsage domain entities
    */
   getRawMaterialUsage(batchId: number): Observable<RawMaterialUsage[]> {
     return this._usageEndpoint.getUsageByBatch(batchId);
   }
 
   /**
-   * Allocates and links a raw material to an ongoing production batch.
+   * Links a raw material consumption record to a production batch.
    *
-   * @param batchId - The unique numeric identifier of the batch consuming the material
-   * @param request - The payload containing material identifiers and consumption quantities
-   * @returns An Observable emitting the newly registered RawMaterialUsage domain entity
-   *
-   * @remarks
-   * Sends an HTTP POST request to record the physical usage of a raw material,
-   * establishing a vital genealogical link for quality control tracking.
+   * @param batchId - The unique numeric identifier of the batch
+   * @param request - Request payload containing raw material and quantity data
+   * @returns Observable stream emitting the created RawMaterialUsage domain entity
    */
   linkRawMaterial(batchId: number, request: LinkRawMaterialRequest): Observable<RawMaterialUsage> {
     return this._usageEndpoint.linkRawMaterial(batchId, request);

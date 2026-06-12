@@ -13,7 +13,15 @@ import { BatchStore } from '../../../application/batch.store';
 import { IamStore } from '../../../../iam/application/iam.store';
 
 /**
- * Displays the collection of manufacturing batches in a table.
+ * Component responsible for displaying the production batch collection.
+ *
+ * @remarks
+ * This standalone presentation component renders manufacturing batches in a
+ * tabular view. It obtains the current laboratory context from {@link IamStore}
+ * and delegates batch loading operations to {@link BatchStore}.
+ *
+ * The component also exposes formatting helpers for status translation keys and
+ * CSS classes, keeping the template free from repeated string manipulation.
  */
 @Component({
   selector: 'app-batch-list',
@@ -33,13 +41,20 @@ import { IamStore } from '../../../../iam/application/iam.store';
   styleUrl: './batch-list.css',
 })
 export class BatchList implements OnInit {
+  /**
+   * Store responsible for batch state and operations.
+   */
   protected readonly store = inject(BatchStore);
+
+  /**
+   * Store responsible for retrieving the active user or laboratory context.
+   */
   protected readonly iamStore = inject(IamStore);
 
   /**
-   * Columns to be rendered in the batches table.
+   * Columns rendered in the batches table.
    */
-  displayedColumns: string[] = [
+  protected readonly displayedColumns: string[] = [
     'batchNumber',
     'productName',
     'quantity',
@@ -49,31 +64,57 @@ export class BatchList implements OnInit {
   ];
 
   /**
-   * Gets the active numeric laboratory ID from the security context.
+   * Gets the active numeric laboratory identifier.
+   *
+   * @remarks
+   * The current implementation uses the authenticated user identifier as the
+   * laboratory context and falls back to 1 when no session context is available.
    */
   private get currentLabId(): number {
     return this.iamStore.currentUserId() || 1;
   }
 
   /**
-   * Lifecycle hook to initialize the batch collection.
+   * Lifecycle hook that initializes the batch collection.
    */
   ngOnInit(): void {
     this.store.loadBatches(this.currentLabId);
   }
 
   /**
-   * Reloads the batch list from the server.
+   * Reloads the batch list from the backend API.
    */
-  onRefresh(): void {
+  protected onRefresh(): void {
     this.store.loadBatches(this.currentLabId);
   }
 
   /**
-   * Maps the batch status to a CSS class for styling.
-   * @param status - The current status of the batch.
+   * Maps a batch status value to the CSS class used by the status chip.
+   *
+   * @param status - Current lifecycle status of the batch
+   * @returns CSS-friendly status value
    */
-  getStatusClass(status: string): string {
-    return status ? status.toLowerCase().replace('_', '-') : 'pending';
+  protected getStatusClass(status: string): string {
+    return this.normalizeStatus(status);
+  }
+
+  /**
+   * Maps a batch status value to the translation key suffix.
+   *
+   * @param status - Current lifecycle status of the batch
+   * @returns Translation-key-friendly status value
+   */
+  protected getStatusKey(status: string): string {
+    return this.normalizeStatus(status);
+  }
+
+  /**
+   * Normalizes backend enum values for CSS classes and i18n keys.
+   *
+   * @param status - Raw backend status value
+   * @returns Lowercase status with underscores replaced by hyphens
+   */
+  private normalizeStatus(status: string): string {
+    return status ? status.toLowerCase().replace(/_/g, '-') : 'pending';
   }
 }
