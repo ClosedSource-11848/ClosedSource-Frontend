@@ -27,6 +27,9 @@ const raRoutes = () => import('./ra/presentation/ra-routes').then((m) => m.raRou
 const trackingRoutes = () =>
   import('./tracking/presentation/tracking-routes').then((m) => m.trackingRoutes);
 
+const subscriptionRoutes = () =>
+  import('./subscription/presentation/subscription-routes').then((m) => m.subscriptionRoutes);
+
 const baseTitle = 'QualiTrack';
 
 export const routes: Routes = [
@@ -44,6 +47,7 @@ export const routes: Routes = [
   { path: 'alerts', loadChildren: caRoutes },
   { path: 'reports', loadChildren: raRoutes },
   { path: 'tracking', loadChildren: trackingRoutes },
+  { path: 'subscriptions', loadChildren: subscriptionRoutes },
 
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', loadComponent: pageNotFound, title: `Page Not Found - ${baseTitle}` },

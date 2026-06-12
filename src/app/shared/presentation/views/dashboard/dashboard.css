@@ -89,7 +89,7 @@
 
 .summary-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 16px;
 }
 
@@ -143,6 +143,7 @@
 .card-teal .summary-icon { background: #0f766e; }
 .card-rose .summary-icon { background: #e11d48; }
 .card-amber .summary-icon { background: #d97706; }
+.card-green .summary-icon { background: #16a34a; }
 
 .dashboard-grid {
   display: grid;
@@ -152,10 +153,26 @@
 
 .chart-card,
 .attention-card,
-.status-card {
+.status-card,
+.subscription-card {
   border-radius: 12px;
   border: 1px solid #e5e7eb;
   box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+}
+
+.subscription-card {
+  grid-column: 1 / -1;
+}
+
+.subscription-card mat-card-content {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(220px, 0.8fr) auto;
+  gap: 24px;
+  align-items: center;
+}
+
+.subscription-card mat-divider {
+  display: none;
 }
 
 .chart-wrapper {
@@ -221,22 +238,29 @@
   height: 42px;
 }
 
-.telemetry-status {
+.telemetry-status,
+.subscription-status {
   display: flex;
   align-items: center;
   gap: 14px;
   padding: 16px;
   border-radius: 12px;
+  margin-bottom: 0;
+}
+
+.telemetry-status {
   margin-bottom: 18px;
 }
 
-.telemetry-status mat-icon {
+.telemetry-status mat-icon,
+.subscription-status mat-icon {
   font-size: 32px;
   width: 32px;
   height: 32px;
 }
 
-.telemetry-status span {
+.telemetry-status span,
+.subscription-status span {
   display: block;
   color: #64748b;
   font-size: 12px;
@@ -244,7 +268,8 @@
   text-transform: uppercase;
 }
 
-.telemetry-status strong {
+.telemetry-status strong,
+.subscription-status strong {
   color: #0f172a;
   font-size: 20px;
 }
@@ -253,6 +278,16 @@
 .status-warning { background: #fef3c7; color: #b45309; }
 .status-critical { background: #fee2e2; color: #b91c1c; }
 .status-offline { background: #f1f5f9; color: #475569; }
+
+.subscription-active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.subscription-inactive {
+  background: #fef3c7;
+  color: #92400e;
+}
 
 .mini-stats {
   display: grid;
@@ -279,20 +314,60 @@
   font-weight: 600;
 }
 
+.subscription-card .mini-stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding-top: 0;
+}
+
+.subscription-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 0;
+}
+
+.subscription-actions button {
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
 .quick-actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 12px;
+  width: 100%;
 }
 
 .quick-actions button {
   border-radius: 999px;
+  min-width: 120px;
+}
+
+@media (max-width: 1300px) {
+  .summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 1100px) {
   .summary-grid,
   .dashboard-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .subscription-card {
+    grid-column: 1 / -1;
+  }
+
+  .subscription-card mat-card-content {
+    grid-template-columns: 1fr;
+  }
+
+  .subscription-actions {
+    justify-content: center;
   }
 
   .hero-panel {
@@ -310,11 +385,26 @@
     grid-template-columns: 1fr;
   }
 
+  .subscription-card {
+    grid-column: auto;
+  }
+
   .hero-panel {
     padding: 22px;
   }
 
   .hero-copy h1 {
     font-size: 26px;
+  }
+
+  .subscription-actions,
+  .quick-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .quick-actions button,
+  .subscription-actions button {
+    width: 100%;
   }
 }
