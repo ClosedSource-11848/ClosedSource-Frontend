@@ -34,6 +34,7 @@
   "common": {
     "save": "Save Changes",
     "cancel": "Cancel",
+    "back": "Back",
     "register": "Register",
     "search": "Search...",
     "status": "Status",
@@ -251,6 +252,9 @@
       "model": "Model",
       "serial": "Serial Number",
       "status": "Status"
+    },
+    "actions": {
+      "view-detail": "View equipment detail"
     }
   },
   "equipment-form": {
@@ -260,6 +264,10 @@
       "name": "e.g. Standard Autoclave",
       "model": "e.g. RX-200",
       "serial": "e.g. SN-987654321"
+    },
+    "errors": {
+      "name-minlength": "The equipment name must have at least 3 characters",
+      "serial-pattern": "Only letters, numbers, and hyphens are allowed"
     }
   },
   "equipment-detail": {
@@ -268,16 +276,25 @@
       "general": "General Info",
       "bpm": "BPM Config",
       "maintenance": "Maintenance"
+    },
+    "fields": {
+      "sensor": "External Sensor ID",
+      "created-at": "Created At"
     }
   },
   "bpm-config": {
     "title": "BPM Parameter Config",
     "subtitle": "Set tolerance ranges for quality monitoring",
+    "empty": "No BPM parameters configured for this equipment.",
     "fields": {
       "parameter": "Parameter Name",
       "min": "Min Value",
       "max": "Max Value",
       "unit": "Unit"
+    },
+    "placeholders": {
+      "parameter": "E.g. Internal Temperature",
+      "unit": "E.g. °C, %, bar, RPM"
     }
   },
   "maintenance-history": {
@@ -300,7 +317,15 @@
   },
   "maintenance-form": {
     "title": "Technical Activity Record",
-    "subtitle": "Complete the details of the intervention performed"
+    "subtitle": "Complete the details of the intervention performed",
+    "placeholders": {
+      "technician": "Technician name",
+      "description": "Describe the maintenance activity"
+    },
+    "errors": {
+      "technician-minlength": "The technician name must have at least 3 characters",
+      "description-maxlength": "The description cannot exceed 500 characters"
+    }
   },
   "equipment-alert": {
     "title": "Calibration Alerts",
