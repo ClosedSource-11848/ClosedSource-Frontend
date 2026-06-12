@@ -1,15 +1,17 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { TranslatePipe } from '@ngx-translate/core';
+
 import { EquipmentStore } from '../../../application/equipment.store';
 import { ConfigureBpmCommand } from '../../../domain/model/configure-bpm.command';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 /**
  * Component responsible for displaying and handling the BPM configuration form.
@@ -39,6 +41,7 @@ import { ConfigureBpmCommand } from '../../../domain/model/configure-bpm.command
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     MatCardModule,
     RouterModule,
     TranslatePipe,
@@ -49,29 +52,21 @@ import { ConfigureBpmCommand } from '../../../domain/model/configure-bpm.command
 export class BpmConfigForm implements OnInit {
   /**
    * FormBuilder instance used to create and manage the reactive form.
-   *
-   * @remarks
-   * It is injected using Angular's inject function and is used to define
-   * the form structure and validation rules.
    */
   private readonly fb = inject(FormBuilder);
 
   /**
    * ActivatedRoute instance used to access route parameters.
-   *
-   * @remarks
-   * This component uses the route to obtain the equipment identifier from
-   * the current URL.
    */
   private readonly route = inject(ActivatedRoute);
 
   /**
+   * Router used to navigate after configuring BPM parameters.
+   */
+  private readonly router = inject(Router);
+
+  /**
    * Store responsible for equipment-related state and operations.
-   *
-   * @remarks
-   * The store is used to send the BPM configuration command to the application
-   * layer. It also exposes loading, success, and error states that can be used
-   * by the template.
    */
   protected readonly store = inject(EquipmentStore);
 
@@ -108,7 +103,10 @@ export class BpmConfigForm implements OnInit {
    */
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
-    if (idParam) this.equipmentId.set(Number(idParam));
+
+    if (idParam) {
+      this.equipmentId.set(Number(idParam));
+    }
   }
 
   /**
@@ -118,18 +116,28 @@ export class BpmConfigForm implements OnInit {
    * This method validates the form and verifies that an equipment identifier
    * exists before creating the ConfigureBpmCommand.
    *
-   * If the form is valid, the command is sent to the EquipmentStore, which
-   * handles the configuration process through the application and infrastructure
-   * layers.
+   * Numeric values are explicitly converted to number because form controls can
+   * return strings depending on browser/input behavior.
+   *
+   * After dispatching the command, the user is redirected to the equipment
+   * detail view.
    */
   protected onSave(): void {
-    if (this.form.invalid || !this.equipmentId()) return;
+    const equipmentId = this.equipmentId();
+
+    if (this.form.invalid || !equipmentId) return;
+
+    const formValue = this.form.getRawValue();
 
     const command: ConfigureBpmCommand = {
-      equipmentId: this.equipmentId()!,
-      ...this.form.value,
+      equipmentId,
+      parameterName: formValue.parameterName,
+      minValue: Number(formValue.minValue),
+      maxValue: Number(formValue.maxValue),
+      unit: formValue.unit,
     };
 
     this.store.configureBpm(command);
+    this.router.navigate(['/equipments/equipment-detail', equipmentId]).then();
   }
 }

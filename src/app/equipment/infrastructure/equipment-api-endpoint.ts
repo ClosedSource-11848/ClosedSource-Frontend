@@ -38,8 +38,12 @@ const equipmentEndpointUrl = `${environment.serverBasePath}${environment.equipme
  * console.log(equipmentList);
  * });
  *
+ * endpoint.getEquipmentById(1).subscribe((equipment) => {
+ * console.log(equipment);
+ * });
+ *
  * endpoint.registerEquipment({
- * labId: 101,
+ * laboratoryId: 101,
  * name: 'Centrifuge',
  * type: 'Laboratory Equipment',
  * model: 'CF-3000',
@@ -87,6 +91,29 @@ export class EquipmentApiEndpoint extends BaseApiEndpoint<
         resources.map((resource) => this.assembler.toEntityFromResource(resource)),
       ),
       catchError(this.handleError(`Failed to fetch equipment for lab ${labId}`)),
+    );
+  }
+
+  /**
+   * Retrieves a specific equipment by its numeric identifier.
+   *
+   * @param equipmentId - The numeric identifier of the equipment.
+   * @returns An Observable containing the Equipment domain entity.
+   *
+   * @remarks
+   * This method sends a GET request to retrieve a single equipment resource
+   * by its identifier.
+   *
+   * It is especially useful for direct navigation to the equipment detail view,
+   * where the equipment list may not have been loaded previously.
+   *
+   * The API response is transformed into a domain entity using the assembler.
+   * If the request fails, the inherited handleError method manages the error.
+   */
+  getEquipmentById(equipmentId: number): Observable<Equipment> {
+    return this.http.get<EquipmentResource>(`${this.endpointUrl}/${equipmentId}`).pipe(
+      map((resource) => this.assembler.toEntityFromResource(resource)),
+      catchError(this.handleError(`Failed to fetch equipment ${equipmentId}`)),
     );
   }
 

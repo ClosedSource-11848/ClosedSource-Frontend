@@ -27,54 +27,21 @@ import { MessageResource } from '../../shared/infrastructure/message-response';
  * Instead of exposing each API endpoint directly to the rest of the application,
  * this class coordinates the different endpoint classes and provides a simpler
  * interface for consuming equipment-related use cases.
- *
- * In an Angular application, this service is provided at the root level, allowing
- * it to be injected and reused across components, services, or application
- * workflows that require equipment management operations.
- *
- * @example
- * ```typescript
- * equipmentApi.getEquipment(101).subscribe((equipmentList) => {
- * console.log(equipmentList);
- * });
- *
- * equipmentApi.configureBpm({
- * equipmentId: 101,
- * parameterName: 'Temperature',
- * minValue: 20,
- * maxValue: 80,
- * unit: '°C'
- * }).subscribe((config) => {
- * console.log(config);
- * });
- * ```
  */
 @Injectable({ providedIn: 'root' })
 export class EquipmentApi extends BaseApi {
   /**
    * API endpoint responsible for equipment registration and retrieval.
-   *
-   * @remarks
-   * This endpoint handles operations related to equipment records, such as
-   * retrieving equipment by laboratory and registering new equipment.
    */
   private readonly _equipmentEndpoint: EquipmentApiEndpoint;
 
   /**
    * API endpoint responsible for BPM parameter configuration.
-   *
-   * @remarks
-   * This endpoint manages the retrieval and configuration of acceptable BPM
-   * parameter ranges associated with equipment.
    */
   private readonly _bpmEndpoint: BpmConfigApiEndpoint;
 
   /**
    * API endpoint responsible for maintenance records.
-   *
-   * @remarks
-   * This endpoint handles operations related to equipment maintenance history
-   * and maintenance registration.
    */
   private readonly _maintenanceEndpoint: MaintenanceApiEndpoint;
 
@@ -83,10 +50,6 @@ export class EquipmentApi extends BaseApi {
    *
    * @param http - Angular HttpClient used to initialize the equipment,
    * BPM configuration, and maintenance API endpoints.
-   *
-   * @remarks
-   * The constructor initializes the internal endpoint instances required to
-   * execute all equipment-related HTTP operations.
    */
   constructor(http: HttpClient) {
     super();
@@ -95,48 +58,45 @@ export class EquipmentApi extends BaseApi {
     this._maintenanceEndpoint = new MaintenanceApiEndpoint(http);
   }
 
-  // ── Equipment ───────────────────────────────────────────────────────────
-
   /**
    * Retrieves the equipment registered in a specific laboratory.
    *
-   * @param labId - The numeric identifier of the laboratory.
-   * @returns An Observable containing a list of Equipment entities.
-   *
-   * @remarks
-   * This method delegates the request to EquipmentApiEndpoint and returns
-   * the equipment associated with the provided laboratory identifier.
+   * @param labId - The numeric identifier of the laboratory
+   * @returns An Observable containing a list of Equipment entities
    */
   getEquipment(labId: number): Observable<Equipment[]> {
     return this._equipmentEndpoint.getEquipmentByLab(labId);
   }
 
   /**
-   * Registers a new equipment in the system.
+   * Retrieves a specific equipment by its numeric identifier.
    *
-   * @param request - The request data required to register the equipment.
-   * @returns An Observable containing the registered Equipment entity.
+   * @param equipmentId - The numeric identifier of the equipment
+   * @returns An Observable containing the Equipment entity
    *
    * @remarks
-   * This method delegates the equipment registration process to
-   * EquipmentApiEndpoint. The request contains the laboratory assignment,
-   * equipment name, type, model, and serial number.
+   * This method supports direct navigation to equipment detail views where the
+   * equipment list may not have been loaded previously.
+   */
+  getEquipmentById(equipmentId: number): Observable<Equipment> {
+    return this._equipmentEndpoint.getEquipmentById(equipmentId);
+  }
+
+  /**
+   * Registers a new equipment in the system.
+   *
+   * @param request - The request data required to register the equipment
+   * @returns An Observable containing the registered Equipment entity
    */
   registerEquipment(request: RegisterEquipmentRequest): Observable<Equipment> {
     return this._equipmentEndpoint.registerEquipment(request);
   }
 
-  // ── BPM Configuration ────────────────────────────────────────────────────
-
   /**
    * Retrieves the BPM parameter configuration for a specific equipment.
    *
-   * @param equipmentId - The numeric identifier of the equipment.
-   * @returns An Observable containing a list of BpmParameterConfig entities.
-   *
-   * @remarks
-   * This method obtains the configured parameter limits associated with an
-   * equipment, such as minimum value, maximum value, and measurement unit.
+   * @param equipmentId - The numeric identifier of the equipment
+   * @returns An Observable containing a list of BpmParameterConfig entities
    */
   getBpmConfig(equipmentId: number): Observable<BpmParameterConfig[]> {
     return this._bpmEndpoint.getConfigByEquipment(equipmentId);
@@ -145,30 +105,18 @@ export class EquipmentApi extends BaseApi {
   /**
    * Configures BPM parameter limits for an equipment.
    *
-   * @param request - The request data required to configure BPM parameters.
-   * @returns An Observable containing the created or updated BpmParameterConfig entity.
-   *
-   * @remarks
-   * This method delegates the BPM configuration process to BpmConfigApiEndpoint.
-   * It is used to define valid operating ranges for measurable parameters
-   * associated with an equipment.
+   * @param request - The request data required to configure BPM parameters
+   * @returns An Observable containing a message resource
    */
   configureBpm(request: ConfigureBpmRequest): Observable<MessageResource> {
     return this._bpmEndpoint.configureBpm(request);
   }
 
-  // ── Maintenance ──────────────────────────────────────────────────────────
-
   /**
    * Retrieves the maintenance history of a specific equipment.
    *
-   * @param equipmentId - The numeric identifier of the equipment.
-   * @returns An Observable containing a list of MaintenanceRecord entities.
-   *
-   * @remarks
-   * This method obtains all maintenance records associated with the given
-   * equipment, allowing the application to display historical maintenance
-   * activities, inspections, calibrations, or corrective actions.
+   * @param equipmentId - The numeric identifier of the equipment
+   * @returns An Observable containing a list of MaintenanceRecord entities
    */
   getMaintenanceHistory(equipmentId: number): Observable<MaintenanceRecord[]> {
     return this._maintenanceEndpoint.getMaintenanceHistory(equipmentId);
@@ -177,13 +125,8 @@ export class EquipmentApi extends BaseApi {
   /**
    * Registers a new maintenance activity for an equipment.
    *
-   * @param request - The request data required to register the maintenance record.
-   * @returns An Observable containing the created MaintenanceRecord entity.
-   *
-   * @remarks
-   * This method delegates the maintenance registration process to
-   * MaintenanceApiEndpoint. The request includes the equipment identifier,
-   * maintenance date, technician name, description, and maintenance type.
+   * @param request - The request data required to register the maintenance record
+   * @returns An Observable containing a message resource
    */
   registerMaintenance(request: RegisterMaintenanceRequest): Observable<MessageResource> {
     return this._maintenanceEndpoint.registerMaintenance(request);

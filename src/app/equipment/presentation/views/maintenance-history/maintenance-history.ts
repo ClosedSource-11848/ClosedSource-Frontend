@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
+
 import { EquipmentStore } from '../../../application/equipment.store';
 
 /**
@@ -60,8 +61,9 @@ export class MaintenanceHistory implements OnInit {
    * Store responsible for equipment-related state and operations.
    *
    * @remarks
-   * The store provides access to maintenance history, loading state, errors,
-   * success messages, and methods for loading maintenance records.
+   * The store provides access to maintenance history, selected equipment,
+   * loading state, errors, success messages, and methods for loading
+   * maintenance records.
    */
   protected readonly store = inject(EquipmentStore);
 
@@ -88,14 +90,20 @@ export class MaintenanceHistory implements OnInit {
    *
    * @remarks
    * During initialization, this method reads the equipment id from the route.
-   * If the id exists, it stores it in the equipmentId signal and requests
-   * the maintenance history from EquipmentStore.
+   * If the id exists, it stores it in the equipmentId signal and requests the
+   * equipment plus its maintenance history from EquipmentStore.
+   *
+   * Loading the equipment by ID allows this view to work correctly even when
+   * the user enters the route directly.
    */
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
+
     if (idParam) {
       const id = Number(idParam);
+
       this.equipmentId.set(id);
+      this.store.loadEquipmentById(id);
       this.store.loadMaintenanceHistory(id);
     }
   }
