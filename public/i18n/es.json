@@ -4,6 +4,11 @@
     "content": "Gestión avanzada de datos para entornos operativos de alto riesgo. Asegure el cumplimiento normativo total y la precisión a nivel de laboratorio."
   },
   "iam": {
+    "auth": {
+      "already-have-account": "¿Ya tienes una cuenta?",
+      "sign-in": "Iniciar Sesión",
+      "or-create-account": "O crea una cuenta"
+    },
     "sign-in": {
       "title": "Iniciar Sesión",
       "subtitle": "Bienvenido de nuevo a QualiTrack.",
@@ -12,7 +17,15 @@
       "password": "Contraseña",
       "password-placeholder": "Ingrese su contraseña",
       "button": "Ingresar",
-      "no-account": "¿No tienes una cuenta?"
+      "no-account": "¿No tienes una cuenta?",
+      "show-password": "Mostrar contraseña",
+      "hide-password": "Ocultar contraseña",
+      "errors": {
+        "username-required": "El usuario es obligatorio",
+        "username-minlength": "El usuario debe tener al menos 3 caracteres",
+        "password-required": "La contraseña es obligatoria",
+        "password-minlength": "La contraseña debe tener al menos 6 caracteres"
+      }
     },
     "sign-up": {
       "title": "Crear Cuenta",
@@ -25,9 +38,21 @@
       "confirm-password-placeholder": "Confirme su contraseña",
       "mode-label": "Modo de Registro",
       "register-as": "Registrarse como {{role}}",
+      "already-have-account": "¿Ya tienes una cuenta?",
+      "show-password": "Mostrar contraseña",
+      "hide-password": "Ocultar contraseña",
       "roles": {
         "manager": "QA Manager / Supervisor",
         "operator": "Operador de Laboratorio"
+      },
+      "errors": {
+        "username-required": "El usuario es obligatorio",
+        "username-minlength": "El usuario debe tener al menos 3 caracteres",
+        "password-required": "La contraseña es obligatoria",
+        "password-minlength": "La contraseña debe tener al menos 6 caracteres",
+        "password-strength": "La contraseña debe contener letras y números",
+        "confirm-password-required": "La confirmación de contraseña es obligatoria",
+        "password-mismatch": "Las contraseñas no coinciden"
       }
     }
   },
@@ -415,7 +440,7 @@
     "title": "Alertas de Calibración",
     "subtitle": "Equipos que requieren intervención técnica inmediata",
     "action-tooltip": "Registrar Calibración",
-    "view-all": "VER TODOS LOS EQUIPOS"
+    "view-all": "VER TODOS LOS EQUOS"
   },
   "equipment-status": {
     "operational": "Operativo",

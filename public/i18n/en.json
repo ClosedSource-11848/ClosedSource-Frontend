@@ -4,6 +4,11 @@
     "content": "Advanced data management for high-stakes operational environments. Ensure total compliance and laboratory-grade accuracy."
   },
   "iam": {
+    "auth": {
+      "already-have-account": "Already have an account?",
+      "sign-in": "Sign In",
+      "or-create-account": "Or create an account"
+    },
     "sign-in": {
       "title": "Sign In",
       "subtitle": "Welcome back to QualiTrack.",
@@ -12,7 +17,15 @@
       "password": "Password",
       "password-placeholder": "Enter your password",
       "button": "Sign In",
-      "no-account": "Don't have an account?"
+      "no-account": "Don't have an account?",
+      "show-password": "Show password",
+      "hide-password": "Hide password",
+      "errors": {
+        "username-required": "Username is required",
+        "username-minlength": "Username must be at least 3 characters",
+        "password-required": "Password is required",
+        "password-minlength": "Password must be at least 6 characters"
+      }
     },
     "sign-up": {
       "title": "Create Account",
@@ -25,9 +38,21 @@
       "confirm-password-placeholder": "Confirm your password",
       "mode-label": "Registration Mode",
       "register-as": "Register as {{role}}",
+      "already-have-account": "Already have an account?",
+      "show-password": "Show password",
+      "hide-password": "Hide password",
       "roles": {
         "manager": "QA Manager / Supervisor",
         "operator": "Lab Operator"
+      },
+      "errors": {
+        "username-required": "Username is required",
+        "username-minlength": "Username must be at least 3 characters",
+        "password-required": "Password is required",
+        "password-minlength": "Password must be at least 6 characters",
+        "password-strength": "Password must contain letters and numbers",
+        "confirm-password-required": "Confirm password is required",
+        "password-mismatch": "Passwords do not match"
       }
     }
   },
