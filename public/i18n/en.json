@@ -238,7 +238,91 @@
     "actions": {
       "release": "Release Batch",
       "reject": "Reject Batch",
-      "view": "View Traceability"
+      "view": "View Traceability",
+      "view-detail": "View Batch Detail"
+    }
+  },
+  "batch-form": {
+    "title": "Create Production Batch",
+    "subtitle": "Register a new manufacturing cycle for a pharmaceutical product.",
+    "fields": {
+      "product": "Pharmaceutical Product",
+      "batch-number": "Batch Number",
+      "start-date": "Start Date",
+      "quantity": "Quantity",
+      "unit": "Unit",
+      "notes": "BPM Notes"
+    },
+    "placeholders": {
+      "batch-number": "LOT-2026-001",
+      "notes": "Add production observations, quality notes, or BPM instructions."
+    },
+    "hints": {
+      "batch-number": "Format: LOT-YYYY-NNN"
+    },
+    "errors": {
+      "batch-number-format": "The batch number must follow the LOT-YYYY-NNN format.",
+      "quantity-min": "The quantity must be greater than 0."
+    }
+  },
+  "batch-detail": {
+    "title": "Batch Detail",
+    "tabs": {
+      "general": "General Information",
+      "materials": "Raw Materials Used"
+    },
+    "notes": "BPM Notes",
+    "no-notes": "No notes recorded for this batch."
+  },
+  "batch-release": {
+    "title": "Release Batch",
+    "subtitle": "BPM compliant release process - ID: {{batchId}}",
+    "fields": {
+      "release-date": "Release Date",
+      "notes": "Quality Release Notes"
+    },
+    "placeholders": {
+      "notes": "Enter the conclusions of the quality analysis and release justification."
+    },
+    "errors": {
+      "notes-minlength": "Enter at least 10 characters for the release report."
+    },
+    "actions": {
+      "submit": "Release Batch"
+    }
+  },
+  "batch-reject": {
+    "title": "Reject Batch",
+    "subtitle": "Non-compliant batch rejection process - ID: {{batchId}}",
+    "fields": {
+      "rejection-date": "Rejection Date",
+      "reason": "Rejection Reason"
+    },
+    "placeholders": {
+      "reason": "Describe the detected quality deviation in detail."
+    },
+    "errors": {
+      "reason-minlength": "The reason must contain at least 15 characters for audit traceability."
+    },
+    "actions": {
+      "submit": "Reject Batch"
+    }
+  },
+  "batch-usage": {
+    "title": "Register Raw Material Usage",
+    "history-title": "Raw Material Usage History",
+    "empty": "No raw material usage has been recorded for this batch.",
+    "fields": {
+      "raw-material": "Raw Material",
+      "stock": "Stock",
+      "quantity-used": "Quantity Used",
+      "usage-date": "Usage Date"
+    },
+    "actions": {
+      "add": "Add Material"
+    },
+    "errors": {
+      "quantity-min": "The quantity used must be greater than 0."
     }
   },
   "equipment-list": {

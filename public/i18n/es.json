@@ -238,7 +238,91 @@
     "actions": {
       "release": "Liberar Lote",
       "reject": "Rechazar Lote",
-      "view": "Ver Trazabilidad"
+      "view": "Ver Trazabilidad",
+      "view-detail": "Ver Detalle del Lote"
+    }
+  },
+  "batch-form": {
+    "title": "Crear Lote de Producción",
+    "subtitle": "Registra un nuevo ciclo de fabricación para un producto farmacéutico.",
+    "fields": {
+      "product": "Producto Farmacéutico",
+      "batch-number": "Número de Lote",
+      "start-date": "Fecha de Inicio",
+      "quantity": "Cantidad",
+      "unit": "Unidad",
+      "notes": "Notas BPM"
+    },
+    "placeholders": {
+      "batch-number": "LOT-2026-001",
+      "notes": "Agrega observaciones de producción, calidad o instrucciones BPM."
+    },
+    "hints": {
+      "batch-number": "Formato: LOT-YYYY-NNN"
+    },
+    "errors": {
+      "batch-number-format": "El número de lote debe seguir el formato LOT-YYYY-NNN.",
+      "quantity-min": "La cantidad debe ser mayor que 0."
+    }
+  },
+  "batch-detail": {
+    "title": "Detalle del Lote",
+    "tabs": {
+      "general": "Información General",
+      "materials": "Materias Primas Usadas"
+    },
+    "notes": "Notas BPM",
+    "no-notes": "No hay notas registradas para este lote."
+  },
+  "batch-release": {
+    "title": "Liberar Lote",
+    "subtitle": "Proceso de liberación conforme a BPM - ID: {{batchId}}",
+    "fields": {
+      "release-date": "Fecha de Liberación",
+      "notes": "Notas de Liberación de Calidad"
+    },
+    "placeholders": {
+      "notes": "Ingrese las conclusiones del análisis de calidad y la justificación de liberación."
+    },
+    "errors": {
+      "notes-minlength": "Ingrese al menos 10 caracteres para el reporte de liberación."
+    },
+    "actions": {
+      "submit": "Liberar Lote"
+    }
+  },
+  "batch-reject": {
+    "title": "Rechazar Lote",
+    "subtitle": "Proceso de rechazo por no conformidad - ID: {{batchId}}",
+    "fields": {
+      "rejection-date": "Fecha de Rechazo",
+      "reason": "Motivo de Rechazo"
+    },
+    "placeholders": {
+      "reason": "Describa detalladamente la desviación de calidad detectada."
+    },
+    "errors": {
+      "reason-minlength": "El motivo debe tener al menos 15 caracteres para trazabilidad de auditoría."
+    },
+    "actions": {
+      "submit": "Rechazar Lote"
+    }
+  },
+  "batch-usage": {
+    "title": "Registrar Uso de Materia Prima",
+    "history-title": "Historial de Uso de Materias Primas",
+    "empty": "No se ha registrado uso de materias primas para este lote.",
+    "fields": {
+      "raw-material": "Materia Prima",
+      "stock": "Stock",
+      "quantity-used": "Cantidad Usada",
+      "usage-date": "Fecha de Uso"
+    },
+    "actions": {
+      "add": "Agregar Material"
+    },
+    "errors": {
+      "quantity-min": "La cantidad usada debe ser mayor que 0."
     }
   },
   "equipment-list": {
