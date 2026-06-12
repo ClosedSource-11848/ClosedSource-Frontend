@@ -1,61 +1,60 @@
 import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-response';
 
 /**
- * Resource representation of a historical telemetry data point for API communication.
+ * Resource representation of a historical telemetry point for API communication.
  *
  * @remarks
- * In DDD, this acts as the infrastructure-level contract that represents
- * time-series telemetry data as it appears in HTTP responses. It bridges
- * the gap between external API consumers and the internal TelemetryHistoryPoint entity.
+ * In DDD, this resource belongs to the infrastructure layer and represents a
+ * historical telemetry record as transferred through the REST API. It is later
+ * converted into a domain entity by the corresponding assembler.
  */
 export interface TelemetryHistoryPointResource extends BaseResource {
   /**
-   * The unique numeric identifier for the telemetry history point resource.
+   * The unique numeric identifier of the historical telemetry point resource.
    */
   id: number;
 
   /**
-   * The numeric identifier of the equipment that generated this telemetry.
+   * The numeric identifier of the equipment that generated this telemetry point.
    */
   equipmentId: number;
 
   /**
-   * The name of the process parameter that was measured (e.g., 'Temperature', 'Humidity').
+   * The monitored parameter name, such as Temperature, Humidity, or Pressure.
    */
   parameterName: string;
 
   /**
-   * The actual value recorded for the parameter at the given timestamp.
+   * The recorded telemetry value at the specific timestamp.
    */
   recordedValue: number;
 
   /**
-   * The exact timestamp when the telemetry reading was captured by the equipment sensor.
+   * The exact timestamp when this telemetry point was recorded.
    */
   timestamp: string;
 
   /**
-   * Flag indicating whether this specific data point was identified as an anomaly
-   * or deviation from acceptable operational thresholds.
+   * Indicates whether this telemetry point was detected as an anomaly.
    */
   isAnomaly: boolean;
 
   /**
-   * The timestamp when this historical record was persisted into the system.
+   * The timestamp when this historical telemetry point was created in the system.
    */
   createdAt: string;
 }
 
 /**
- * Response envelope for telemetry history collection queries.
+ * Response envelope for historical telemetry queries.
  *
  * @remarks
- * This interface defines the structure of API responses that return multiple historical data points.
- * It allows for consistent metadata handling across collection endpoints.
+ * This response groups historical telemetry points under a consistent property,
+ * allowing the assembler to convert API responses into domain entities.
  */
 export interface TelemetryHistoryResponse extends BaseResponse {
   /**
-   * Array of telemetry history point resources included in the response.
+   * Array of historical telemetry point resources returned by the API.
    */
   historyPoints: TelemetryHistoryPointResource[];
 }

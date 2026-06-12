@@ -15,7 +15,10 @@
     <div class="header-actions">
       <mat-form-field appearance="outline" class="equipment-select">
         <mat-label>{{ 'tracking.dashboard.select-equipment' | translate }}</mat-label>
-        <mat-select [ngModel]="selectedEquipmentId()" (ngModelChange)="selectedEquipmentId.set($event); onEquipmentChange()">
+        <mat-select
+          [ngModel]="selectedEquipmentId()"
+          (ngModelChange)="selectedEquipmentId.set($event); onEquipmentChange()"
+        >
           @for (eq of equipmentStore.equipmentList(); track eq.id) {
             <mat-option [value]="eq.id">{{ eq.name }} ({{ eq.id }})</mat-option>
           }
@@ -23,7 +26,12 @@
         <mat-icon matPrefix>precision_manufacturing</mat-icon>
       </mat-form-field>
 
-      <button mat-stroked-button (click)="onEquipmentChange()" [disabled]="store.isLoading()">
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="onEquipmentChange()"
+        [disabled]="store.isLoading() || !selectedEquipmentId()"
+      >
         <mat-icon>refresh</mat-icon>
         {{ 'common.refresh' | translate }}
       </button>
@@ -38,7 +46,10 @@
   }
 
   <div class="status-grid">
-    <mat-card class="status-card" [ngClass]="'status-bg-' + store.equipmentTelemetryStatus().toLowerCase()">
+    <mat-card
+      class="status-card"
+      [ngClass]="'status-bg-' + store.equipmentTelemetryStatus().toLowerCase()"
+    >
       <mat-card-content class="status-content">
         <div class="status-icon-wrapper">
           @if (store.isEquipmentOnline()) {
@@ -47,9 +58,10 @@
             <mat-icon>wifi_off</mat-icon>
           }
         </div>
+
         <div class="status-text">
           <span class="label">{{ 'tracking.dashboard.connection-status' | translate }}</span>
-          <h3>{{ 'tracking.status.' + store.equipmentTelemetryStatus() | translate }}</h3>
+          <h3>{{ 'tracking.status.' + store.equipmentTelemetryStatus().toLowerCase() | translate }}</h3>
         </div>
       </mat-card-content>
     </mat-card>
@@ -59,6 +71,7 @@
         <div class="status-icon-wrapper" [class.text-danger]="store.anomaliesHistory().length > 0">
           <mat-icon>warning_amber</mat-icon>
         </div>
+
         <div class="status-text">
           <span class="label">{{ 'tracking.dashboard.anomalies' | translate }}</span>
           <h3>{{ store.anomaliesHistory().length }} {{ 'tracking.dashboard.events' | translate }}</h3>
@@ -70,16 +83,20 @@
   <mat-card class="chart-card mat-elevation-z2">
     <mat-card-header>
       <mat-card-title>{{ 'tracking.dashboard.live-stream' | translate }}</mat-card-title>
-      <mat-card-subtitle>{{ 'tracking.dashboard.stream-desc' | translate }} {{ selectedEquipmentId() }}</mat-card-subtitle>
+      <mat-card-subtitle>
+        {{ 'tracking.dashboard.stream-desc' | translate }} {{ selectedEquipmentId() }}
+      </mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
       @if (store.telemetryHistory().length > 0) {
         <div class="canvas-wrapper">
-          <canvas baseChart
-                  [data]="chartData()"
-                  [options]="chartOptions"
-                  [type]="'line'">
+          <canvas
+            baseChart
+            [data]="chartData()"
+            [options]="chartOptions"
+            [type]="'line'"
+          >
           </canvas>
         </div>
       } @else {
@@ -100,11 +117,16 @@
       <mat-card class="metric-card mat-elevation-z1">
         <mat-card-content>
           <span class="metric-name">{{ measure.parameterName }}</span>
+
           <div class="metric-value-container">
             <span class="metric-value">{{ measure.value }}</span>
             <span class="metric-unit">{{ measure.unit }}</span>
           </div>
-          <span class="metric-time">{{ 'tracking.dashboard.updated' | translate }}: {{ measure.timestamp | date:'mediumTime' }}</span>
+
+          <span class="metric-time">
+            {{ 'tracking.dashboard.updated' | translate }}:
+            {{ measure.timestamp | date:'mediumTime' }}
+          </span>
         </mat-card-content>
       </mat-card>
     } @empty {
