@@ -1,11 +1,12 @@
 import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-response';
+import { KpiMetricStatus } from '../domain/model/kpi-metric.entity';
 
 /**
  * Resource representation of a single Key Performance Indicator (KPI) metric.
  *
  * @remarks
- * Used within a dashboard resource to transfer individual performance
- * measurements and their evaluated status over the API.
+ * This resource mirrors the API representation of a KPI metric. It does not
+ * contain domain behavior and is used only for HTTP serialization and mapping.
  */
 export interface KpiMetricResource {
   /**
@@ -14,7 +15,7 @@ export interface KpiMetricResource {
   id: number;
 
   /**
-   * The name of the performance indicator (e.g., 'Equipment Availability').
+   * The name of the performance indicator.
    */
   name: string;
 
@@ -29,14 +30,14 @@ export interface KpiMetricResource {
   unit: string;
 
   /**
-   * The goal or threshold value against which the current value is evaluated.
+   * The target or threshold value used to evaluate the metric.
    */
   targetValue: number;
 
   /**
-   * The evaluated health status of the metric (e.g., 'ON_TRACK', 'AT_RISK', 'CRITICAL').
+   * The evaluated health status of the metric.
    */
-  status: string;
+  status: KpiMetricStatus;
 
   /**
    * The timestamp when this metric was recorded.
@@ -48,9 +49,9 @@ export interface KpiMetricResource {
  * Resource representation of a KPI dashboard snapshot for API communication.
  *
  * @remarks
- * In DDD, this acts as the infrastructure-level contract that represents
- * the performance dashboard data as it appears in HTTP responses. It bridges
- * the gap between external API consumers and the internal KpiDashboard entity.
+ * In DDD, this resource is part of the infrastructure layer and represents
+ * the dashboard payload as it appears in HTTP responses. It is converted into
+ * a {@link KpiDashboard} domain entity by the KPI assembler.
  */
 export interface KpiDashboardResource extends BaseResource {
   /**
@@ -61,7 +62,7 @@ export interface KpiDashboardResource extends BaseResource {
   /**
    * The numeric identifier of the laboratory associated with these KPIs.
    */
-  labId: number;
+  laboratoryId: number;
 
   /**
    * The timestamp when these metrics were aggregated.
@@ -69,12 +70,12 @@ export interface KpiDashboardResource extends BaseResource {
   timestamp: string;
 
   /**
-   * A calculated score representing the overall performance or health status of the lab.
+   * A calculated score representing the overall performance or health status.
    */
   overallHealthScore: number;
 
   /**
-   * The collection of individual performance metrics included in this snapshot.
+   * The collection of KPI metrics included in this dashboard snapshot.
    */
   metrics: KpiMetricResource[];
 }
@@ -83,8 +84,9 @@ export interface KpiDashboardResource extends BaseResource {
  * Response envelope for KPI dashboard collection queries.
  *
  * @remarks
- * This interface defines the structure of API responses that return multiple dashboard snapshots.
- * It allows for consistent metadata handling across collection endpoints.
+ * Kept for compatibility with the shared {@link BaseAssembler} contract.
+ * For the aligned backend, collection endpoints should preferably return
+ * direct arrays when multiple dashboards are needed.
  */
 export interface KpiDashboardsResponse extends BaseResponse {
   /**

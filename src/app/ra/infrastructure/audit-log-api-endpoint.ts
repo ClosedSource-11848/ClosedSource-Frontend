@@ -12,12 +12,11 @@ const auditLogEndpointUrl = `${environment.serverBasePath}${environment.raAuditL
  * HTTP endpoint client for audit log operations.
  *
  * @remarks
- * This endpoint encapsulates all HTTP communication for the AuditLogEntry entity
- * within the Reporting and Analysis (RA) domain. It extends {@link BaseApiEndpoint}
- * to leverage standard data access patterns with specialized filtering configuration.
+ * This endpoint encapsulates HTTP communication for audit log data within
+ * the Reporting and Analysis bounded context.
  *
- * The endpoint handles retrieving historical system actions and compliance
- * events based on timeframes, related equipment, or production batches.
+ * Endpoint contract:
+ * - GET /audit-logs?equipmentId=&batchId=&dateFrom=&dateTo=
  */
 export class AuditLogApiEndpoint extends BaseApiEndpoint<
   AuditLogEntry,
@@ -29,29 +28,24 @@ export class AuditLogApiEndpoint extends BaseApiEndpoint<
    * Creates an instance of AuditLogApiEndpoint.
    *
    * @param http - Angular HttpClient for making HTTP requests
-   *
-   * @remarks
-   * Initializes the endpoint with the configured server base path and the
-   * audit log endpoint path. The AuditLogAssembler is used to map between
-   * infrastructure resources and domain entities.
    */
   constructor(http: HttpClient) {
     super(http, auditLogEndpointUrl, new AuditLogAssembler());
   }
 
   /**
-   * Retrieves a collection of audit log entries based on provided criteria.
+   * Retrieves audit log entries based on optional filters.
    *
-   * @param filters - Optional object containing query parameters to filter the audit trail
-   * @param filters.equipmentId - Filter by the numeric identifier of specific equipment
-   * @param filters.batchId - Filter by the numeric identifier of a production batch
-   * @param filters.dateFrom - Start date for the log query (ISO string)
-   * @param filters.dateTo - End date for the log query (ISO string)
-   * @returns Observable stream emitting an array of AuditLogEntry domain entities
+   * @param filters - Optional filter criteria for the audit log query
+   * @param filters.equipmentId - Filter by equipment numeric identifier
+   * @param filters.batchId - Filter by production batch numeric identifier
+   * @param filters.dateFrom - Start date for the audit log query
+   * @param filters.dateTo - End date for the audit log query
+   * @returns Observable stream emitting an array of audit log entries
    *
    * @remarks
-   * Constructs dynamic HTTP parameters from the provided filters and performs a GET request
-   * to fetch the audit trail records.
+   * Builds query parameters dynamically and expects a direct array response
+   * from the backend.
    */
   getAuditLog(filters?: {
     equipmentId?: number;
@@ -62,14 +56,15 @@ export class AuditLogApiEndpoint extends BaseApiEndpoint<
     let params = new HttpParams();
 
     if (filters) {
-      if (filters.equipmentId) params = params.set('equipmentId', filters.equipmentId.toString());
-      if (filters.batchId) params = params.set('batchId', filters.batchId.toString());
-      if (filters.dateFrom) params = params.set('dateFrom', filters.dateFrom);
-      if (filters.dateTo) params = params.set('dateTo', filters.dateTo);
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params = params.append(key, String(value));
+        }
+      });
     }
 
-    return this.http.get<AuditLogEntriesResponse>(this.endpointUrl, { params }).pipe(
-      map((response) => this.assembler.toEntitiesFromResponse(response)),
+    return this.http.get<AuditLogEntryResource[]>(this.endpointUrl, { params }).pipe(
+      map((resources) => this.assembler.toEntitiesFromResources(resources)),
       catchError(this.handleError('Failed to fetch audit logs')),
     );
   }

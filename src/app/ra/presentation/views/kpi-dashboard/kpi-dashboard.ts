@@ -18,8 +18,8 @@ import { IamStore } from '../../../../iam/application/iam.store';
  * @remarks
  * In the presentation layer, this component acts as the primary visual interface
  * for the Reporting and Analysis (RA) domain's KPI features. It subscribes to the
- * reactive state managed by the `RaStore` and visualizes performance metrics using
- * both tabular formats and graphical charts (via Chart.js).
+ * reactive state managed by the {@link RaStore} and visualizes performance metrics
+ * using both tabular formats and graphical charts through Chart.js.
  */
 @Component({
   selector: 'app-kpi-dashboard',
@@ -38,24 +38,27 @@ import { IamStore } from '../../../../iam/application/iam.store';
 })
 export class KpiDashboardComponent implements OnInit {
   /**
-   * The application store managing the state for the RA domain.
+   * The application store managing the state for the RA bounded context.
    */
   protected readonly store = inject(RaStore);
 
   /**
-   * The identity and access management store, used to retrieve current context.
+   * The identity and access management store used to retrieve the current session context.
    */
   protected readonly iamStore = inject(IamStore);
 
   /**
-   * Configuration for the columns displayed in the KPI metrics table.
+   * Column identifiers displayed in the KPI metrics table.
    */
   protected readonly displayedColumns = ['name', 'status', 'current', 'target', 'recordedAt'];
 
   /**
-   * General configuration options for the Chart.js instance.
+   * General configuration options for the Chart.js KPI comparison chart.
+   *
+   * @remarks
+   * The chart compares each metric's current value against its target value.
    */
-  protected barChartOptions: ChartConfiguration['options'] = {
+  protected readonly barChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
@@ -67,33 +70,33 @@ export class KpiDashboardComponent implements OnInit {
   };
 
   /**
-   * Defines the visual representation type of the chart.
+   * Visual representation type used by the KPI chart.
    */
-  protected barChartType: ChartType = 'bar';
+  protected readonly barChartType: ChartType = 'bar';
 
   /**
-   * Reactive computed signal that transforms domain KPI metrics into a structure
-   * compatible with Chart.js.
+   * Reactive computed signal that transforms KPI metrics into Chart.js data.
+   *
+   * @returns A bar chart data structure containing current and target metric values
    *
    * @remarks
-   * Dynamically extracts metric names for labels, and maps current values and
-   * target values into separate datasets for visual comparison.
+   * This computed value updates automatically when the dashboard signal changes.
    */
-  protected chartData = computed<ChartData<'bar'>>(() => {
-    const dash = this.store.dashboard();
-    const metricsList = dash?.metrics || [];
+  protected readonly chartData = computed<ChartData<'bar'>>(() => {
+    const dashboard = this.store.dashboard();
+    const metrics = dashboard?.metrics ?? [];
 
     return {
-      labels: metricsList.map((metric) => metric.name),
+      labels: metrics.map((metric) => metric.name),
       datasets: [
         {
-          data: metricsList.map((metric) => metric.value),
+          data: metrics.map((metric) => metric.value),
           label: 'Current Value',
           backgroundColor: 'rgba(54, 162, 235, 0.7)',
           borderRadius: 4,
         },
         {
-          data: metricsList.map((metric) => metric.targetValue),
+          data: metrics.map((metric) => metric.targetValue),
           label: 'Target Goal',
           backgroundColor: 'rgba(75, 192, 192, 0.7)',
           borderRadius: 4,
@@ -103,20 +106,24 @@ export class KpiDashboardComponent implements OnInit {
   });
 
   /**
-   * Retrieves the current laboratory ID based on the authenticated user's context.
-   * * @remarks
-   * Ensures the ID is correctly typed as a number for consistency with domain entities.
-   * Defaults to 1 if no user context is found.
+   * Retrieves the current laboratory ID from the active application context.
+   *
+   * @returns The numeric laboratory identifier used to request KPI dashboard data
+   *
+   * @remarks
+   * The current frontend context stores only the signed-in user ID. Until IAM exposes
+   * a dedicated laboratory ID, the app keeps the existing convention used by the
+   * other bounded contexts and falls back to `1` when no session value is available.
    */
-  private get currentLabId(): number {
+  private get currentLaboratoryId(): number {
     const id = this.iamStore.currentUserId();
     return id ? Number(id) : 1;
   }
 
   /**
-   * Lifecycle hook that initializes the component by triggering the KPI data load.
+   * Lifecycle hook that loads the KPI dashboard when the component is initialized.
    */
   ngOnInit(): void {
-    this.store.loadDashboard(this.currentLabId);
+    this.store.loadDashboard(this.currentLaboratoryId);
   }
 }

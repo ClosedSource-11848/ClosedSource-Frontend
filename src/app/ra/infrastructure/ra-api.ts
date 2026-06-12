@@ -25,28 +25,43 @@ import {
  * In Domain-Driven Design, this service acts as the infrastructure layer facade
  * coordinating access to RA-related API resources through HTTP endpoints.
  * It orchestrates interactions between the application layer and the underlying
- * infrastructure endpoints for KPIs, trends, audit logs, and reports.
+ * infrastructure endpoints for KPI dashboards, deviation trends, audit logs,
+ * and generated reports.
  *
- * The RaApi abstracts away the complexity of managing multiple endpoints,
- * providing a unified interface for application services to interact with
- * the reporting domain data.
+ * The RaApi abstracts away the complexity of managing multiple endpoint clients,
+ * providing a unified interface for application services and stores to interact
+ * with reporting data.
  */
 @Injectable({ providedIn: 'root' })
 export class RaApi extends BaseApi {
+  /**
+   * Endpoint client responsible for KPI dashboard requests.
+   */
   private readonly _kpiEndpoint: KpiApiEndpoint;
+
+  /**
+   * Endpoint client responsible for deviation trend requests.
+   */
   private readonly _deviationTrendEndpoint: DeviationTrendApiEndpoint;
+
+  /**
+   * Endpoint client responsible for audit log requests.
+   */
   private readonly _auditLogEndpoint: AuditLogApiEndpoint;
+
+  /**
+   * Endpoint client responsible for report generation requests.
+   */
   private readonly _reportEndpoint: ReportApiEndpoint;
 
   /**
    * Creates an instance of RaApi.
    *
-   * @param http - Angular HttpClient for making HTTP requests
+   * @param http - Angular HttpClient used by the underlying endpoint clients
    *
    * @remarks
-   * Initializes the API facade with specialized endpoint clients for KPIs,
-   * trends, audit logs, and document reporting. Each client manages its own
-   * HTTP configuration and resource conversion.
+   * Initializes specialized endpoint clients for each RA capability. Each endpoint
+   * handles its own HTTP path, serialization details, and assembler usage.
    */
   constructor(http: HttpClient) {
     super();
@@ -56,41 +71,47 @@ export class RaApi extends BaseApi {
     this._reportEndpoint = new ReportApiEndpoint(http);
   }
 
-  // ── KPI Dashboard ────────────────────────────────────────────────────────
-
   /**
    * Retrieves the current KPI dashboard snapshot for a specific laboratory.
    *
-   * @param labId - The unique numeric identifier of the laboratory
-   * @returns Observable stream emitting the KpiDashboard domain entity
+   * @param laboratoryId - The unique numeric identifier of the laboratory
+   * @returns Observable stream emitting the {@link KpiDashboard} domain entity
+   *
+   * @remarks
+   * Delegates the request to {@link KpiApiEndpoint}, which calls:
+   * `GET /kpis?laboratoryId={laboratoryId}`.
    */
-  getDashboardByLab(labId: number): Observable<KpiDashboard> {
-    return this._kpiEndpoint.getDashboardByLab(labId);
+  getDashboardByLaboratory(laboratoryId: number): Observable<KpiDashboard> {
+    return this._kpiEndpoint.getDashboardByLaboratory(laboratoryId);
   }
 
-  // ── Deviation Trends ─────────────────────────────────────────────────────
-
   /**
-   * Retrieves historical deviation trends for a specific piece of equipment.
+   * Retrieves historical deviation trends for a specific equipment.
    *
    * @param equipmentId - The unique numeric identifier of the equipment
-   * @returns Observable stream emitting an array of DeviationTrend domain entities
+   * @returns Observable stream emitting an array of {@link DeviationTrend} domain entities
+   *
+   * @remarks
+   * Delegates the request to {@link DeviationTrendApiEndpoint}, which calls:
+   * `GET /deviation-trends?equipmentId={equipmentId}`.
    */
   getTrendsByEquipment(equipmentId: number): Observable<DeviationTrend[]> {
     return this._deviationTrendEndpoint.getTrendsByEquipment(equipmentId);
   }
 
-  // ── Audit Log ────────────────────────────────────────────────────────────
-
   /**
-   * Retrieves a collection of audit log entries based on provided criteria.
+   * Retrieves audit log entries based on optional filter criteria.
    *
-   * @param filters - Optional object containing query parameters to filter the audit trail
-   * @param filters.equipmentId - Filter by the numeric identifier of specific equipment
-   * @param filters.batchId - Filter by the numeric identifier of a production batch
-   * @param filters.dateFrom - Start date for the log query (ISO string format)
-   * @param filters.dateTo - End date for the log query (ISO string format)
-   * @returns Observable stream emitting an array of AuditLogEntry domain entities
+   * @param filters - Optional query filters for the audit log
+   * @param filters.equipmentId - Equipment numeric identifier filter
+   * @param filters.batchId - Batch numeric identifier filter
+   * @param filters.dateFrom - Start date for the audit log query
+   * @param filters.dateTo - End date for the audit log query
+   * @returns Observable stream emitting an array of {@link AuditLogEntry} domain entities
+   *
+   * @remarks
+   * Delegates the request to {@link AuditLogApiEndpoint}, which calls:
+   * `GET /audit-logs?equipmentId=&batchId=&dateFrom=&dateTo=`.
    */
   getAuditLog(filters?: {
     equipmentId?: number;
@@ -101,23 +122,29 @@ export class RaApi extends BaseApi {
     return this._auditLogEndpoint.getAuditLog(filters);
   }
 
-  // ── Reports (Returns Blobs for PDF/CSV) ──────────────────────────────────
-
   /**
    * Requests the generation of a production batch report.
    *
-   * @param request - The DTO containing batch selection and format preferences
-   * @returns Observable stream emitting the generated report as a binary Blob
+   * @param request - DTO containing batch report generation parameters
+   * @returns Observable stream emitting the generated report as a binary {@link Blob}
+   *
+   * @remarks
+   * Delegates the request to {@link ReportApiEndpoint}, which calls:
+   * `POST /reports/batches`.
    */
   generateBatchReport(request: GenerateBatchReportRequest): Observable<Blob> {
     return this._reportEndpoint.generateBatchReport(request);
   }
 
   /**
-   * Requests the generation of a regulatory compliance audit report.
+   * Requests the generation of a regulatory compliance report.
    *
-   * @param request - The DTO containing lab selection, date ranges, and format preferences
-   * @returns Observable stream emitting the generated audit report as a binary Blob
+   * @param request - DTO containing compliance report generation parameters
+   * @returns Observable stream emitting the generated report as a binary {@link Blob}
+   *
+   * @remarks
+   * Delegates the request to {@link ReportApiEndpoint}, which calls:
+   * `POST /reports/compliance`.
    */
   generateComplianceReport(request: GenerateComplianceReportRequest): Observable<Blob> {
     return this._reportEndpoint.generateComplianceReport(request);
@@ -126,8 +153,12 @@ export class RaApi extends BaseApi {
   /**
    * Requests the export of historical equipment logs.
    *
-   * @param request - The DTO containing equipment selection, date ranges, and format preferences
-   * @returns Observable stream emitting the exported logs as a binary Blob
+   * @param request - DTO containing equipment log export parameters
+   * @returns Observable stream emitting the exported report as a binary {@link Blob}
+   *
+   * @remarks
+   * Delegates the request to {@link ReportApiEndpoint}, which calls:
+   * `POST /reports/equipment-logs`.
    */
   exportEquipmentLog(request: ExportEquipmentLogRequest): Observable<Blob> {
     return this._reportEndpoint.exportEquipmentLog(request);
