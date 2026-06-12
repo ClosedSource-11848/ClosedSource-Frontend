@@ -7,274 +7,270 @@ import { CreateBatchCommand } from '../domain/model/create-batch.command';
 import { ReleaseBatchCommand } from '../domain/model/release-batch.command';
 import { RejectBatchCommand } from '../domain/model/reject-batch.command';
 import { LinkRawMaterialCommand } from '../domain/model/link-raw-material.command';
+import {
+  CreateBatchRequest,
+  ReleaseBatchRequest,
+  RejectBatchRequest,
+} from '../infrastructure/batch.request';
+import { LinkRawMaterialRequest } from '../infrastructure/raw-material-usage.request';
 
 /**
- * Global state management for the Batch manufacturing domain using Angular Signals.
+ * Signal-based application store for the Batch bounded context.
  *
  * @remarks
- * In a Domain-Driven Design (DDD) architecture, this store acts as an application service
- * that orchestrates the flow of data between the presentation layer and the
- * infrastructure layer ({@link BatchApi}). It maintains the reactive state of batches
- * and material usage, ensuring the UI stays synchronized with domain changes.
+ * In a Domain-Driven Design (DDD) architecture, this store belongs to the
+ * application layer. It receives commands from the presentation layer, maps
+ * them into infrastructure request DTOs, delegates persistence and retrieval
+ * operations to {@link BatchApi}, and exposes reactive state to the UI.
  *
- * It manages:
- * - Reactive lists of production batches and raw material consumption.
- * - Loading, error, and success states for user feedback.
- * - Complex domain filtering via computed signals.
- *
- * @author Qualitrack
+ * This store manages:
+ * - Batch collection state
+ * - Selected batch detail state
+ * - Raw material usage traceability for a batch
+ * - Loading, error, and success feedback state
  */
 @Injectable({ providedIn: 'root' })
 export class BatchStore {
   /**
-   * Infrastructure service for HTTP communication.
+   * Infrastructure facade used to communicate with the backend API.
    */
   private readonly api = inject(BatchApi);
 
-  // ── State (Private Signals) ────────────────────────────────────────────────
-
   /**
-   * Internal list of all fetched batches.
+   * Internal list of loaded production batches.
    */
   private readonly _batches = signal<Batch[]>([]);
 
   /**
-   * Internal list of material usage records for the currently selected batch.
+   * Internal list of raw material usage records for the current batch.
    */
   private readonly _currentBatchUsage = signal<RawMaterialUsage[]>([]);
 
   /**
-   * Flag indicating if an asynchronous operation is in progress.
+   * Internal selected batch detail state.
+   */
+  private readonly _selectedBatch = signal<Batch | null>(null);
+
+  /**
+   * Indicates whether an asynchronous operation is currently in progress.
    */
   private readonly _isLoading = signal<boolean>(false);
 
   /**
-   * Stores current error messages for the UI.
+   * Stores the latest error message exposed to the UI.
    */
   private readonly _error = signal<string | null>(null);
 
   /**
-   * Stores temporary success feedback messages.
+   * Stores the latest success message exposed to the UI.
    */
   private readonly _successMsg = signal<string | null>(null);
 
-  private readonly _selectedBatch = signal<Batch | null>(null);
-
-  // ── Selectors (Readonly Public Signals) ─────────────────────────────────────
-
-  /** Exposed readonly signal of the batches list. */
+  /**
+   * Readonly signal containing the loaded batch collection.
+   */
   readonly batches = this._batches.asReadonly();
 
-  /** Exposed readonly signal of current material usage records. */
+  /**
+   * Readonly signal containing raw material usage records for the selected batch.
+   */
   readonly currentBatchUsage = this._currentBatchUsage.asReadonly();
 
-  /** Exposed readonly signal for loading state. */
+  /**
+   * Readonly signal containing the selected batch detail.
+   */
+  readonly selectedBatch = this._selectedBatch.asReadonly();
+
+  /**
+   * Readonly signal indicating whether the store is loading data.
+   */
   readonly isLoading = this._isLoading.asReadonly();
 
-  /** Exposed readonly signal for error feedback. */
+  /**
+   * Readonly signal containing the current error message, if any.
+   */
   readonly error = this._error.asReadonly();
 
-  /** Exposed readonly signal for success feedback. */
+  /**
+   * Readonly signal containing the current success message, if any.
+   */
   readonly successMsg = this._successMsg.asReadonly();
 
   /**
-   * Computed selector for batches that are active in the production cycle.
-   * Filters by statuses 'PENDING' and 'IN_PROGRESS'.
+   * Computed selector for batches that are still active in production.
    */
   readonly pendingBatches = computed(() =>
-    this._batches().filter((b) => b.status === 'PENDING' || b.status === 'IN_PROGRESS'),
+    this._batches().filter((batch) => batch.status === 'PENDING' || batch.status === 'IN_PROGRESS'),
   );
 
   /**
-   * Computed selector for batches that have finished their lifecycle.
-   * Filters by statuses 'RELEASED' and 'REJECTED'.
+   * Computed selector for batches that have already finished their lifecycle.
    */
   readonly finishedBatches = computed(() =>
-    this._batches().filter((b) => b.status === 'RELEASED' || b.status === 'REJECTED'),
+    this._batches().filter((batch) => batch.status === 'RELEASED' || batch.status === 'REJECTED'),
   );
 
-  readonly selectedBatch = this._selectedBatch.asReadonly();
-
-  // ── Batch Management ─────────────────────────────────────────────────────
-
+  /**
+   * Loads a single batch by its numeric identifier.
+   *
+   * @param batchId - The unique numeric identifier of the batch
+   */
   loadBatchById(batchId: number): void {
-    this._isLoading.set(true);
-    this._error.set(null);
+    this.startRequest();
 
     this.api
       .getBatchById(batchId)
       .pipe(retry(2))
       .subscribe({
-        next: (batch: Batch) => {
+        next: (batch) => {
           this._selectedBatch.set(batch);
-
-          this._batches.update((list) => {
-            const exists = list.some((item) => item.id === batch.id);
-            return exists
-              ? list.map((item) => (item.id === batch.id ? batch : item))
-              : [...list, batch];
-          });
-
-          this._isLoading.set(false);
+          this.upsertBatch(batch);
+          this.finishRequest();
         },
-        error: (err: any) => {
-          this._error.set(this.formatError(err, 'Failed to load batch detail'));
-          this._isLoading.set(false);
-        },
+        error: (error) => this.failRequest(error, 'Failed to load batch detail'),
       });
   }
 
   /**
-   * Fetches the list of batches from the API for a specific laboratory.
+   * Loads all batches associated with a laboratory.
    *
-   * @param labId - The unique numeric identifier of the laboratory.
+   * @param labId - The unique numeric identifier of the laboratory
    */
   loadBatches(labId: number): void {
-    this._isLoading.set(true);
-    this._error.set(null);
+    this.startRequest();
+
     this.api
       .getBatches(labId)
       .pipe(retry(2))
       .subscribe({
-        next: (batches: Batch[]) => {
+        next: (batches) => {
           this._batches.set(batches);
-          this._isLoading.set(false);
+          this.finishRequest();
         },
-        error: (err: any) => {
-          this._error.set(this.formatError(err, 'Failed to load batch list'));
-          this._isLoading.set(false);
-        },
+        error: (error) => this.failRequest(error, 'Failed to load batch list'),
       });
   }
 
   /**
-   * Triggers the creation of a new batch using an application command.
+   * Creates a new production batch from an application command.
    *
-   * @param command - The domain intent and data for the new batch.
+   * @param command - Command containing batch creation data
    */
   createBatch(command: CreateBatchCommand): void {
-    this._isLoading.set(true);
-    this._error.set(null);
+    this.startRequest();
+
+    const request = this.toCreateBatchRequest(command);
+
     this.api
-      .createBatch(command as any)
+      .createBatch(request)
       .pipe(retry(2))
       .subscribe({
-        next: (batch: Batch) => {
+        next: (batch) => {
           this._batches.update((list) => [...list, batch]);
+          this._selectedBatch.set(batch);
           this._successMsg.set('Batch created successfully');
-          this._isLoading.set(false);
+          this.finishRequest();
         },
-        error: (err: any) => {
-          this._error.set(this.formatError(err, 'Failed to create batch'));
-          this._isLoading.set(false);
-        },
+        error: (error) => this.failRequest(error, 'Failed to create batch'),
       });
   }
 
   /**
-   * Finalizes and releases a batch into the distribution phase.
+   * Releases an existing production batch.
    *
-   * @param batchId - Numeric identifier of the batch to update.
-   * @param command - The release details and quality remarks.
+   * @param batchId - The unique numeric identifier of the batch
+   * @param command - Command containing release data
    */
   releaseBatch(batchId: number, command: ReleaseBatchCommand): void {
-    this._isLoading.set(true);
-    this._error.set(null);
+    this.startRequest();
+
+    const request = this.toReleaseBatchRequest(command);
+
     this.api
-      .releaseBatch(batchId, command as any)
+      .releaseBatch(batchId, request)
       .pipe(retry(2))
       .subscribe({
-        next: (updatedBatch: Batch) => {
-          this._batches.update((list) => list.map((b) => (b.id === batchId ? updatedBatch : b)));
+        next: (updatedBatch) => {
+          this.upsertBatch(updatedBatch);
+          this._selectedBatch.set(updatedBatch);
           this._successMsg.set('Batch released successfully');
-          this._isLoading.set(false);
+          this.finishRequest();
         },
-        error: (err: any) => {
-          this._error.set(this.formatError(err, 'Failed to release batch'));
-          this._isLoading.set(false);
-        },
+        error: (error) => this.failRequest(error, 'Failed to release batch'),
       });
   }
 
   /**
-   * Marks a batch as rejected due to non-compliance.
+   * Rejects an existing production batch.
    *
-   * @param batchId - Numeric identifier of the batch to update.
-   * @param command - The rejection justification and date.
+   * @param batchId - The unique numeric identifier of the batch
+   * @param command - Command containing rejection data
    */
   rejectBatch(batchId: number, command: RejectBatchCommand): void {
-    this._isLoading.set(true);
-    this._error.set(null);
+    this.startRequest();
+
+    const request = this.toRejectBatchRequest(command);
+
     this.api
-      .rejectBatch(batchId, command as any)
+      .rejectBatch(batchId, request)
       .pipe(retry(2))
       .subscribe({
-        next: (updatedBatch: Batch) => {
-          this._batches.update((list) => list.map((b) => (b.id === batchId ? updatedBatch : b)));
+        next: (updatedBatch) => {
+          this.upsertBatch(updatedBatch);
+          this._selectedBatch.set(updatedBatch);
           this._successMsg.set('Batch rejected successfully');
-          this._isLoading.set(false);
+          this.finishRequest();
         },
-        error: (err: any) => {
-          this._error.set(this.formatError(err, 'Failed to reject batch'));
-          this._isLoading.set(false);
-        },
+        error: (error) => this.failRequest(error, 'Failed to reject batch'),
       });
   }
 
-  // ── Raw Material Usage ───────────────────────────────────────────────────
-
   /**
-   * Loads the genealogy of raw materials used in a specific batch.
+   * Loads the raw material usage records for a batch.
    *
-   * @param batchId - The target numeric batch identifier.
+   * @param batchId - The unique numeric identifier of the batch
    */
   loadBatchUsage(batchId: number): void {
-    this._isLoading.set(true);
-    this._error.set(null);
+    this.startRequest();
+
     this.api
       .getRawMaterialUsage(batchId)
       .pipe(retry(2))
       .subscribe({
-        next: (usage: RawMaterialUsage[]) => {
+        next: (usage) => {
           this._currentBatchUsage.set(usage);
-          this._isLoading.set(false);
+          this.finishRequest();
         },
-        error: (err: any) => {
-          this._error.set(this.formatError(err, 'Failed to load material usage'));
-          this._isLoading.set(false);
-        },
+        error: (error) => this.failRequest(error, 'Failed to load material usage'),
       });
   }
 
   /**
-   * Links a specific amount of raw material to the batch record.
+   * Links a raw material consumption record to a batch.
    *
-   * @param batchId - The numeric identifier of the consuming batch.
-   * @param command - The material ID and quantity used.
+   * @param batchId - The unique numeric identifier of the batch
+   * @param command - Command containing raw material and quantity data
    */
   linkMaterial(batchId: number, command: LinkRawMaterialCommand): void {
-    this._isLoading.set(true);
-    this._error.set(null);
+    this.startRequest();
+
+    const request = this.toLinkRawMaterialRequest(command);
+
     this.api
-      .linkRawMaterial(batchId, command as any)
+      .linkRawMaterial(batchId, request)
       .pipe(retry(2))
       .subscribe({
-        next: (usage: RawMaterialUsage) => {
+        next: (usage) => {
           this._currentBatchUsage.update((list) => [...list, usage]);
           this._successMsg.set('Raw material linked successfully');
-          this._isLoading.set(false);
+          this.finishRequest();
         },
-        error: (err: any) => {
-          this._error.set(this.formatError(err, 'Failed to link raw material'));
-          this._isLoading.set(false);
-        },
+        error: (error) => this.failRequest(error, 'Failed to link raw material'),
       });
   }
 
-  // ── Helpers ──────────────────────────────────────────────────────────────
-
   /**
-   * Resets the error and success messages in the state.
+   * Clears current feedback messages.
    */
   clearMessages(): void {
     this._error.set(null);
@@ -282,18 +278,115 @@ export class BatchStore {
   }
 
   /**
-   * Internal helper to normalize domain and infrastructure errors.
+   * Maps a CreateBatchCommand into the HTTP request payload expected by the API.
    *
-   * @param error - The raw error object.
-   * @param fallback - Default message if parsing fails.
-   * @returns A user-friendly error string.
+   * @param command - Application command to map
+   * @returns Infrastructure request DTO
    */
-  private formatError(error: any, fallback: string): string {
+  private toCreateBatchRequest(command: CreateBatchCommand): CreateBatchRequest {
+    return {
+      labId: command.labId,
+      productId: command.productId,
+      batchNumber: command.batchNumber,
+      quantity: command.quantity,
+      unit: command.unit,
+      startDate: command.startDate,
+      notes: command.notes,
+    };
+  }
+
+  /**
+   * Maps a ReleaseBatchCommand into the HTTP request payload expected by the API.
+   *
+   * @param command - Application command to map
+   * @returns Infrastructure request DTO
+   */
+  private toReleaseBatchRequest(command: ReleaseBatchCommand): ReleaseBatchRequest {
+    return {
+      releaseDate: command.releaseDate,
+      notes: command.notes,
+    };
+  }
+
+  /**
+   * Maps a RejectBatchCommand into the HTTP request payload expected by the API.
+   *
+   * @param command - Application command to map
+   * @returns Infrastructure request DTO
+   */
+  private toRejectBatchRequest(command: RejectBatchCommand): RejectBatchRequest {
+    return {
+      rejectionDate: command.rejectionDate,
+      reason: command.reason,
+    };
+  }
+
+  /**
+   * Maps a LinkRawMaterialCommand into the HTTP request payload expected by the API.
+   *
+   * @param command - Application command to map
+   * @returns Infrastructure request DTO
+   */
+  private toLinkRawMaterialRequest(command: LinkRawMaterialCommand): LinkRawMaterialRequest {
+    return {
+      rawMaterialId: command.rawMaterialId,
+      quantityUsed: command.quantityUsed,
+    };
+  }
+
+  /**
+   * Inserts or updates a batch in the local collection.
+   *
+   * @param batch - Batch entity to insert or replace
+   */
+  private upsertBatch(batch: Batch): void {
+    this._batches.update((list) => {
+      const exists = list.some((item) => item.id === batch.id);
+      return exists ? list.map((item) => (item.id === batch.id ? batch : item)) : [...list, batch];
+    });
+  }
+
+  /**
+   * Sets loading state and clears previous feedback messages.
+   */
+  private startRequest(): void {
+    this._isLoading.set(true);
+    this._error.set(null);
+    this._successMsg.set(null);
+  }
+
+  /**
+   * Clears loading state after a successful request.
+   */
+  private finishRequest(): void {
+    this._isLoading.set(false);
+  }
+
+  /**
+   * Stores a normalized error message and clears loading state.
+   *
+   * @param error - Raw error object
+   * @param fallback - Fallback message used when the error cannot be parsed
+   */
+  private failRequest(error: unknown, fallback: string): void {
+    this._error.set(this.formatError(error, fallback));
+    this._isLoading.set(false);
+  }
+
+  /**
+   * Normalizes infrastructure and runtime errors into UI-friendly messages.
+   *
+   * @param error - Raw error object
+   * @param fallback - Fallback message used when parsing fails
+   * @returns Human-readable error message
+   */
+  private formatError(error: unknown, fallback: string): string {
     if (error instanceof Error) {
       return error.message.includes('Resource not found')
         ? `${fallback}: Not Found`
         : error.message;
     }
+
     return fallback;
   }
 }

@@ -10,10 +10,19 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { BatchStore } from '../../../application/batch.store';
+import { Batch } from '../../../domain/model/batch.entity';
 import { RawMaterialUsageComponent } from '../raw-material-usage/raw-material-usage';
 
 /**
- * Component for displaying the detailed information and management of a specific batch.
+ * Component responsible for displaying production batch details.
+ *
+ * @remarks
+ * This standalone presentation component loads a specific batch using the
+ * identifier provided by the route. It displays the selected batch information
+ * and embeds the raw material usage component to manage material traceability.
+ *
+ * The component also exposes helpers for normalizing backend status enum values
+ * into CSS-friendly and i18n-friendly strings.
  */
 @Component({
   selector: 'app-batch-detail',
@@ -34,16 +43,23 @@ import { RawMaterialUsageComponent } from '../raw-material-usage/raw-material-us
   styleUrl: './batch-detail.css',
 })
 export class BatchDetail implements OnInit {
+  /**
+   * Activated route used to read the batch identifier from the URL.
+   */
   private readonly route = inject(ActivatedRoute);
+
+  /**
+   * Store responsible for batch detail and raw material usage state.
+   */
   protected readonly store = inject(BatchStore);
 
   /**
-   * The unique numeric identifier of the batch currently being viewed.
+   * Unique numeric identifier of the batch currently being viewed.
    */
-  batchId!: number;
+  protected batchId: number = 0;
 
   /**
-   * Lifecycle hook to initialize the component and load batch usage data.
+   * Lifecycle hook that loads batch detail and raw material usage data.
    */
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -56,14 +72,45 @@ export class BatchDetail implements OnInit {
   }
 
   /**
-   * Retrieves the current batch entity from the store.
-   * @returns The Batch domain entity or undefined.
+   * Gets the current batch entity from selected state or the loaded collection.
+   *
+   * @returns The matching Batch domain entity, or undefined when it is not loaded yet
    */
-  get currentBatch() {
+  protected get currentBatch(): Batch | undefined {
     const selected = this.store.selectedBatch();
 
     return selected?.id === this.batchId
       ? selected
-      : this.store.batches().find((b) => b.id === this.batchId);
+      : this.store.batches().find((batch) => batch.id === this.batchId);
+  }
+
+  /**
+   * Maps a batch status value to the CSS class used by the detail view.
+   *
+   * @param status - Current lifecycle status of the batch
+   * @returns CSS-friendly status value
+   */
+  protected getStatusClass(status?: string): string {
+    return this.normalizeStatus(status);
+  }
+
+  /**
+   * Maps a batch status value to the translation key suffix.
+   *
+   * @param status - Current lifecycle status of the batch
+   * @returns Translation-key-friendly status value
+   */
+  protected getStatusKey(status?: string): string {
+    return this.normalizeStatus(status);
+  }
+
+  /**
+   * Normalizes backend enum values for CSS classes and i18n keys.
+   *
+   * @param status - Raw backend status value
+   * @returns Lowercase status with underscores replaced by hyphens
+   */
+  private normalizeStatus(status?: string): string {
+    return status ? status.toLowerCase().replace(/_/g, '-') : 'unknown';
   }
 }
