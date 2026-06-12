@@ -1,75 +1,77 @@
-import { Component, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
+import { Component } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { RouterOutlet } from '@angular/router';
-import { LanguageSwitcher } from '../language-switcher/language-switcher';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
+import { LanguageSwitcher } from '../language-switcher/language-switcher';
+
+/**
+ * Layout component for the main application shell.
+ *
+ * @remarks
+ * Provides the fixed toolbar, side navigation menu, language switcher,
+ * and routed content outlet. Routes that require path parameters are excluded
+ * from the menu to avoid navigating users to not-found pages.
+ */
 @Component({
   selector: 'app-layout',
   standalone: true,
   imports: [
-    CommonModule,
-    MatSidenavModule,
+    RouterOutlet,
+    TranslateModule,
     MatToolbarModule,
-    MatExpansionModule,
+    MatSidenavModule,
     MatIconModule,
     MatButtonModule,
+    MatExpansionModule,
     MatTooltipModule,
-    TranslatePipe,
-    RouterOutlet,
     LanguageSwitcher,
   ],
   templateUrl: './layout.html',
   styleUrl: './layout.css',
 })
 export class Layout {
-  @ViewChild(MatSidenav) drawer!: MatSidenav;
+  /**
+   * Material sidenav display mode.
+   */
+  protected readonly sidenavMode: 'side' | 'over' = 'side';
 
-  sidenavMode: 'side' | 'over' = 'side';
-  sidenavOpened = true;
+  /**
+   * Indicates whether the sidenav starts opened.
+   */
+  protected readonly sidenavOpened = true;
 
-  options = [
+  /**
+   * Navigation options rendered by the layout template.
+   */
+  protected readonly options = [
     {
       label: 'nav.dashboard',
-      icon: 'cast_connected',
-      link: '/tracking',
-      children: [
-        { label: 'tracking.dashboard.title', link: '/tracking/dashboard' },
-        { label: 'tracking.analysis.title', link: '/tracking/analysis' },
-        { label: 'tracking.history.title', link: '/tracking/history' },
-      ],
+      icon: 'dashboard',
+      link: '/dashboard',
     },
     {
       label: 'nav.batches',
-      icon: 'inventory_2',
+      icon: 'inventory',
       link: '/batches',
       children: [
         { label: 'batches.title', link: '/batches/batch-list' },
-        { label: 'product-form.title', link: '/batches/batch-form' },
-        { label: 'equipment-detail.title', link: '/batches/batch-detail' },
-        { label: 'batches.actions.release', link: '/batches/batch-release-form' },
-        { label: 'batches.actions.reject', link: '/batches/batch-reject-form' },
+        { label: 'batches.add-button', link: '/batches/batch-form' },
       ],
     },
     {
       label: 'nav.equipment',
-      icon: 'settings_suggest',
+      icon: 'precision_manufacturing',
       link: '/equipments',
       children: [
         { label: 'equipment-list.title', link: '/equipments/equipment-list' },
-        { label: 'equipment-form.title', link: '/equipments/register-equipment' },
-        { label: 'equipment-detail.title', link: '/equipments/equipment-detail' },
-        { label: 'bpm-config.title', link: '/equipments/bpm-config-form' },
-        { label: 'maintenance-history.title', link: '/equipments/maintenance-history' },
-        { label: 'maintenance-form.title', link: '/equipments/maintenance-form' },
+        { label: 'equipment-list.add-button', link: '/equipments/register-equipment' },
       ],
     },
     {
@@ -77,9 +79,8 @@ export class Layout {
       icon: 'warning',
       link: '/alerts',
       children: [
-        { label: 'nav.dashboard', link: '/alerts/alert-dashboard' },
+        { label: 'ca-alerts.subtitle', link: '/alerts/alert-dashboard' },
         { label: 'ca-alerts.history.title', link: '/alerts/alert-history' },
-        { label: 'ca-alerts.detail.title', link: '/alerts/deviation-detail' },
         { label: 'ca-alerts.settings.title', link: '/alerts/notification-settings' },
       ],
     },
@@ -100,47 +101,50 @@ export class Layout {
       link: '/laboratories',
       children: [
         { label: 'lab-profile.title', link: '/laboratories/lab-profile' },
+        { label: 'lab-form.title', link: '/laboratories/lab-form' },
         { label: 'staff-list.title', link: '/laboratories/staff-list' },
         { label: 'staff-form.title', link: '/laboratories/staff-form' },
         { label: 'product-catalog.title', link: '/laboratories/product-catalog' },
         { label: 'product-form.title', link: '/laboratories/product-form' },
         { label: 'raw-material-list.title', link: '/laboratories/raw-material-list' },
-        {
-          label: 'raw-material-form.title',
-          icon: 'post_add',
-          link: '/laboratories/raw-material-form',
-        },
+        { label: 'raw-material-form.title', link: '/laboratories/raw-material-form' },
+      ],
+    },
+    {
+      label: 'nav.tracking',
+      icon: 'sensors',
+      link: '/tracking',
+      children: [
+        { label: 'tracking.dashboard.title', link: '/tracking/dashboard' },
+        { label: 'tracking.history.title', link: '/tracking/history' },
+        { label: 'tracking.analysis.title', link: '/tracking/analysis' },
       ],
     },
   ];
 
-  constructor(
-    private router: Router,
-    private observer: BreakpointObserver,
-  ) {
-    this.observer.observe(['(max-width: 768px)']).subscribe((result) => {
-      if (result.matches) {
-        this.sidenavMode = 'over';
-        this.sidenavOpened = false;
-      } else {
-        this.sidenavMode = 'side';
-        this.sidenavOpened = true;
-      }
-    });
-  }
+  /**
+   * Creates a new Layout component.
+   *
+   * @param router - Angular router used for navigation and active route checks
+   */
+  constructor(private readonly router: Router) {}
 
-  navigateTo(link: string): void {
+  /**
+   * Navigates to a route from the side menu.
+   *
+   * @param link - Target route link
+   */
+  protected navigateTo(link: string): void {
     this.router.navigate([link]).then();
-    if (this.sidenavMode === 'over') {
-      this.drawer.toggle().then();
-    }
   }
 
-  isActive(link: string): boolean {
-    return this.router.url.startsWith(link);
-  }
-
-  getCurrentYear(): number {
-    return new Date().getFullYear();
+  /**
+   * Determines whether a route or route group is currently active.
+   *
+   * @param link - Route link to compare against the current URL
+   * @returns True when the current URL matches or belongs to the route group
+   */
+  protected isActive(link: string): boolean {
+    return this.router.url === link || this.router.url.startsWith(`${link}/`);
   }
 }
