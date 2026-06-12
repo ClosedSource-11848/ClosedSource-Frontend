@@ -20,4 +20,7 @@
  *
  * @author Qualitrack
  */
-export interface LinkRawMaterialCommand {}
+export interface LinkRawMaterialCommand {
+  rawMaterialId: number;
+  quantityUsed: number;
+}

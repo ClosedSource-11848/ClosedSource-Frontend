@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { CaStore } from '../../../application/ca.store';
+import { AlertSeverity, AlertStatus } from '../../../domain/model/deviation-alert.entity';
 
 @Component({
   selector: 'app-alert-history',
@@ -37,29 +38,12 @@ import { CaStore } from '../../../application/ca.store';
   styleUrl: './alert-history.css',
 })
 export class AlertHistory implements OnInit {
-  /**
-   * The application store instance for Compliance and Alerts.
-   */
   protected readonly store = inject(CaStore);
-
-  /**
-   * Angular Router for handling navigation to alert details.
-   */
   private readonly router = inject(Router);
-
-  /**
-   * Form builder service to create the reactive filter form.
-   */
   private readonly fb = inject(FormBuilder);
 
-  /**
-   * Form group for managing alert search filters.
-   */
   filterForm!: FormGroup;
 
-  /**
-   * Configuration for the columns to be displayed in the history table.
-   */
   displayedColumns: string[] = [
     'timestamp',
     'equipmentId',
@@ -69,65 +53,64 @@ export class AlertHistory implements OnInit {
     'actions',
   ];
 
-  /**
-   * Creates an instance of AlertHistory and initializes the filter form structure.
-   */
   constructor() {
     this.initFilterForm();
   }
 
-  /**
-   * Initializes the component by loading the initial set of alerts.
-   */
   ngOnInit(): void {
     this.store.loadAlerts();
   }
 
-  /**
-   * Defines the structure and initial values of the filter form.
-   * @private
-   */
   private initFilterForm(): void {
     this.filterForm = this.fb.group({
       status: [''],
       severity: [''],
       equipmentId: [''],
+      batchId: [''],
     });
   }
 
-  /**
-   * Processes the form values and triggers a filtered data load in the store.
-   *
-   * @remarks
-   * Filters out null or empty values before dispatching the load action
-   * to ensure clean query parameters are sent to the API. It also ensures
-   * numeric identifiers are correctly typed.
-   */
   applyFilters(): void {
     const rawFilters = this.filterForm.value;
-    const cleanFilters = Object.fromEntries(
-      Object.entries(rawFilters)
-        .filter(([_, v]) => v !== null && v !== '')
-        .map(([k, v]) => [k, k === 'equipmentId' ? Number(v) : v]),
-    );
+
+    const cleanFilters: {
+      equipmentId?: number;
+      batchId?: number;
+      status?: AlertStatus;
+      severity?: AlertSeverity;
+    } = {};
+
+    if (rawFilters.equipmentId) {
+      cleanFilters.equipmentId = Number(rawFilters.equipmentId);
+    }
+
+    if (rawFilters.batchId) {
+      cleanFilters.batchId = Number(rawFilters.batchId);
+    }
+
+    if (rawFilters.status) {
+      cleanFilters.status = rawFilters.status as AlertStatus;
+    }
+
+    if (rawFilters.severity) {
+      cleanFilters.severity = rawFilters.severity as AlertSeverity;
+    }
 
     this.store.loadAlerts(cleanFilters);
   }
 
-  /**
-   * Resets the filter form and reloads the complete alerts list.
-   */
   clearFilters(): void {
-    this.filterForm.reset({ status: '', severity: '', equipmentId: '' });
+    this.filterForm.reset({
+      status: '',
+      severity: '',
+      equipmentId: '',
+      batchId: '',
+    });
+
     this.store.loadAlerts();
   }
 
-  /**
-   * Navigates to the detailed information view of a specific alert.
-   *
-   * @param alertId - The unique numeric identifier of the deviation alert.
-   */
   viewDetails(alertId: number): void {
-    this.router.navigate(['/alerts/deviation-detail', alertId]);
+    this.router.navigate(['/alerts/deviation-detail', alertId]).then();
   }
 }

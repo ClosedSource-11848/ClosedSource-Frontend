@@ -82,22 +82,22 @@
       "critical": "Critical Deviations"
     },
     "fields": {
-      "timestamp": "Date / Time",
-      "parameter": "Deviated Parameter",
       "severity": "Severity",
-      "equipment": "Equipment",
       "recorded": "Recorded Value",
-      "threshold": "Threshold Limit",
+      "threshold": "Threshold Value",
+      "equipment": "Equipment",
       "batch": "Batch",
-      "minimum-severity": "Minimum Severity"
+      "resolution-notes": "Resolution Notes"
     },
     "severity": {
+      "low": "Low",
       "info": "Info",
       "warning": "Warning",
       "critical": "Critical"
     },
     "status": {
       "unresolved": "Unresolved",
+      "acknowledged": "Acknowledged",
       "resolved": "Resolved",
       "ignored": "Ignored"
     },

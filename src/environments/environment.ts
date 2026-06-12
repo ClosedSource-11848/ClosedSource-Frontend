@@ -10,7 +10,7 @@ export const environment = {
   iamRecoverPasswordEndpointPath: '/authentication/recover-password',
 
   // Laboratory
-  laboratoryLabsEndpointPath: '/labs',
+  laboratoryLabsEndpointPath: '/laboratories',
   laboratoryStaffEndpointPath: '/staff',
   laboratoryProductsEndpointPath: '/products',
   laboratoryRawMaterialsEndpointPath: '/raw-materials',
@@ -25,12 +25,11 @@ export const environment = {
   batchRawMaterialUsageEndpointPath: '/raw-material-usages',
 
   // Tracking (IoT)
-  trackingTelemetryEndpointPath: 'https://qt-telemetry-v3.free.beeceptor.com',
-  //trackingTelemetryEndpointPath: '/telemetry',
+  trackingTelemetryEndpointPath: '/telemetry',
   trackingDeviceBindingsEndpointPath: '/device-bindings',
 
   // CA (Compliance & Alerting)
-  caComplianceEndpointPath: '/compliance',
+  caComplianceEndpointPath: '/compliance-events',
   caAlertsEndpointPath: '/alerts',
   caNotificationPrefsEndpointPath: '/notification-preferences',
 

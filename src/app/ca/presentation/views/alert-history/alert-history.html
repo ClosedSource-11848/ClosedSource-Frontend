@@ -17,14 +17,19 @@
   <form [formGroup]="filterForm" (ngSubmit)="applyFilters()" class="filter-bar mat-elevation-z1">
     <mat-form-field appearance="outline" class="filter-field">
       <mat-label>{{ 'ca-alerts.fields.equipment' | translate }}</mat-label>
-      <input matInput formControlName="equipmentId" placeholder="Ej. EQ-1020">
+      <input matInput formControlName="equipmentId" placeholder="Ej. 1020" type="number">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>{{ 'ca-alerts.fields.batch' | translate }}</mat-label>
+      <input matInput formControlName="batchId" placeholder="Ej. 15" type="number">
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="filter-field">
       <mat-label>{{ 'ca-alerts.fields.severity' | translate }}</mat-label>
       <mat-select formControlName="severity">
         <mat-option value="">{{ 'common.all' | translate }}</mat-option>
-        <mat-option value="INFO">{{ 'ca-alerts.severity.info' | translate }}</mat-option>
+        <mat-option value="LOW">{{ 'ca-alerts.severity.low' | translate }}</mat-option>
         <mat-option value="WARNING">{{ 'ca-alerts.severity.warning' | translate }}</mat-option>
         <mat-option value="CRITICAL">{{ 'ca-alerts.severity.critical' | translate }}</mat-option>
       </mat-select>
@@ -35,8 +40,8 @@
       <mat-select formControlName="status">
         <mat-option value="">{{ 'common.all' | translate }}</mat-option>
         <mat-option value="UNRESOLVED">{{ 'ca-alerts.status.unresolved' | translate }}</mat-option>
+        <mat-option value="ACKNOWLEDGED">{{ 'ca-alerts.status.acknowledged' | translate }}</mat-option>
         <mat-option value="RESOLVED">{{ 'ca-alerts.status.resolved' | translate }}</mat-option>
-        <mat-option value="IGNORED">{{ 'ca-alerts.status.ignored' | translate }}</mat-option>
       </mat-select>
     </mat-form-field>
 

@@ -70,7 +70,7 @@ export class BpmConfigAssembler implements BaseAssembler<
       minValue: resource.minValue,
       maxValue: resource.maxValue,
       unit: resource.unit,
-      createdAt: resource.createdAt,
+      createdAt: resource.createdAt ?? ''
     });
   }
 

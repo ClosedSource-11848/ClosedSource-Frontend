@@ -6,6 +6,7 @@ import { RawMaterial } from '../domain/model/raw-material.entity';
 import { RawMaterialResource, RawMaterialsResponse } from './raw-material-response';
 import { RawMaterialAssembler } from './raw-material-assembler';
 import { CreateRawMaterialRequest } from './raw-material.request';
+import { MessageResource } from '../../shared/infrastructure/message-response';
 
 /**
  * Base URL for all laboratory-related HTTP endpoints, composed from the
@@ -69,8 +70,10 @@ export class RawMaterialApiEndpoint extends BaseApiEndpoint<
    * through the base class error handler.
    */
   getRawMaterialsByLab(labId: number): Observable<RawMaterial[]> {
-    return this.http.get<RawMaterialsResponse>(`${this.endpointUrl}/${labId}/raw-materials`).pipe(
-      map((response) => this.assembler.toEntitiesFromResponse(response)),
+    return this.http.get<RawMaterialResource[]>(`${this.endpointUrl}/${labId}/raw-materials`).pipe(
+      map((resources) =>
+        resources.map((resource) => this.assembler.toEntityFromResource(resource)),
+      ),
       catchError(this.handleError(`Failed to fetch raw materials for lab ${labId}`)),
     );
   }
@@ -92,9 +95,11 @@ export class RawMaterialApiEndpoint extends BaseApiEndpoint<
    */
   getLowStockMaterials(labId: number): Observable<RawMaterial[]> {
     return this.http
-      .get<RawMaterialsResponse>(`${this.endpointUrl}/${labId}/raw-materials/low-stock`)
+      .get<RawMaterialResource[]>(`${this.endpointUrl}/${labId}/raw-materials?lowStock=true`)
       .pipe(
-        map((response) => this.assembler.toEntitiesFromResponse(response)),
+        map((resources) =>
+          resources.map((resource) => this.assembler.toEntityFromResource(resource)),
+        ),
         catchError(this.handleError(`Failed to fetch low stock materials for lab ${labId}`)),
       );
   }
@@ -115,12 +120,9 @@ export class RawMaterialApiEndpoint extends BaseApiEndpoint<
    * {@link RawMaterialAssembler.toEntityFromResource}. Errors are forwarded
    * through the base class error handler.
    */
-  createRawMaterial(labId: number, request: CreateRawMaterialRequest): Observable<RawMaterial> {
+  createRawMaterial(labId: number, request: CreateRawMaterialRequest): Observable<MessageResource> {
     return this.http
-      .post<RawMaterialResource>(`${this.endpointUrl}/${labId}/raw-materials`, request)
-      .pipe(
-        map((resource) => this.assembler.toEntityFromResource(resource)),
-        catchError(this.handleError('Failed to create raw material')),
-      );
+      .post<MessageResource>(`${this.endpointUrl}/${labId}/raw-materials`, request)
+      .pipe(catchError(this.handleError('Failed to create raw material')));
   }
 }

@@ -62,7 +62,7 @@ StaffMembersResponse
   toEntityFromResource(resource: StaffMemberResource): StaffMember {
     return new StaffMember({
       id: resource.id,
-      labId: resource.labId,
+      labId: resource.laboratoryId,
       fullName: resource.fullName,
       role: resource.role,
       email: resource.email,
@@ -85,7 +85,7 @@ StaffMembersResponse
   toResourceFromEntity(entity: StaffMember): StaffMemberResource {
     return {
       id: entity.id,
-      labId: entity.labId,
+      laboratoryId: entity.labId,
       fullName: entity.fullName,
       role: entity.role,
       email: entity.email,

@@ -6,6 +6,7 @@ import { PharmaceuticalProduct } from '../domain/model/pharmaceutical-product.en
 import { PharmaceuticalProductResource, PharmaceuticalProductsResponse } from './product-response';
 import { ProductAssembler } from './product-assembler';
 import { CreateProductRequest } from './product.request';
+import { MessageResource } from '../../shared/infrastructure/message-response';
 
 /**
  * Base URL for all laboratory-related HTTP endpoints, composed from the
@@ -70,9 +71,11 @@ export class ProductApiEndpoint extends BaseApiEndpoint<
    */
   getProductsByLab(labId: number): Observable<PharmaceuticalProduct[]> {
     return this.http
-      .get<PharmaceuticalProductsResponse>(`${this.endpointUrl}/${labId}/products`)
+      .get<PharmaceuticalProductResource[]>(`${this.endpointUrl}/${labId}/products`)
       .pipe(
-        map((response) => this.assembler.toEntitiesFromResponse(response)),
+        map((resources) =>
+          resources.map((resource) => this.assembler.toEntityFromResource(resource)),
+        ),
         catchError(this.handleError(`Failed to fetch products for lab ${labId}`)),
       );
   }
@@ -93,12 +96,9 @@ export class ProductApiEndpoint extends BaseApiEndpoint<
    * {@link ProductAssembler.toEntityFromResource}. Errors are forwarded
    * through the base class error handler.
    */
-  createProduct(labId: number, request: CreateProductRequest): Observable<PharmaceuticalProduct> {
+  createProduct(labId: number, request: CreateProductRequest): Observable<MessageResource> {
     return this.http
-      .post<PharmaceuticalProductResource>(`${this.endpointUrl}/${labId}/products`, request)
-      .pipe(
-        map((resource) => this.assembler.toEntityFromResource(resource)),
-        catchError(this.handleError('Failed to create pharmaceutical product')),
-      );
+      .post<MessageResource>(`${this.endpointUrl}/${labId}/products`, request)
+      .pipe(catchError(this.handleError('Failed to create pharmaceutical product')));
   }
 }

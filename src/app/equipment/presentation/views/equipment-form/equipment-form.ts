@@ -131,7 +131,7 @@ export class EquipmentForm {
 
     const command: RegisterEquipmentCommand = {
       ...this.form.value,
-      labId: Number(labId),
+      laboratoryId: Number(labId),
     };
 
     this.store.registerEquipment(command);
