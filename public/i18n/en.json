@@ -3,6 +3,11 @@
     "title": "We care about accuracy, we ensure quality.",
     "content": "Advanced data management for high-stakes operational environments. Ensure total compliance and laboratory-grade accuracy."
   },
+  "auth": {
+    "already-have-account": "Already have an account?",
+    "sign-in": "Sign In",
+    "or-create-account": "Or create an account"
+  },
   "iam": {
     "auth": {
       "already-have-account": "Already have an account?",
@@ -68,7 +73,6 @@
     "required": "This field is required",
     "invalidEmail": "Please enter a valid email",
     "minZero": "Value must be at least 0",
-    "actions": "Actions",
     "status-loading": "Loading data...",
     "all": "All",
     "clear": "Clear Filters",
@@ -76,7 +80,23 @@
     "download": "Download",
     "export": "Export",
     "format": "Format",
-    "date-range": "Date Range"
+    "date-range": "Date Range",
+    "errors": {
+      "required": "This field is required",
+      "invalid-email": "Please enter a valid email",
+      "min-zero": "Value must be at least 0"
+    },
+    "actions": {
+      "label": "Actions",
+      "save": "Save",
+      "cancel": "Cancel",
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete",
+      "register": "Register",
+      "search": "Search",
+      "refresh": "Refresh"
+    }
   },
   "status": {
     "ON_TRACK": "On Track",
@@ -120,12 +140,13 @@
     "tracking": "Tracking & Telemetry",
     "tracking-dashboard": "Telemetry Dashboard",
     "tracking-history": "Telemetry History",
-    "tracking-analysis": "Telemetry Analysis"
+    "tracking-analysis": "Telemetry Analysis",
+    "subscription": "Subscription & Billing"
   },
   "dashboard": {
     "command-center": "QualiTrack Command Center",
     "fallback-title": "Laboratory Operations",
-    "subtitle": "Operational overview across laboratory, equipment, batches, compliance, reports, and telemetry.",
+    "subtitle": "Operational overview across laboratory, equipment, batches, compliance, reports, telemetry, and subscription status.",
     "overall-health": "Overall Health",
     "health": {
       "healthy": "Healthy",
@@ -137,10 +158,13 @@
       "batches": "Batches",
       "alerts": "Alerts",
       "raw-materials": "Raw Materials",
+      "subscription": "Subscription",
       "operational": "{{count}} operational",
       "in-progress": "{{count}} in progress",
       "critical": "{{count}} critical",
-      "low-stock": "{{count}} low stock"
+      "low-stock": "{{count}} low stock",
+      "active-subscription": "Active plan",
+      "no-subscription": "No active plan"
     },
     "charts": {
       "distribution-title": "Operational Distribution",
@@ -166,6 +190,7 @@
       "equipment-maintenance": "Equipment needing maintenance",
       "critical-compliance-alerts": "Critical compliance alerts",
       "telemetry-anomalies": "Telemetry anomalies",
+      "subscription-required": "Subscription required",
       "pending": "{{count}} pending",
       "empty-title": "No urgent issues",
       "empty-subtitle": "Your operational signals look stable."
@@ -178,13 +203,148 @@
       "anomalies": "Anomalies",
       "at-risk-kpis": "At-risk KPIs"
     },
+    "subscription": {
+      "title": "Subscription & Billing",
+      "subtitle": "Manage your current plan and payment access.",
+      "current-status": "Current Status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "payments": "Payments",
+      "plan": "Plan",
+      "billing": "Billing",
+      "plans": "Plans"
+    },
     "quick-actions": {
       "laboratory": "Laboratory",
       "equipment": "Equipment",
       "batches": "Batches",
       "alerts": "Alerts",
       "reports": "Reports",
-      "tracking": "Tracking"
+      "tracking": "Tracking",
+      "subscription": "Subscription"
+    }
+  },
+  "subscription": {
+    "plans": {
+      "title": "Subscription Plans",
+      "subtitle": "Choose the plan that fits your laboratory operations.",
+      "current-plan": "Current Plan",
+      "recommended": "Recommended",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "max-users": "Up to {{count}} users",
+      "max-equipment": "Up to {{count}} equipment records",
+      "features": "Included Features",
+      "select": "Select Plan",
+      "selected": "Selected",
+      "continue": "Continue to Checkout",
+      "empty": "No subscription plans are currently available."
+    },
+    "billing-period": {
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "checkout": {
+      "title": "Checkout",
+      "subtitle": "Review your selected plan before continuing to payment.",
+      "selected-plan": "Selected Plan",
+      "plan-code": "Plan Code",
+      "billing-period": "Billing Period",
+      "amount": "Amount",
+      "continue-payment": "Continue to Payment",
+      "change-plan": "Change Plan",
+      "no-plan-title": "No plan selected",
+      "no-plan-subtitle": "Select a subscription plan before starting checkout.",
+      "go-plans": "View Plans"
+    },
+    "payment-success": {
+      "title": "Payment Successful",
+      "subtitle": "Your subscription payment was completed successfully.",
+      "go-dashboard": "Go to Dashboard",
+      "view-billing": "View Billing"
+    },
+    "payment-cancel": {
+      "title": "Payment Cancelled",
+      "subtitle": "Your payment process was cancelled. You can try again whenever you are ready.",
+      "try-again": "Try Again",
+      "view-plans": "View Plans"
+    },
+    "billing": {
+      "title": "Billing Summary",
+      "subtitle": "Review your active subscription and payment history.",
+      "current-subscription": "Current Subscription",
+      "no-active-subscription": "No active subscription",
+      "no-active-subscription-desc": "Choose a plan to activate billing for your laboratory.",
+      "choose-plan": "Choose Plan",
+      "change-plan": "Change Plan",
+      "plan": "Plan",
+      "plan-id": "Plan ID",
+      "status": "Status",
+      "start-date": "Start Date",
+      "started-at": "Started At",
+      "end-date": "End Date",
+      "period-ends": "Period Ends",
+      "payments-title": "Payment History",
+      "payment-history": "Payment History",
+      "empty-payments": "No payments have been registered yet.",
+      "no-payments": "No payments have been registered yet.",
+      "no-subscription": "No active subscription found.",
+      "table": {
+        "date": "Date",
+        "amount": "Amount",
+        "status": "Status",
+        "provider": "Provider",
+        "reference": "Reference"
+      }
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive",
+      "CANCELLED": "Cancelled",
+      "EXPIRED": "Expired",
+      "PAST_DUE": "Past Due",
+      "active": "Active",
+      "inactive": "Inactive",
+      "cancelled": "Cancelled",
+      "expired": "Expired",
+      "past_due": "Past Due"
+    },
+    "payment-status": {
+      "PENDING": "Pending",
+      "PAID": "Paid",
+      "FAILED": "Failed",
+      "CANCELLED": "Cancelled",
+      "REFUNDED": "Refunded",
+      "pending": "Pending",
+      "paid": "Paid",
+      "failed": "Failed",
+      "cancelled": "Cancelled",
+      "refunded": "Refunded"
+    },
+    "payments": {
+      "title": "Payments",
+      "date": "Date",
+      "amount": "Amount",
+      "currency": "Currency",
+      "provider": "Provider",
+      "reference": "Reference",
+      "status": "Status",
+      "paid-at": "Paid At"
+    },
+    "errors": {
+      "load-plans": "Failed to load subscription plans.",
+      "load-current": "Failed to load current subscription.",
+      "load-payments": "Failed to load payment history.",
+      "checkout": "Failed to create checkout session."
+    },
+    "messages": {
+      "checkout-created": "Checkout session created successfully."
+    }
+  },
+  "ca-compliance": {
+    "status": {
+      "compliant": "Compliant",
+      "non-compliant": "Non-compliant"
     }
   },
   "ca-alerts": {
@@ -201,7 +361,8 @@
       "threshold": "Threshold Value",
       "equipment": "Equipment",
       "batch": "Batch",
-      "resolution-notes": "Resolution Notes"
+      "resolution-notes": "Resolution Notes",
+      "description": "Description"
     },
     "severity": {
       "low": "Low",
@@ -255,6 +416,7 @@
     },
     "status": {
       "pending": "Pending",
+      "in_progress": "In Progress",
       "in-progress": "In Progress",
       "released": "Released",
       "rejected": "Rejected",

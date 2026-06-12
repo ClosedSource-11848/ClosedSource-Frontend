@@ -3,6 +3,11 @@
     "title": "Nos preocupamos por la precisión, aseguramos la calidad.",
     "content": "Gestión avanzada de datos para entornos operativos de alto riesgo. Asegure el cumplimiento normativo total y la precisión a nivel de laboratorio."
   },
+  "auth": {
+    "already-have-account": "¿Ya tienes una cuenta?",
+    "sign-in": "Iniciar Sesión",
+    "or-create-account": "O crea una cuenta"
+  },
   "iam": {
     "auth": {
       "already-have-account": "¿Ya tienes una cuenta?",
@@ -29,13 +34,13 @@
     },
     "sign-up": {
       "title": "Crear Cuenta",
-      "subtitle": "Regístrese para acceder al sistema QualiTrack.",
+      "subtitle": "Regístrate para acceder al sistema QualiTrack.",
       "username": "Usuario",
-      "username-placeholder": "Elija un nombre de usuario",
+      "username-placeholder": "Elige un nombre de usuario",
       "password": "Contraseña",
-      "password-placeholder": "Cree una contraseña",
+      "password-placeholder": "Crea una contraseña",
       "confirm-password": "Confirmar Contraseña",
-      "confirm-password-placeholder": "Confirme su contraseña",
+      "confirm-password-placeholder": "Confirma tu contraseña",
       "mode-label": "Modo de Registro",
       "register-as": "Registrarse como {{role}}",
       "already-have-account": "¿Ya tienes una cuenta?",
@@ -68,7 +73,6 @@
     "required": "Este campo es obligatorio",
     "invalidEmail": "Ingrese un correo válido",
     "minZero": "El valor debe ser al menos 0",
-    "actions": "Acciones",
     "status-loading": "Cargando datos...",
     "all": "Todos",
     "clear": "Limpiar Filtros",
@@ -76,7 +80,23 @@
     "download": "Descargar",
     "export": "Exportar",
     "format": "Formato",
-    "date-range": "Rango de Fechas"
+    "date-range": "Rango de Fechas",
+    "errors": {
+      "required": "Este campo es obligatorio",
+      "invalid-email": "Ingrese un correo válido",
+      "min-zero": "El valor debe ser al menos 0"
+    },
+    "actions": {
+      "label": "Acciones",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "view": "Ver",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "register": "Registrar",
+      "search": "Buscar",
+      "refresh": "Actualizar"
+    }
   },
   "status": {
     "ON_TRACK": "En Camino",
@@ -120,12 +140,13 @@
     "tracking": "Tracking y Telemetría",
     "tracking-dashboard": "Panel de Telemetría",
     "tracking-history": "Historial de Telemetría",
-    "tracking-analysis": "Análisis de Telemetría"
+    "tracking-analysis": "Análisis de Telemetría",
+    "subscription": "Suscripción y Facturación"
   },
   "dashboard": {
     "command-center": "Centro de Control QualiTrack",
     "fallback-title": "Operaciones del Laboratorio",
-    "subtitle": "Resumen operativo de laboratorio, equipos, lotes, cumplimiento, reportes y telemetría.",
+    "subtitle": "Resumen operativo de laboratorio, equipos, lotes, cumplimiento, reportes, telemetría y estado de suscripción.",
     "overall-health": "Salud General",
     "health": {
       "healthy": "Saludable",
@@ -137,10 +158,13 @@
       "batches": "Lotes",
       "alerts": "Alertas",
       "raw-materials": "Materias Primas",
+      "subscription": "Suscripción",
       "operational": "{{count}} operativos",
       "in-progress": "{{count}} en progreso",
       "critical": "{{count}} críticas",
-      "low-stock": "{{count}} con stock bajo"
+      "low-stock": "{{count}} con stock bajo",
+      "active-subscription": "Plan activo",
+      "no-subscription": "Sin plan activo"
     },
     "charts": {
       "distribution-title": "Distribución Operativa",
@@ -166,6 +190,7 @@
       "equipment-maintenance": "Equipos que requieren mantenimiento",
       "critical-compliance-alerts": "Alertas críticas de cumplimiento",
       "telemetry-anomalies": "Anomalías de telemetría",
+      "subscription-required": "Suscripción requerida",
       "pending": "{{count}} pendientes",
       "empty-title": "Sin problemas urgentes",
       "empty-subtitle": "Tus señales operativas se ven estables."
@@ -178,13 +203,148 @@
       "anomalies": "Anomalías",
       "at-risk-kpis": "KPIs en riesgo"
     },
+    "subscription": {
+      "title": "Suscripción y Facturación",
+      "subtitle": "Administra tu plan actual y el acceso de pago.",
+      "current-status": "Estado Actual",
+      "active": "Activa",
+      "inactive": "Inactiva",
+      "payments": "Pagos",
+      "plan": "Plan",
+      "billing": "Facturación",
+      "plans": "Planes"
+    },
     "quick-actions": {
       "laboratory": "Laboratorio",
       "equipment": "Equipos",
       "batches": "Lotes",
       "alerts": "Alertas",
       "reports": "Reportes",
-      "tracking": "Tracking"
+      "tracking": "Tracking",
+      "subscription": "Suscripción"
+    }
+  },
+  "subscription": {
+    "plans": {
+      "title": "Planes de Suscripción",
+      "subtitle": "Elige el plan que mejor se adapte a las operaciones de tu laboratorio.",
+      "current-plan": "Plan Actual",
+      "recommended": "Recomendado",
+      "monthly": "Mensual",
+      "yearly": "Anual",
+      "max-users": "Hasta {{count}} usuarios",
+      "max-equipment": "Hasta {{count}} equipos registrados",
+      "features": "Características Incluidas",
+      "select": "Seleccionar Plan",
+      "selected": "Seleccionado",
+      "continue": "Continuar al Pago",
+      "empty": "No hay planes de suscripción disponibles actualmente."
+    },
+    "billing-period": {
+      "monthly": "Mensual",
+      "yearly": "Anual"
+    },
+    "checkout": {
+      "title": "Pago",
+      "subtitle": "Revisa el plan seleccionado antes de continuar con el pago.",
+      "selected-plan": "Plan Seleccionado",
+      "plan-code": "Código del Plan",
+      "billing-period": "Periodo de Facturación",
+      "amount": "Monto",
+      "continue-payment": "Continuar al Pago",
+      "change-plan": "Cambiar Plan",
+      "no-plan-title": "No hay un plan seleccionado",
+      "no-plan-subtitle": "Selecciona un plan de suscripción antes de iniciar el pago.",
+      "go-plans": "Ver Planes"
+    },
+    "payment-success": {
+      "title": "Pago Exitoso",
+      "subtitle": "El pago de tu suscripción se completó correctamente.",
+      "go-dashboard": "Ir al Dashboard",
+      "view-billing": "Ver Facturación"
+    },
+    "payment-cancel": {
+      "title": "Pago Cancelado",
+      "subtitle": "El proceso de pago fue cancelado. Puedes intentarlo nuevamente cuando estés listo.",
+      "try-again": "Intentar de Nuevo",
+      "view-plans": "Ver Planes"
+    },
+    "billing": {
+      "title": "Resumen de Facturación",
+      "subtitle": "Revisa tu suscripción activa y el historial de pagos.",
+      "current-subscription": "Suscripción Actual",
+      "no-active-subscription": "No hay una suscripción activa",
+      "no-active-subscription-desc": "Elige un plan para activar la facturación de tu laboratorio.",
+      "choose-plan": "Elegir Plan",
+      "change-plan": "Cambiar Plan",
+      "plan": "Plan",
+      "plan-id": "ID del Plan",
+      "status": "Estado",
+      "start-date": "Fecha de Inicio",
+      "started-at": "Inició El",
+      "end-date": "Fecha de Fin",
+      "period-ends": "Fin del Periodo",
+      "payments-title": "Historial de Pagos",
+      "payment-history": "Historial de Pagos",
+      "empty-payments": "Aún no se han registrado pagos.",
+      "no-payments": "Aún no se han registrado pagos.",
+      "no-subscription": "No se encontró una suscripción activa.",
+      "table": {
+        "date": "Fecha",
+        "amount": "Monto",
+        "status": "Estado",
+        "provider": "Proveedor",
+        "reference": "Referencia"
+      }
+    },
+    "status": {
+      "ACTIVE": "Activa",
+      "INACTIVE": "Inactiva",
+      "CANCELLED": "Cancelada",
+      "EXPIRED": "Expirada",
+      "PAST_DUE": "Vencida",
+      "active": "Activa",
+      "inactive": "Inactiva",
+      "cancelled": "Cancelada",
+      "expired": "Expirada",
+      "past_due": "Vencida"
+    },
+    "payment-status": {
+      "PENDING": "Pendiente",
+      "PAID": "Pagado",
+      "FAILED": "Fallido",
+      "CANCELLED": "Cancelado",
+      "REFUNDED": "Reembolsado",
+      "pending": "Pendiente",
+      "paid": "Pagado",
+      "failed": "Fallido",
+      "cancelled": "Cancelado",
+      "refunded": "Reembolsado"
+    },
+    "payments": {
+      "title": "Pagos",
+      "date": "Fecha",
+      "amount": "Monto",
+      "currency": "Moneda",
+      "provider": "Proveedor",
+      "reference": "Referencia",
+      "status": "Estado",
+      "paid-at": "Pagado El"
+    },
+    "errors": {
+      "load-plans": "No se pudieron cargar los planes de suscripción.",
+      "load-current": "No se pudo cargar la suscripción actual.",
+      "load-payments": "No se pudo cargar el historial de pagos.",
+      "checkout": "No se pudo crear la sesión de pago."
+    },
+    "messages": {
+      "checkout-created": "La sesión de pago se creó correctamente."
+    }
+  },
+  "ca-compliance": {
+    "status": {
+      "compliant": "Conforme",
+      "non-compliant": "No conforme"
     }
   },
   "ca-alerts": {
@@ -197,11 +357,12 @@
     },
     "fields": {
       "severity": "Severidad",
-      "recorded": "Valor registrado",
-      "threshold": "Valor límite",
+      "recorded": "Valor Registrado",
+      "threshold": "Valor Límite",
       "equipment": "Equipo",
       "batch": "Lote",
-      "resolution-notes": "Notas de resolución"
+      "resolution-notes": "Notas de Resolución",
+      "description": "Descripción"
     },
     "severity": {
       "low": "Baja",
@@ -255,6 +416,7 @@
     },
     "status": {
       "pending": "Pendiente",
+      "in_progress": "En Progreso",
       "in-progress": "En Progreso",
       "released": "Liberado",
       "rejected": "Rechazado",
@@ -392,7 +554,7 @@
     }
   },
   "bpm-config": {
-    "title": "Configuración Parámetros BPM",
+    "title": "Configuración de Parámetros BPM",
     "subtitle": "Establece los rangos de tolerancia para el monitoreo de calidad",
     "empty": "No hay parámetros BPM configurados para este equipo.",
     "fields": {
@@ -440,7 +602,7 @@
     "title": "Alertas de Calibración",
     "subtitle": "Equipos que requieren intervención técnica inmediata",
     "action-tooltip": "Registrar Calibración",
-    "view-all": "VER TODOS LOS EQUOS"
+    "view-all": "VER TODOS LOS EQUIPOS"
   },
   "equipment-status": {
     "operational": "Operativo",
