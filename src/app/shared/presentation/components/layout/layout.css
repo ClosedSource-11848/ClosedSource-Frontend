@@ -24,7 +24,7 @@
   font-weight: 700;
   font-size: 22px;
   color: #1a3a5c;
-  letter-spacing: 0.5px;
+  letter-spacing: 0;
 }
 
 .spacer {
@@ -69,20 +69,22 @@ mat-sidenav {
   overflow-x: hidden;
 }
 
-/* Estilo para items principales */
 .nav-item {
   display: flex;
   align-items: center;
   gap: 14px;
   padding: 12px 14px;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
   color: #5f6368;
   position: relative;
 }
 
-.nav-item:hover, .nav-item-header:hover {
+.nav-item:hover,
+.nav-item-header:hover {
   background: #eaf0fb !important;
   color: #1a3a5c;
 }
@@ -109,11 +111,14 @@ mat-sidenav {
 
 .nav-icon-wrapper mat-icon {
   font-size: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 .nav-label {
   font-size: 14px;
   font-weight: 500;
+  overflow-wrap: anywhere;
 }
 
 .active-indicator {
@@ -127,7 +132,7 @@ mat-sidenav {
   border-radius: 2px 0 0 2px;
 }
 
-/* ==================== SUB-MENU CORREGIDO ==================== */
+/* ==================== SUB-MENU ==================== */
 .sub-menu-container {
   margin-left: 28px;
   padding-left: 12px;
@@ -143,7 +148,9 @@ mat-sidenav {
   padding: 10px 16px;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
   color: #5f6368;
 }
 
@@ -155,6 +162,7 @@ mat-sidenav {
 .sub-nav-label {
   font-size: 13px;
   font-weight: 500;
+  overflow-wrap: anywhere;
 }
 
 .sub-nav-item.sub-active {
@@ -169,12 +177,13 @@ mat-sidenav {
 /* ==================== EXPANSION PANEL RESET ==================== */
 .nav-expansion-panel {
   background: transparent !important;
+  box-shadow: none !important;
 }
 
 .nav-item-header {
   height: 48px !important;
   padding: 0 10px !important;
-  border-radius: 10px !important;
+  border-radius: 8px !important;
 }
 
 .nav-item-title {
@@ -195,4 +204,28 @@ mat-sidenav-content {
 .content-wrapper {
   padding: 24px;
   min-height: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 0 12px;
+  }
+
+  .toolbar-title {
+    font-size: 18px;
+  }
+
+  .toolbar img {
+    height: 34px;
+    margin-right: 8px;
+  }
+
+  mat-sidenav {
+    width: 260px;
+  }
+
+  .content-wrapper {
+    padding: 16px;
+  }
 }

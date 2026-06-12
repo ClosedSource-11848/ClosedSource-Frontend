@@ -68,10 +68,98 @@
     "home": "Home",
     "dashboard": "Dashboard",
     "batches": "Batch Management",
+    "batch-list": "Production Batches",
+    "batch-form": "Create Batch",
     "equipment": "Equipment",
+    "equipment-list": "Equipment Catalog",
+    "register-equipment": "Register Equipment",
     "alerts": "Compliance Alerts",
+    "alert-dashboard": "Alert Dashboard",
+    "alert-history": "Alert History",
+    "notification-settings": "Notification Settings",
     "reports": "Reports & KPIs",
-    "laboratory": "Laboratory"
+    "kpi-dashboard": "KPI Dashboard",
+    "deviation-trends": "Deviation Trends",
+    "report-generator": "Report Generator",
+    "audit-log": "Audit Log",
+    "laboratory": "Laboratory",
+    "lab-profile": "Laboratory Profile",
+    "lab-form": "Create Laboratory",
+    "staff-list": "Personnel Management",
+    "staff-form": "Register Staff Member",
+    "product-catalog": "Pharmaceutical Product Catalog",
+    "product-form": "Register Product",
+    "raw-material-list": "Raw Materials Inventory",
+    "raw-material-form": "Register Raw Material",
+    "tracking": "Tracking & Telemetry",
+    "tracking-dashboard": "Telemetry Dashboard",
+    "tracking-history": "Telemetry History",
+    "tracking-analysis": "Telemetry Analysis"
+  },
+  "dashboard": {
+    "command-center": "QualiTrack Command Center",
+    "fallback-title": "Laboratory Operations",
+    "subtitle": "Operational overview across laboratory, equipment, batches, compliance, reports, and telemetry.",
+    "overall-health": "Overall Health",
+    "health": {
+      "healthy": "Healthy",
+      "attention": "Needs attention",
+      "critical": "Critical"
+    },
+    "cards": {
+      "equipment": "Equipment",
+      "batches": "Batches",
+      "alerts": "Alerts",
+      "raw-materials": "Raw Materials",
+      "operational": "{{count}} operational",
+      "in-progress": "{{count}} in progress",
+      "critical": "{{count}} critical",
+      "low-stock": "{{count}} low stock"
+    },
+    "charts": {
+      "distribution-title": "Operational Distribution",
+      "distribution-subtitle": "Current records across bounded contexts",
+      "risk-title": "Risk Overview",
+      "risk-subtitle": "Items that may require operational attention",
+      "staff": "Staff",
+      "products": "Products",
+      "raw-materials": "Raw materials",
+      "equipment": "Equipment",
+      "batches": "Batches",
+      "no-data": "No data",
+      "low-stock": "Low stock",
+      "maintenance": "Maintenance",
+      "critical-alerts": "Critical alerts",
+      "critical-kpis": "Critical KPIs",
+      "anomalies": "Anomalies"
+    },
+    "attention": {
+      "title": "Attention Needed",
+      "subtitle": "Priority signals from your bounded contexts",
+      "low-stock-materials": "Low stock materials",
+      "equipment-maintenance": "Equipment needing maintenance",
+      "critical-compliance-alerts": "Critical compliance alerts",
+      "telemetry-anomalies": "Telemetry anomalies",
+      "pending": "{{count}} pending",
+      "empty-title": "No urgent issues",
+      "empty-subtitle": "Your operational signals look stable."
+    },
+    "telemetry": {
+      "title": "Live Telemetry",
+      "subtitle": "Latest equipment monitoring signal",
+      "connection-status": "Connection Status",
+      "measurements": "Measurements",
+      "anomalies": "Anomalies",
+      "at-risk-kpis": "At-risk KPIs"
+    },
+    "quick-actions": {
+      "laboratory": "Laboratory",
+      "equipment": "Equipment",
+      "batches": "Batches",
+      "alerts": "Alerts",
+      "reports": "Reports",
+      "tracking": "Tracking"
+    }
   },
   "ca-alerts": {
     "subtitle": "Real-time monitoring of BPM deviations",
@@ -235,6 +323,16 @@
     "phone": "Contact Phone",
     "regulations": "Applicable Regulations",
     "edit": "Edit Profile"
+  },
+  "lab-form": {
+    "title": "Create Laboratory",
+    "subtitle": "Register a new laboratory profile in QualiTrack.",
+    "name": "Laboratory Name",
+    "ruc": "RUC",
+    "address": "Physical Address",
+    "phone": "Contact Phone",
+    "regulations": "Applicable Regulations",
+    "submit": "Create Laboratory"
   },
   "staff-list": {
     "title": "Personnel Management",

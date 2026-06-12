@@ -3,26 +3,11 @@ import { Laboratory } from '../domain/model/laboratory.entity';
 import { LaboratoryResource, LaboratoriesResponse } from './laboratory-response';
 
 /**
- * Assembler responsible for mapping between {@link LaboratoryResource} API response
- * shapes and {@link Laboratory} domain entities within the Laboratory domain.
+ * Assembler for converting between Laboratory domain entities and API resources.
  *
  * @remarks
- * `LaboratoryAssembler` implements {@link BaseAssembler} to fulfill the mapping
- * contract required by {@link LaboratoryApiEndpoint}. It acts as the translation
- * boundary between the raw server representation ({@link LaboratoryResource}) and
- * the domain model ({@link Laboratory}), ensuring that neither layer needs to be
- * aware of the other's structure.
- *
- * This class is instantiated directly by {@link LaboratoryApiEndpoint} and is not
- * managed by Angular's DI container. It carries no state and all methods are
- * pure transformations with no side effects.
- *
- * @example
- * ```typescript
- * const assembler = new LaboratoryAssembler();
- * const entity = assembler.toEntityFromResource(resource);
- * console.log(entity instanceof Laboratory); // true
- * ```
+ * This assembler belongs to the infrastructure layer and isolates the domain
+ * model from HTTP response/request shapes.
  */
 export class LaboratoryAssembler implements BaseAssembler<
   Laboratory,
@@ -30,30 +15,20 @@ export class LaboratoryAssembler implements BaseAssembler<
   LaboratoriesResponse
 > {
   /**
-   * Maps a {@link LaboratoriesResponse} collection response into an array
-   * of {@link Laboratory} domain entities.
+   * Converts a laboratory response envelope into domain entities.
    *
-   * @param response - The raw collection response received from the server.
-   * @returns An array of {@link Laboratory} entities, one per resource in the response.
-   *
-   * @remarks
-   * Delegates each individual mapping to {@link toEntityFromResource}, ensuring
-   * consistent transformation logic across single and collection responses.
+   * @param response - API response containing laboratory resources
+   * @returns Array of Laboratory domain entities
    */
   toEntitiesFromResponse(response: LaboratoriesResponse): Laboratory[] {
     return response.laboratories.map((resource) => this.toEntityFromResource(resource));
   }
 
   /**
-   * Maps a single {@link LaboratoryResource} into a {@link Laboratory} domain entity.
+   * Converts a laboratory API resource into a domain entity.
    *
-   * @param resource - The raw resource object deserialized from the server response.
-   * @returns A new {@link Laboratory} instance populated with the resource data.
-   *
-   * @remarks
-   * This is the canonical entry point for inbound server-to-domain transformations
-   * within this assembler. All fields are mapped one-to-one onto the {@link Laboratory}
-   * constructor parameters. Reused by {@link toEntitiesFromResponse} for collection mapping.
+   * @param resource - Laboratory resource received from the API
+   * @returns Laboratory domain entity
    */
   toEntityFromResource(resource: LaboratoryResource): Laboratory {
     return new Laboratory({
@@ -69,15 +44,10 @@ export class LaboratoryAssembler implements BaseAssembler<
   }
 
   /**
-   * Maps a {@link Laboratory} domain entity into a {@link LaboratoryResource} shape.
+   * Converts a Laboratory domain entity into an API resource.
    *
-   * @param entity - The domain entity to convert into its resource representation.
-   * @returns A {@link LaboratoryResource} object populated with the entity's data.
-   *
-   * @remarks
-   * Performs the inverse transformation of {@link toEntityFromResource}. The result
-   * is cast as {@link LaboratoryResource} to satisfy any additional fields inherited
-   * from {@link BaseResource} that are not present on the {@link Laboratory} entity.
+   * @param entity - Laboratory domain entity
+   * @returns Laboratory resource ready for API communication
    */
   toResourceFromEntity(entity: Laboratory): LaboratoryResource {
     return {
@@ -89,6 +59,6 @@ export class LaboratoryAssembler implements BaseAssembler<
       applicableRegulations: entity.applicableRegulations,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
-    } as LaboratoryResource;
+    };
   }
 }

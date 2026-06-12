@@ -4,9 +4,9 @@
   padding: 40px 20px;
 }
 
-.staff-card {
+.lab-form-card {
   width: 100%;
-  max-width: 500px;
+  max-width: 620px;
   border-radius: 8px;
 }
 
@@ -19,7 +19,7 @@
   border-radius: 8px;
 }
 
-.staff-form {
+.lab-form {
   margin-top: 24px;
 }
 
