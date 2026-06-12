@@ -34,6 +34,7 @@
   "common": {
     "save": "Guardar Cambios",
     "cancel": "Cancelar",
+    "back": "Volver",
     "register": "Registrar",
     "search": "Buscar...",
     "status": "Estado",
@@ -251,6 +252,9 @@
       "model": "Modelo",
       "serial": "Número de Serie",
       "status": "Estado"
+    },
+    "actions": {
+      "view-detail": "Ver detalle del equipo"
     }
   },
   "equipment-form": {
@@ -260,6 +264,10 @@
       "name": "Ej. Autoclave Estándar",
       "model": "Ej. RX-200",
       "serial": "Ej. SN-987654321"
+    },
+    "errors": {
+      "name-minlength": "El nombre del equipo debe tener al menos 3 caracteres",
+      "serial-pattern": "Solo se permiten letras, números y guiones"
     }
   },
   "equipment-detail": {
@@ -268,16 +276,25 @@
       "general": "Información General",
       "bpm": "Configuración BPM",
       "maintenance": "Mantenimiento"
+    },
+    "fields": {
+      "sensor": "ID Externo del Sensor",
+      "created-at": "Creado En"
     }
   },
   "bpm-config": {
     "title": "Configuración Parámetros BPM",
     "subtitle": "Establece los rangos de tolerancia para el monitoreo de calidad",
+    "empty": "No hay parámetros BPM configurados para este equipo.",
     "fields": {
       "parameter": "Nombre del Parámetro",
       "min": "Valor Mínimo",
       "max": "Valor Máximo",
       "unit": "Unidad de Medida"
+    },
+    "placeholders": {
+      "parameter": "Ej. Temperatura Interna",
+      "unit": "Ej. °C, %, bar, RPM"
     }
   },
   "maintenance-history": {
@@ -300,7 +317,15 @@
   },
   "maintenance-form": {
     "title": "Registro de Actividad Técnica",
-    "subtitle": "Completa los detalles de la intervención realizada"
+    "subtitle": "Completa los detalles de la intervención realizada",
+    "placeholders": {
+      "technician": "Nombre del técnico",
+      "description": "Describe la actividad de mantenimiento"
+    },
+    "errors": {
+      "technician-minlength": "El nombre del técnico debe tener al menos 3 caracteres",
+      "description-maxlength": "La descripción no puede exceder los 500 caracteres"
+    }
   },
   "equipment-alert": {
     "title": "Alertas de Calibración",
