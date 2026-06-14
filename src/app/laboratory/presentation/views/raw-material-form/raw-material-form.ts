@@ -88,7 +88,7 @@ export class RawMaterialForm {
    * Retrieves the current laboratory ID from the authenticated context.
    */
   private get currentLaboratoryId(): number {
-    const id = this.iamStore.currentUserId();
+    const id = this.iamStore.currentLaboratoryId();
     return id ? Number(id) : 1;
   }
 

@@ -12,7 +12,8 @@
  * const request: SignUpRequest = {
  *   username: 'lab.operator',
  *   password: 'Secure123',
- *   roles: ['ROLE_LAB_OPERATOR']
+ *   roles: ['ROLE_LAB_OPERATOR'],
+ *   laboratoryId: 1
  * };
  * ```
  */
@@ -31,4 +32,9 @@ export interface SignUpRequest {
    * Authorization roles assigned to the new account.
    */
   roles: string[];
+
+  /**
+   * Laboratory associated with the new account.
+   */
+  laboratoryId: number | null;
 }

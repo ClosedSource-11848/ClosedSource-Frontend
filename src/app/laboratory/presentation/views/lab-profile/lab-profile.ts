@@ -83,7 +83,7 @@ export class LabProfile implements OnInit {
    * used across the current frontend bounded contexts.
    */
   private get currentLaboratoryId(): number {
-    const id = this.iamStore.currentUserId();
+    const id = this.iamStore.currentLaboratoryId();
     return id ? Number(id) : 1;
   }
 

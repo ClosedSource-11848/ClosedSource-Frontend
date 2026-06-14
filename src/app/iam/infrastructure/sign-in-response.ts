@@ -7,8 +7,9 @@ import { BaseResource } from '../../shared/infrastructure/base-response';
  * This resource belongs to the infrastructure layer and represents the data
  * returned by the backend after a successful sign-in operation.
  *
- * It includes the authenticated user's identity, authorization roles, and JWT
- * token required for subsequent authenticated HTTP requests.
+ * It includes the authenticated user's identity, authorization roles, associated
+ * laboratory identifier, and JWT token required for subsequent authenticated
+ * HTTP requests.
  *
  * @example
  * ```typescript
@@ -16,6 +17,7 @@ import { BaseResource } from '../../shared/infrastructure/base-response';
  *   id: 1,
  *   username: 'qa.manager',
  *   roles: ['ROLE_QA_MANAGER'],
+ *   laboratoryId: 1,
  *   token: 'jwt-token'
  * };
  * ```
@@ -35,6 +37,11 @@ export interface SignInResource extends BaseResource {
    * Authorization roles assigned to the authenticated user.
    */
   roles: string[];
+
+  /**
+   * Laboratory associated with the authenticated user.
+   */
+  laboratoryId: number | null;
 
   /**
    * JWT access token returned by the authentication service.

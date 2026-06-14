@@ -113,7 +113,7 @@ export class EquipmentForm {
    * development and seeded demo scenarios usable.
    */
   private get currentLabId(): number {
-    const id = this.iamStore.currentUserId();
+    const id = this.iamStore.currentLaboratoryId();
     return id ? Number(id) : 1;
   }
 

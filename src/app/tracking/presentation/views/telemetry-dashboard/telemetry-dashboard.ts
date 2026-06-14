@@ -85,7 +85,7 @@ export class TelemetryDashboardComponent implements OnInit, OnDestroy {
    * where laboratory and equipment identifiers are numeric.
    */
   private get currentLabId(): number {
-    const id = this.iamStore.currentUserId();
+    const id = this.iamStore.currentLaboratoryId();
     return id ? Number(id) : 1;
   }
 

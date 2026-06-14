@@ -2,7 +2,7 @@ export const environment = {
   production: true,
 
   // Base API URL
-  serverBasePath: 'https://qualitrack-v1.free.beeceptor.com/api/v1',
+  serverBasePath: 'http://localhost:8080/api/v1',
 
   // IAM (Identity and Access Management)
   iamSignInEndpointPath: '/authentication/sign-in',
@@ -40,8 +40,8 @@ export const environment = {
   raDeviationTrendsEndpointPath: '/deviation-trends',
 
   // Payments
-  subscriptionPlansEndpointPath: '/api/v1/subscription-plans',
-  subscriptionsEndpointPath: '/api/v1/subscriptions',
-  paymentsEndpointPath: '/api/v1/payments',
-  checkoutEndpointPath: '/api/v1/checkout',
+  subscriptionPlansEndpointPath: '/subscription-plans',
+  subscriptionsEndpointPath: '/subscriptions',
+  paymentsEndpointPath: '/payments',
+  checkoutEndpointPath: '/checkout',
 };

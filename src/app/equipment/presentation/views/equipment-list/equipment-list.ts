@@ -100,7 +100,7 @@ export class EquipmentList implements OnInit {
    * usable during local development or seeded demo scenarios.
    */
   private get currentLabId(): number {
-    const id = this.iamStore.currentUserId();
+    const id = this.iamStore.currentLaboratoryId();
     return id ? Number(id) : 1;
   }
 

@@ -22,6 +22,7 @@ export class SignInAssembler {
       id: response.id,
       username: response.username,
       roles: response.roles,
+      laboratoryId: response.laboratoryId ?? null,
       token: response.token,
     };
   }

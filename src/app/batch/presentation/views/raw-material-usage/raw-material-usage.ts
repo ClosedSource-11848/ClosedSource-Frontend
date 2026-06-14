@@ -91,7 +91,7 @@ export class RawMaterialUsageComponent implements OnInit {
    * laboratory context and falls back to 1 when no session context is available.
    */
   private get currentLabId(): number {
-    return this.iamStore.currentUserId() || 1;
+    return this.iamStore.currentLaboratoryId() || 1;
   }
 
   /**
