@@ -69,7 +69,12 @@
       <button
         mat-raised-button
         color="primary"
-        [disabled]="!store.selectedPlan() || store.isLoading() || !iamStore.currentUserId()"
+        [disabled]="
+          !store.selectedPlan() ||
+          store.isLoading() ||
+          !iamStore.currentUserId() ||
+          !iamStore.currentLaboratoryId()
+        "
         (click)="onCheckout()">
         <mat-icon>payment</mat-icon>
         {{ 'subscription.checkout.pay' | translate }}
