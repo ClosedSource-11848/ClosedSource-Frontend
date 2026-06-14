@@ -15,6 +15,19 @@
     </button>
   </div>
 
+  <mat-form-field appearance="outline" class="equipment-selector">
+    <mat-label>{{ 'deviation-trend.equipment' | translate }}</mat-label>
+    <mat-select
+      [value]="selectedEquipmentId()"
+      (selectionChange)="onEquipmentSelected($event.value)">
+      @for (equipment of equipmentStore.equipmentList(); track equipment.id) {
+        <mat-option [value]="equipment.id">
+          {{ equipment.name }} - {{ equipment.serialNumber }}
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
   @if (store.isLoading()) {
     <div class="loading-shade">
       <mat-spinner diameter="50"></mat-spinner>

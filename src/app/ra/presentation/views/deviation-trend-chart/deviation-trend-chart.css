@@ -30,6 +30,13 @@
   font-weight: 700;
 }
 
+/* Equipment selector */
+.equipment-selector {
+  width: 100%;
+  max-width: 420px;
+  margin-bottom: 24px;
+}
+
 /* Loading and errors */
 .loading-shade {
   display: flex;
@@ -216,6 +223,10 @@
   .section-header {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .equipment-selector {
+    max-width: 100%;
   }
 
   .summary-content {
