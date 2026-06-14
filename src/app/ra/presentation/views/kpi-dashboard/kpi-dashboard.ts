@@ -108,15 +108,14 @@ export class KpiDashboardComponent implements OnInit {
   /**
    * Retrieves the current laboratory ID from the active application context.
    *
-   * @returns The numeric laboratory identifier used to request KPI dashboard data
+   * @returns The numeric laboratory identifier used to request KPI dashboard data.
    *
    * @remarks
-   * The current frontend context stores only the signed-in user ID. Until IAM exposes
-   * a dedicated laboratory ID, the app keeps the existing convention used by the
-   * other bounded contexts and falls back to `1` when no session value is available.
+   * The laboratory identifier comes from the authenticated IAM session. A fallback
+   * value of 1 is kept for local development and seeded demo scenarios.
    */
   private get currentLaboratoryId(): number {
-    const id = this.iamStore.currentUserId();
+    const id = this.iamStore.currentLaboratoryId();
     return id ? Number(id) : 1;
   }
 

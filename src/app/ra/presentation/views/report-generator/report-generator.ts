@@ -113,11 +113,10 @@ export class ReportGeneratorComponent {
   /**
    * Retrieves the current user ID from the active session context.
    *
-   * @returns The numeric user identifier used as the report requester
+   * @returns The numeric user identifier used as the report requester.
    *
    * @remarks
-   * Defaults to `1` when no user ID is available, matching the temporary
-   * convention used by the current frontend context.
+   * This value identifies the authenticated user who requests the report.
    */
   private get currentUserId(): number {
     const id = this.iamStore.currentUserId();
@@ -127,15 +126,14 @@ export class ReportGeneratorComponent {
   /**
    * Retrieves the current laboratory ID from the active application context.
    *
-   * @returns The numeric laboratory identifier used for compliance reports
+   * @returns The numeric laboratory identifier used for compliance reports.
    *
    * @remarks
-   * The current frontend context stores only the signed-in user ID. Until IAM exposes
-   * a dedicated laboratory ID, the app keeps the existing convention used by the
-   * other bounded contexts and falls back to `1` when no session value is available.
+   * The laboratory identifier comes from the authenticated IAM session. A fallback
+   * value of 1 is kept for local development and seeded demo scenarios.
    */
   private get currentLaboratoryId(): number {
-    const id = this.iamStore.currentUserId();
+    const id = this.iamStore.currentLaboratoryId();
     return id ? Number(id) : 1;
   }
 

@@ -101,8 +101,13 @@ export class Dashboard implements OnInit, OnDestroy {
     },
   };
 
+  /**
+   * Retrieves the current laboratory ID from the authenticated IAM session.
+   *
+   * @returns The numeric laboratory identifier used to load operational data.
+   */
   private get currentLabId(): number {
-    const id = this.iamStore.currentUserId();
+    const id = this.iamStore.currentLaboratoryId();
     return id ? Number(id) : 1;
   }
 
@@ -284,7 +289,6 @@ export class Dashboard implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const labId = this.currentLabId;
-    const userId = this.iamStore.currentUserId();
 
     this.langSubscription = this.translate.onLangChange.subscribe(() => {
       this.languageVersion.update((value) => value + 1);
@@ -300,10 +304,8 @@ export class Dashboard implements OnInit, OnDestroy {
     this.caStore.loadAlerts();
     this.raStore.loadDashboard(labId);
 
-    if (userId) {
-      this.subscriptionStore.loadCurrentSubscription(Number(userId));
-      this.subscriptionStore.loadPayments(Number(userId));
-    }
+    this.subscriptionStore.loadCurrentSubscription(labId);
+    this.subscriptionStore.loadPayments(labId);
 
     this.initializeTelemetryFromFirstEquipment();
   }

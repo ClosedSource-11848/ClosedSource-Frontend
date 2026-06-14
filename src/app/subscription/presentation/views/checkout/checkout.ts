@@ -74,13 +74,15 @@ export class Checkout implements OnInit {
    */
   protected onCheckout(): void {
     const userId = this.iamStore.currentUserId();
+    const laboratoryId = this.iamStore.currentLaboratoryId();
     const selectedPlanCode = this.planCode || this.store.selectedPlanCode();
 
-    if (!userId || !selectedPlanCode) return;
+    if (!userId || !laboratoryId || !selectedPlanCode) return;
 
     this.store.createCheckoutSession({
       planCode: selectedPlanCode,
       userId,
+      laboratoryId,
     });
   }
 }

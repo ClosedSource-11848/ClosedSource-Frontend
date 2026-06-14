@@ -18,7 +18,7 @@ import { IamStore } from '../../../../iam/application/iam.store';
  *
  * @remarks
  * This standalone presentation component displays the current subscription
- * status and payment history for the authenticated user.
+ * status and payment history for the authenticated laboratory context.
  */
 @Component({
   selector: 'app-billing-summary',
@@ -58,12 +58,12 @@ export class BillingSummary implements OnInit {
    * Lifecycle hook that loads subscription and payment data.
    */
   ngOnInit(): void {
-    const userId = this.iamStore.currentUserId();
+    const laboratoryId = this.iamStore.currentLaboratoryId();
 
-    if (!userId) return;
+    if (!laboratoryId) return;
 
-    this.store.loadCurrentSubscription(userId);
-    this.store.loadPayments(userId);
+    this.store.loadCurrentSubscription(laboratoryId);
+    this.store.loadPayments(laboratoryId);
   }
 
   /**

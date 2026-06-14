@@ -71,6 +71,11 @@ export class SignUpForm {
   protected selectedRoleKey: 'manager' | 'operator' = 'operator';
 
   /**
+   * Temporary laboratory identifier used while the laboratory ownership flow is completed.
+   */
+  private readonly defaultLaboratoryId = 1;
+
+  /**
    * Reactive form used to capture sign-up data.
    */
   protected readonly form = new FormGroup(
@@ -123,6 +128,8 @@ export class SignUpForm {
    * Submits the sign-up form.
    */
   protected onSubmit(): void {
+    this.store.clearError();
+
     if (this.form.invalid) {
       this.markFormGroupTouched(this.form);
       return;
@@ -132,6 +139,7 @@ export class SignUpForm {
       username: this.form.controls.username.value,
       password: this.form.controls.password.value,
       roles: [this.selectedRole],
+      laboratoryId: this.defaultLaboratoryId,
     };
 
     this.store.signUp(command, this.router);
