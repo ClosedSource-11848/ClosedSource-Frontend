@@ -48,6 +48,13 @@ export class SubscriptionStore {
   );
 
   /**
+   * Internal selected billing cycle state.
+   */
+  private readonly _selectedBillingCycle = signal<'MONTHLY' | 'YEARLY' | null>(
+    (sessionStorage.getItem('selectedBillingCycle') as 'MONTHLY' | 'YEARLY' | null) ?? null,
+  );
+
+  /**
    * Internal checkout session state.
    */
   private readonly _checkoutSession = signal<CheckoutSessionResource | null>(null);
@@ -88,6 +95,11 @@ export class SubscriptionStore {
   readonly selectedPlanCode = this._selectedPlanCode.asReadonly();
 
   /**
+   * Readonly signal containing the selected billing cycle.
+   */
+  readonly selectedBillingCycle = this._selectedBillingCycle.asReadonly();
+
+  /**
    * Readonly signal containing the checkout session.
    */
   readonly checkoutSession = this._checkoutSession.asReadonly();
@@ -108,11 +120,17 @@ export class SubscriptionStore {
   readonly successMsg = this._successMsg.asReadonly();
 
   /**
-   * Computed selected plan entity based on selected plan code.
+   * Computed selected plan entity based on selected plan code and billing cycle.
    */
   readonly selectedPlan = computed(() => {
     const planCode = this._selectedPlanCode();
-    return planCode ? (this._plans().find((plan) => plan.code === planCode) ?? null) : null;
+    const billingCycle = this._selectedBillingCycle();
+
+    return planCode && billingCycle
+      ? (this._plans().find(
+          (plan) => plan.code === planCode && plan.billingPeriod === billingCycle,
+        ) ?? null)
+      : null;
   });
 
   /**
@@ -136,31 +154,42 @@ export class SubscriptionStore {
   }
 
   /**
-   * Loads the current subscription for a user.
+   * Loads the current active subscription for a laboratory.
    *
-   * @param userId - Numeric identifier of the user
+   * @param laboratoryId - Numeric identifier of the laboratory
    */
-  loadCurrentSubscription(userId: number): void {
+  loadCurrentSubscription(laboratoryId: number): void {
     this.startRequest();
 
-    this.api.getCurrentSubscription(userId).subscribe({
+    this.api.getCurrentSubscription(laboratoryId).subscribe({
       next: (subscription) => {
         this._currentSubscription.set(subscription);
         this.finishRequest();
+
+        this.loadPayments(subscription.id);
       },
-      error: (error) => this.failRequest(error, 'Failed to load current subscription'),
+      error: (error) => {
+        if (this.isNotFoundError(error)) {
+          this._currentSubscription.set(null);
+          this._payments.set([]);
+          this.finishRequest();
+          return;
+        }
+
+        this.failRequest(error, 'Failed to load current subscription');
+      },
     });
   }
 
   /**
-   * Loads payment history for a user.
+   * Loads payment history for a subscription.
    *
-   * @param userId - Numeric identifier of the user
+   * @param subscriptionId - Numeric identifier of the subscription
    */
-  loadPayments(userId: number): void {
+  loadPayments(subscriptionId: number): void {
     this.startRequest();
 
-    this.api.getPaymentsByUser(userId).subscribe({
+    this.api.getPaymentsBySubscription(subscriptionId).subscribe({
       next: (payments) => {
         this._payments.set(payments);
         this.finishRequest();
@@ -172,11 +201,14 @@ export class SubscriptionStore {
   /**
    * Selects a subscription plan before authentication or checkout.
    *
-   * @param command - Command containing the selected plan code
+   * @param command - Command containing the selected plan code and billing cycle
    */
   selectPlan(command: SelectPlanCommand): void {
     this._selectedPlanCode.set(command.planCode);
+    this._selectedBillingCycle.set(command.billingCycle);
+
     sessionStorage.setItem('selectedPlanCode', command.planCode);
+    sessionStorage.setItem('selectedBillingCycle', command.billingCycle);
   }
 
   /**
@@ -184,7 +216,10 @@ export class SubscriptionStore {
    */
   clearSelectedPlan(): void {
     this._selectedPlanCode.set(null);
+    this._selectedBillingCycle.set(null);
+
     sessionStorage.removeItem('selectedPlanCode');
+    sessionStorage.removeItem('selectedBillingCycle');
   }
 
   /**
@@ -229,9 +264,12 @@ export class SubscriptionStore {
     command: CreateCheckoutSessionCommand,
   ): CreateCheckoutSessionRequest {
     return {
-      planCode: command.planCode,
       userId: command.userId,
       laboratoryId: command.laboratoryId,
+      planCode: command.planCode,
+      billingCycle: command.billingCycle,
+      successUrl: command.successUrl,
+      cancelUrl: command.cancelUrl,
     };
   }
 
@@ -260,6 +298,16 @@ export class SubscriptionStore {
   private failRequest(error: unknown, fallback: string): void {
     this._error.set(this.formatError(error, fallback));
     this._isLoading.set(false);
+  }
+
+  /**
+   * Determines whether the received error represents a missing resource.
+   *
+   * @param error - Raw error object
+   * @returns True when the error is a not-found response
+   */
+  private isNotFoundError(error: unknown): boolean {
+    return error instanceof Error && error.message.includes('Resource not found');
   }
 
   /**
