@@ -45,10 +45,16 @@ export class SubscriptionAssembler implements BaseAssembler<
       id: resource.id,
       userId: resource.userId,
       laboratoryId: resource.laboratoryId,
-      planId: resource.planId,
+      planCode: resource.planCode,
+      billingCycle: resource.billingCycle,
       status: resource.status,
-      startedAt: resource.startedAt,
-      currentPeriodEndsAt: resource.currentPeriodEndsAt,
+      stripeCustomerId: resource.stripeCustomerId,
+      stripeSubscriptionId: resource.stripeSubscriptionId,
+      stripeCheckoutSessionId: resource.stripeCheckoutSessionId,
+      currentPeriodStart: resource.currentPeriodStart,
+      currentPeriodEnd: resource.currentPeriodEnd,
+      cancelledAt: resource.cancelledAt,
+      cancelledBy: resource.cancelledBy,
     });
   }
 
@@ -63,10 +69,16 @@ export class SubscriptionAssembler implements BaseAssembler<
       id: entity.id,
       userId: entity.userId,
       laboratoryId: entity.laboratoryId,
-      planId: entity.planId,
+      planCode: entity.planCode,
+      billingCycle: entity.billingCycle,
       status: entity.status,
-      startedAt: entity.startedAt,
-      currentPeriodEndsAt: entity.currentPeriodEndsAt,
+      stripeCustomerId: entity.stripeCustomerId,
+      stripeSubscriptionId: entity.stripeSubscriptionId,
+      stripeCheckoutSessionId: entity.stripeCheckoutSessionId,
+      currentPeriodStart: entity.currentPeriodStart,
+      currentPeriodEnd: entity.currentPeriodEnd,
+      cancelledAt: entity.cancelledAt,
+      cancelledBy: entity.cancelledBy,
     };
   }
 }

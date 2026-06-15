@@ -31,7 +31,7 @@ export interface SubscriptionPlanResource extends BaseResource {
   /**
    * Plan price amount.
    */
-  priceAmount: number;
+  amount: number;
 
   /**
    * Currency used for the plan price.
@@ -39,9 +39,14 @@ export interface SubscriptionPlanResource extends BaseResource {
   currency: string;
 
   /**
-   * Billing period for the plan.
+   * Billing cycle for the plan.
    */
-  billingPeriod: 'MONTHLY' | 'YEARLY';
+  billingCycle: 'MONTHLY' | 'YEARLY';
+
+  /**
+   * Stripe Price ID associated with this plan.
+   */
+  stripePriceId: string;
 
   /**
    * Maximum number of users allowed by the plan.
@@ -52,11 +57,6 @@ export interface SubscriptionPlanResource extends BaseResource {
    * Maximum number of equipment records allowed by the plan.
    */
   maxEquipment: number;
-
-  /**
-   * Features included in the plan.
-   */
-  features: string[];
 
   /**
    * Indicates whether the plan is available for purchase.

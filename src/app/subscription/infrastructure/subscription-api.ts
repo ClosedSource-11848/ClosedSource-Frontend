@@ -45,23 +45,23 @@ export class SubscriptionApi extends BaseApi {
   }
 
   /**
-   * Retrieves the current subscription for a user.
+   * Retrieves the active subscription for a laboratory.
    *
-   * @param userId - Numeric identifier of the user
-   * @returns Observable stream emitting the current Subscription entity
+   * @param laboratoryId - Numeric identifier of the laboratory
+   * @returns Observable stream emitting the active Subscription entity
    */
-  getCurrentSubscription(userId: number): Observable<Subscription> {
-    return this.endpoint.getCurrentSubscription(userId);
+  getCurrentSubscription(laboratoryId: number): Observable<Subscription> {
+    return this.endpoint.getCurrentSubscription(laboratoryId);
   }
 
   /**
-   * Retrieves payment history for a user.
+   * Retrieves payment history for a subscription.
    *
-   * @param userId - Numeric identifier of the user
+   * @param subscriptionId - Numeric identifier of the subscription
    * @returns Observable stream emitting payment entities
    */
-  getPaymentsByUser(userId: number): Observable<Payment[]> {
-    return this.endpoint.getPaymentsByUser(userId);
+  getPaymentsBySubscription(subscriptionId: number): Observable<Payment[]> {
+    return this.endpoint.getPaymentsBySubscription(subscriptionId);
   }
 
   /**

@@ -11,6 +11,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SubscriptionStore } from '../../../application/subscription.store';
 import { IamStore } from '../../../../iam/application/iam.store';
 
+type BillingCycle = 'MONTHLY' | 'YEARLY';
+
 /**
  * Component responsible for starting a subscription checkout session.
  *
@@ -57,13 +59,25 @@ export class Checkout implements OnInit {
   protected planCode: string | null = null;
 
   /**
+   * Selected billing cycle used by the checkout flow.
+   */
+  protected billingCycle: BillingCycle | null = null;
+
+  /**
    * Lifecycle hook that resolves the selected plan and loads plans if needed.
    */
   ngOnInit(): void {
     this.planCode = this.route.snapshot.queryParamMap.get('plan') || this.store.selectedPlanCode();
 
-    if (this.planCode) {
-      this.store.selectPlan({ planCode: this.planCode });
+    this.billingCycle =
+      this.toBillingCycle(this.route.snapshot.queryParamMap.get('billingCycle')) ||
+      this.store.selectedBillingCycle();
+
+    if (this.planCode && this.billingCycle) {
+      this.store.selectPlan({
+        planCode: this.planCode,
+        billingCycle: this.billingCycle,
+      });
     }
 
     this.store.loadPlans();
@@ -76,13 +90,27 @@ export class Checkout implements OnInit {
     const userId = this.iamStore.currentUserId();
     const laboratoryId = this.iamStore.currentLaboratoryId();
     const selectedPlanCode = this.planCode || this.store.selectedPlanCode();
+    const selectedBillingCycle = this.billingCycle || this.store.selectedBillingCycle();
 
-    if (!userId || !laboratoryId || !selectedPlanCode) return;
+    if (!userId || !laboratoryId || !selectedPlanCode || !selectedBillingCycle) return;
 
     this.store.createCheckoutSession({
       planCode: selectedPlanCode,
+      billingCycle: selectedBillingCycle,
       userId,
       laboratoryId,
+      successUrl: `${window.location.origin}/subscriptions/success`,
+      cancelUrl: `${window.location.origin}/subscriptions/cancel`,
     });
+  }
+
+  /**
+   * Converts a query parameter into a valid billing cycle.
+   *
+   * @param value - Raw query parameter value
+   * @returns Billing cycle value or null
+   */
+  private toBillingCycle(value: string | null): BillingCycle | null {
+    return value === 'MONTHLY' || value === 'YEARLY' ? value : null;
   }
 }

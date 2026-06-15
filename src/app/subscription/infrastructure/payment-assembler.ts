@@ -40,12 +40,13 @@ export class PaymentAssembler implements BaseAssembler<Payment, PaymentResource,
     return new Payment({
       id: resource.id,
       subscriptionId: resource.subscriptionId,
+      provider: resource.provider,
+      providerPaymentId: resource.providerPaymentId,
+      stripeCheckoutSessionId: resource.stripeCheckoutSessionId,
       amount: resource.amount,
       currency: resource.currency,
       status: resource.status,
-      provider: resource.provider,
-      externalPaymentId: resource.externalPaymentId,
-      createdAt: resource.createdAt,
+      paidAt: resource.paidAt,
     });
   }
 
@@ -59,12 +60,13 @@ export class PaymentAssembler implements BaseAssembler<Payment, PaymentResource,
     return {
       id: entity.id,
       subscriptionId: entity.subscriptionId,
+      provider: entity.provider,
+      providerPaymentId: entity.providerPaymentId,
+      stripeCheckoutSessionId: entity.stripeCheckoutSessionId,
       amount: entity.amount,
       currency: entity.currency,
       status: entity.status,
-      provider: entity.provider,
-      externalPaymentId: entity.externalPaymentId,
-      createdAt: entity.createdAt,
+      paidAt: entity.paidAt,
     };
   }
 }

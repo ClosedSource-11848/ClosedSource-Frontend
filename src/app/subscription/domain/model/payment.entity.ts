@@ -19,6 +19,21 @@ export class Payment implements BaseEntity {
   subscriptionId: number;
 
   /**
+   * The external payment provider name.
+   */
+  provider: string;
+
+  /**
+   * The external payment provider transaction identifier.
+   */
+  providerPaymentId?: string;
+
+  /**
+   * Stripe checkout session identifier.
+   */
+  stripeCheckoutSessionId?: string;
+
+  /**
    * The payment amount.
    */
   amount: number;
@@ -34,19 +49,9 @@ export class Payment implements BaseEntity {
   status: 'PENDING' | 'PAID' | 'FAILED' | 'CANCELED';
 
   /**
-   * The external payment provider name.
+   * The ISO date string indicating when the payment was paid or recorded.
    */
-  provider: string;
-
-  /**
-   * The external payment provider transaction identifier.
-   */
-  externalPaymentId?: string;
-
-  /**
-   * The ISO date string indicating when the payment was created.
-   */
-  createdAt: string;
+  paidAt?: string;
 
   /**
    * Creates a new Payment entity.
@@ -56,20 +61,22 @@ export class Payment implements BaseEntity {
   constructor(params: {
     id: number;
     subscriptionId: number;
+    provider: string;
+    providerPaymentId?: string;
+    stripeCheckoutSessionId?: string;
     amount: number;
     currency: string;
     status: 'PENDING' | 'PAID' | 'FAILED' | 'CANCELED';
-    provider: string;
-    externalPaymentId?: string;
-    createdAt: string;
+    paidAt?: string;
   }) {
     this.id = params.id;
     this.subscriptionId = params.subscriptionId;
+    this.provider = params.provider;
+    this.providerPaymentId = params.providerPaymentId;
+    this.stripeCheckoutSessionId = params.stripeCheckoutSessionId;
     this.amount = params.amount;
     this.currency = params.currency;
     this.status = params.status;
-    this.provider = params.provider;
-    this.externalPaymentId = params.externalPaymentId;
-    this.createdAt = params.createdAt;
+    this.paidAt = params.paidAt;
   }
 }

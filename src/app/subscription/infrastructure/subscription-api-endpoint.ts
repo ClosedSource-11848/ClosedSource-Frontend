@@ -7,9 +7,9 @@ import { SubscriptionPlan } from '../domain/model/subscription-plan.entity';
 import { Subscription } from '../domain/model/subscription.entity';
 import { Payment } from '../domain/model/payment.entity';
 
-import { SubscriptionPlanResource, SubscriptionPlansResponse } from './subscription-plan-response';
-import { SubscriptionResource, SubscriptionsResponse } from './subscription-response';
-import { PaymentResource, PaymentsResponse } from './payment-response';
+import { SubscriptionPlanResource } from './subscription-plan-response';
+import { SubscriptionResource } from './subscription-response';
+import { PaymentResource } from './payment-response';
 import { CreateCheckoutSessionRequest } from './checkout.request';
 import { CheckoutSessionResource, CheckoutSessionResponse } from './checkout-response';
 
@@ -20,7 +20,6 @@ import { CheckoutSessionAssembler } from './checkout-session-assembler';
 
 const plansEndpointUrl = `${environment.serverBasePath}${environment.subscriptionPlansEndpointPath}`;
 const subscriptionsEndpointUrl = `${environment.serverBasePath}${environment.subscriptionsEndpointPath}`;
-const paymentsEndpointUrl = `${environment.serverBasePath}${environment.paymentsEndpointPath}`;
 const checkoutEndpointUrl = `${environment.serverBasePath}${environment.checkoutEndpointPath}`;
 
 /**
@@ -74,31 +73,33 @@ export class SubscriptionApiEndpoint extends ErrorHandlingEnabledBaseType {
   }
 
   /**
-   * Retrieves the active subscription for a specific user.
+   * Retrieves the active subscription for a laboratory.
    *
-   * @param userId - Numeric identifier of the subscription owner
+   * @param laboratoryId - Numeric identifier of the laboratory
    * @returns Observable stream emitting the active Subscription entity
    */
-  getCurrentSubscription(userId: number): Observable<Subscription> {
+  getCurrentSubscription(laboratoryId: number): Observable<Subscription> {
     return this.http
-      .get<SubscriptionResource>(`${subscriptionsEndpointUrl}/current/${userId}`)
+      .get<SubscriptionResource>(`${subscriptionsEndpointUrl}/laboratories/${laboratoryId}/active`)
       .pipe(
         map((resource) => this.subscriptionAssembler.toEntityFromResource(resource)),
-        catchError(this.handleError(`Failed to fetch subscription for user ${userId}`)),
+        catchError(this.handleError(`Failed to fetch subscription for laboratory ${laboratoryId}`)),
       );
   }
 
   /**
-   * Retrieves payment history for a specific user.
+   * Retrieves payment history for a subscription.
    *
-   * @param userId - Numeric identifier of the payment owner
+   * @param subscriptionId - Numeric identifier of the subscription
    * @returns Observable stream emitting payment domain entities
    */
-  getPaymentsByUser(userId: number): Observable<Payment[]> {
-    return this.http.get<PaymentResource[]>(`${paymentsEndpointUrl}?userId=${userId}`).pipe(
-      map((resources) => this.paymentAssembler.toEntitiesFromResources(resources)),
-      catchError(this.handleError(`Failed to fetch payments for user ${userId}`)),
-    );
+  getPaymentsBySubscription(subscriptionId: number): Observable<Payment[]> {
+    return this.http
+      .get<PaymentResource[]>(`${subscriptionsEndpointUrl}/${subscriptionId}/payments`)
+      .pipe(
+        map((resources) => this.paymentAssembler.toEntitiesFromResources(resources)),
+        catchError(this.handleError(`Failed to fetch payments for subscription ${subscriptionId}`)),
+      );
   }
 
   /**
