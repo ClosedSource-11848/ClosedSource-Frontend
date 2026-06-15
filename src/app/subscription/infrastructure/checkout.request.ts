@@ -4,23 +4,35 @@
  * @remarks
  * This request belongs to the infrastructure layer and represents the HTTP body
  * sent to the backend checkout endpoint.
- *
- * The frontend sends only identifiers and intent data. Pricing and payment
- * provider details must be resolved by the backend.
  */
 export interface CreateCheckoutSessionRequest {
-  /**
-   * Business code of the selected subscription plan.
-   */
-  planCode: string;
-
   /**
    * Numeric identifier of the user starting checkout.
    */
   userId: number;
 
   /**
-   * Optional laboratory identifier associated with the subscription.
+   * Laboratory identifier associated with the subscription.
    */
-  laboratoryId?: number;
+  laboratoryId: number;
+
+  /**
+   * Business code of the selected subscription plan.
+   */
+  planCode: string;
+
+  /**
+   * Selected billing cycle.
+   */
+  billingCycle: 'MONTHLY' | 'YEARLY';
+
+  /**
+   * URL where Stripe redirects after successful payment.
+   */
+  successUrl: string;
+
+  /**
+   * URL where Stripe redirects after checkout cancellation.
+   */
+  cancelUrl: string;
 }
