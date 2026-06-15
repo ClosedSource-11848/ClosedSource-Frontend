@@ -19,6 +19,21 @@ export interface PaymentResource extends BaseResource {
   subscriptionId: number;
 
   /**
+   * External payment provider name.
+   */
+  provider: string;
+
+  /**
+   * External payment provider transaction identifier.
+   */
+  providerPaymentId?: string;
+
+  /**
+   * Stripe checkout session identifier.
+   */
+  stripeCheckoutSessionId?: string;
+
+  /**
    * Payment amount.
    */
   amount: number;
@@ -34,19 +49,9 @@ export interface PaymentResource extends BaseResource {
   status: 'PENDING' | 'PAID' | 'FAILED' | 'CANCELED';
 
   /**
-   * External payment provider name.
+   * ISO date string indicating when the payment was paid or recorded.
    */
-  provider: string;
-
-  /**
-   * External payment provider transaction identifier.
-   */
-  externalPaymentId?: string;
-
-  /**
-   * ISO date string indicating when the payment was created.
-   */
-  createdAt: string;
+  paidAt?: string;
 }
 
 /**

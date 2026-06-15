@@ -19,14 +19,19 @@ export interface SubscriptionResource extends BaseResource {
   userId: number;
 
   /**
-   * The numeric identifier of the related laboratory, if available.
+   * The numeric identifier of the related laboratory.
    */
-  laboratoryId?: number;
+  laboratoryId: number;
 
   /**
-   * The numeric identifier of the selected subscription plan.
+   * Business code of the selected subscription plan.
    */
-  planId: number;
+  planCode: string;
+
+  /**
+   * Billing cycle of the selected subscription.
+   */
+  billingCycle: 'MONTHLY' | 'YEARLY';
 
   /**
    * Current lifecycle status of the subscription.
@@ -34,14 +39,39 @@ export interface SubscriptionResource extends BaseResource {
   status: 'PENDING' | 'ACTIVE' | 'PAST_DUE' | 'CANCELED' | 'EXPIRED';
 
   /**
-   * ISO date string indicating when the subscription starts.
+   * Stripe customer identifier.
    */
-  startedAt: string;
+  stripeCustomerId?: string;
 
   /**
-   * ISO date string indicating when the current billing period ends.
+   * Stripe subscription identifier.
    */
-  currentPeriodEndsAt?: string;
+  stripeSubscriptionId?: string;
+
+  /**
+   * Stripe checkout session identifier.
+   */
+  stripeCheckoutSessionId?: string;
+
+  /**
+   * ISO date string indicating when the current period starts.
+   */
+  currentPeriodStart?: string;
+
+  /**
+   * ISO date string indicating when the current period ends.
+   */
+  currentPeriodEnd?: string;
+
+  /**
+   * ISO date string indicating when the subscription was cancelled.
+   */
+  cancelledAt?: string;
+
+  /**
+   * Numeric identifier of the user who cancelled the subscription.
+   */
+  cancelledBy?: number;
 }
 
 /**

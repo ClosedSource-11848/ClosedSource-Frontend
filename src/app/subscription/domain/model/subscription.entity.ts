@@ -22,12 +22,17 @@ export class Subscription implements BaseEntity {
   /**
    * The numeric identifier of the laboratory associated with the subscription.
    */
-  laboratoryId?: number;
+  laboratoryId: number;
 
   /**
-   * The numeric identifier of the selected subscription plan.
+   * The business code of the selected subscription plan.
    */
-  planId: number;
+  planCode: string;
+
+  /**
+   * The billing cycle of the subscription.
+   */
+  billingCycle: 'MONTHLY' | 'YEARLY';
 
   /**
    * The current lifecycle status of the subscription.
@@ -35,14 +40,39 @@ export class Subscription implements BaseEntity {
   status: 'PENDING' | 'ACTIVE' | 'PAST_DUE' | 'CANCELED' | 'EXPIRED';
 
   /**
-   * The ISO date string indicating when the subscription starts.
+   * Stripe customer identifier.
    */
-  startedAt: string;
+  stripeCustomerId?: string;
+
+  /**
+   * Stripe subscription identifier.
+   */
+  stripeSubscriptionId?: string;
+
+  /**
+   * Stripe checkout session identifier.
+   */
+  stripeCheckoutSessionId?: string;
+
+  /**
+   * The ISO date string indicating when the current billing period starts.
+   */
+  currentPeriodStart?: string;
 
   /**
    * The ISO date string indicating when the current billing period ends.
    */
-  currentPeriodEndsAt?: string;
+  currentPeriodEnd?: string;
+
+  /**
+   * The ISO date string indicating when the subscription was cancelled.
+   */
+  cancelledAt?: string;
+
+  /**
+   * The numeric identifier of the user who cancelled the subscription.
+   */
+  cancelledBy?: number;
 
   /**
    * Creates a new Subscription entity.
@@ -52,18 +82,30 @@ export class Subscription implements BaseEntity {
   constructor(params: {
     id: number;
     userId: number;
-    laboratoryId?: number;
-    planId: number;
+    laboratoryId: number;
+    planCode: string;
+    billingCycle: 'MONTHLY' | 'YEARLY';
     status: 'PENDING' | 'ACTIVE' | 'PAST_DUE' | 'CANCELED' | 'EXPIRED';
-    startedAt: string;
-    currentPeriodEndsAt?: string;
+    stripeCustomerId?: string;
+    stripeSubscriptionId?: string;
+    stripeCheckoutSessionId?: string;
+    currentPeriodStart?: string;
+    currentPeriodEnd?: string;
+    cancelledAt?: string;
+    cancelledBy?: number;
   }) {
     this.id = params.id;
     this.userId = params.userId;
     this.laboratoryId = params.laboratoryId;
-    this.planId = params.planId;
+    this.planCode = params.planCode;
+    this.billingCycle = params.billingCycle;
     this.status = params.status;
-    this.startedAt = params.startedAt;
-    this.currentPeriodEndsAt = params.currentPeriodEndsAt;
+    this.stripeCustomerId = params.stripeCustomerId;
+    this.stripeSubscriptionId = params.stripeSubscriptionId;
+    this.stripeCheckoutSessionId = params.stripeCheckoutSessionId;
+    this.currentPeriodStart = params.currentPeriodStart;
+    this.currentPeriodEnd = params.currentPeriodEnd;
+    this.cancelledAt = params.cancelledAt;
+    this.cancelledBy = params.cancelledBy;
   }
 }

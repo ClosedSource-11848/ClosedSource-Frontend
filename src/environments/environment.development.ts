@@ -40,8 +40,8 @@ export const environment = {
   raDeviationTrendsEndpointPath: '/deviation-trends',
 
   // Payments
-  subscriptionPlansEndpointPath: '/subscription-plans',
+  subscriptionPlansEndpointPath: '/subscriptions/plans',
   subscriptionsEndpointPath: '/subscriptions',
-  paymentsEndpointPath: '/payments',
-  checkoutEndpointPath: '/checkout',
+  paymentsEndpointPath: '/subscriptions',
+  checkoutEndpointPath: '/subscriptions/checkout-sessions',
 };

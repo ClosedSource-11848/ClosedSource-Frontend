@@ -1,22 +1,38 @@
+:host {
+  display: block;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top left, rgba(20, 184, 166, 0.14), transparent 34%),
+    radial-gradient(circle at top right, rgba(132, 204, 22, 0.12), transparent 30%),
+    linear-gradient(180deg, #f8fcfd 0%, #eef7f9 100%);
+}
+
 .plans-container {
-  padding: 24px;
+  padding: 32px 24px 48px;
   position: relative;
 }
 
 .page-header {
-  margin-bottom: 24px;
+  margin-bottom: 28px;
+  padding: 28px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #0d3557 0%, #126b8c 55%, #14a6d8 100%);
+  color: white;
+  box-shadow: 0 18px 38px rgba(13, 53, 87, 0.22);
 }
 
 .page-header h1 {
   margin: 0;
-  color: #1a3a5c;
-  font-size: 28px;
-  font-weight: 700;
+  color: white;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
 }
 
 .page-header p {
-  margin: 6px 0 0;
-  color: #5f6368;
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 15px;
 }
 
 .plans-grid {
@@ -27,50 +43,150 @@
 }
 
 .plan-card {
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(13, 53, 87, 0.1);
+  background: rgba(255, 255, 255, 0.94);
   display: flex;
   flex-direction: column;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+}
+
+.plan-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 6px;
+  background: linear-gradient(90deg, #14a6d8, #17b890, #8bc53f);
+}
+
+.plan-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(20, 166, 216, 0.45);
+  box-shadow: 0 22px 46px rgba(13, 53, 87, 0.18);
+}
+
+.plan-card:nth-child(odd) {
+  background: linear-gradient(160deg, #0d3557 0%, #126b8c 48%, #14a6d8 100%);
+  color: white;
+  border-color: rgba(20, 166, 216, 0.6);
+}
+
+.plan-card:nth-child(odd)::before {
+  background: linear-gradient(90deg, #8bc53f, #17b890, #ffffff);
 }
 
 .plan-card.highlight {
-  border: 2px solid #148f77;
+  border: 2px solid #14a6d8;
+}
+
+.plan-card mat-card-header {
+  padding: 24px 24px 0;
+}
+
+.plan-card mat-card-title {
+  color: #0d3557;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.plan-card mat-card-subtitle {
+  color: #425466;
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.55;
+  font-weight: 500;
+}
+
+.plan-card:nth-child(odd) mat-card-title,
+.plan-card:nth-child(odd) mat-card-subtitle {
+  color: white;
+}
+
+.plan-card:nth-child(odd) mat-card-subtitle {
+  opacity: 0.9;
 }
 
 .plan-card mat-card-content {
   flex: 1;
+  padding: 0 24px 8px;
 }
 
 .price-block {
-  margin: 24px 0;
+  margin: 26px 0 24px;
   display: flex;
   align-items: baseline;
   gap: 6px;
 }
 
 .price {
-  font-size: 32px;
-  font-weight: 800;
-  color: #1a3a5c;
+  font-size: 36px;
+  font-weight: 900;
+  color: #0d3557;
+  letter-spacing: -0.04em;
 }
 
 .period {
-  color: #5f6368;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.plan-card:nth-child(odd) .price,
+.plan-card:nth-child(odd) .period {
+  color: white;
+}
+
+.plan-card:nth-child(odd) .period {
+  opacity: 0.9;
 }
 
 .limits-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.limits-grid div {
+  padding: 14px;
+  border-radius: 14px;
+  background: #f1f8fa;
+  border: 1px solid rgba(13, 53, 87, 0.08);
+}
+
+.plan-card:nth-child(odd) .limits-grid div {
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .label {
   display: block;
-  font-size: 12px;
-  color: #5f6368;
+  font-size: 11px;
+  color: #64748b;
   text-transform: uppercase;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.limits-grid strong {
+  color: #0d3557;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.plan-card:nth-child(odd) .label,
+.plan-card:nth-child(odd) .limits-grid strong {
+  color: white;
+}
+
+.plan-card:nth-child(odd) .label {
+  opacity: 0.78;
 }
 
 .features-list {
@@ -82,24 +198,57 @@
 .features-list li {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   color: #2d3748;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  line-height: 1.35;
 }
 
 .features-list mat-icon {
-  color: #148f77;
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
+  color: #17b890;
+  font-size: 19px;
+  width: 19px;
+  height: 19px;
+  flex: 0 0 auto;
+}
+
+.plan-card:nth-child(odd) .features-list li {
+  color: white;
+}
+
+.plan-card:nth-child(odd) .features-list mat-icon {
+  color: #b7ec55;
 }
 
 mat-card-actions {
-  padding: 16px;
+  padding: 18px 24px 24px;
 }
 
 mat-card-actions button {
   width: 100%;
+  height: 44px;
+  border-radius: 999px;
+  font-weight: 800;
+  color: #ffffff;
+  background: linear-gradient(90deg, #14a6d8, #17b890);
+  box-shadow: 0 10px 22px rgba(20, 166, 216, 0.24);
+}
+
+mat-card-actions button:hover {
+  background: linear-gradient(90deg, #0d8fbd, #119e7d);
+  box-shadow: 0 14px 28px rgba(20, 166, 216, 0.3);
+}
+
+.plan-card:nth-child(odd) mat-card-actions button {
+  color: #0d6b8c;
+  background: white;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.16);
+}
+
+.plan-card:nth-child(odd) mat-card-actions button:hover {
+  color: #0d3557;
+  background: #eef9fb;
 }
 
 .loading-shade {
@@ -113,7 +262,7 @@ mat-card-actions button {
   border: 1px solid #f8b4b4;
   color: #9b1c1c;
   padding: 16px;
-  border-radius: 8px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -122,4 +271,26 @@ mat-card-actions button {
 
 .error-container p {
   margin: 0;
+}
+
+@media (max-width: 768px) {
+  .plans-container {
+    padding: 20px 16px 36px;
+  }
+
+  .page-header {
+    padding: 24px 20px;
+  }
+
+  .page-header h1 {
+    font-size: 26px;
+  }
+
+  .plans-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .price {
+    font-size: 32px;
+  }
 }

@@ -55,7 +55,11 @@ export class BillingSummary implements OnInit {
   protected readonly displayedColumns = ['createdAt', 'amount', 'provider', 'status'];
 
   /**
-   * Lifecycle hook that loads subscription and payment data.
+   * Lifecycle hook that loads subscription data.
+   *
+   * @remarks
+   * Payment history is loaded by SubscriptionStore after the active subscription
+   * is resolved, because the backend exposes payments by subscription ID.
    */
   ngOnInit(): void {
     const laboratoryId = this.iamStore.currentLaboratoryId();
@@ -63,7 +67,6 @@ export class BillingSummary implements OnInit {
     if (!laboratoryId) return;
 
     this.store.loadCurrentSubscription(laboratoryId);
-    this.store.loadPayments(laboratoryId);
   }
 
   /**

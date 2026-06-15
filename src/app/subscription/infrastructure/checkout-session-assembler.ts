@@ -5,8 +5,7 @@ import { CheckoutSessionResource, CheckoutSessionResponse } from './checkout-res
  *
  * @remarks
  * Checkout sessions are not modeled as domain entities in the frontend because
- * they represent a short-lived infrastructure interaction with a payment
- * provider.
+ * they represent a short-lived infrastructure interaction with Stripe.
  */
 export class CheckoutSessionAssembler {
   /**
@@ -17,9 +16,8 @@ export class CheckoutSessionAssembler {
    */
   toResourceFromResponse(response: CheckoutSessionResponse): CheckoutSessionResource {
     return {
-      id: response.id,
-      checkoutSessionId: response.checkoutSessionId,
       checkoutUrl: response.checkoutUrl,
+      checkoutSessionId: response.checkoutSessionId,
     };
   }
 }

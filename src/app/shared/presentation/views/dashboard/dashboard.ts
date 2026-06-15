@@ -305,7 +305,6 @@ export class Dashboard implements OnInit, OnDestroy {
     this.raStore.loadDashboard(labId);
 
     this.subscriptionStore.loadCurrentSubscription(labId);
-    this.subscriptionStore.loadPayments(labId);
 
     this.initializeTelemetryFromFirstEquipment();
   }

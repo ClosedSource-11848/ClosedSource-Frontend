@@ -46,12 +46,12 @@ export class SubscriptionPlanAssembler implements BaseAssembler<
       code: resource.code,
       name: resource.name,
       description: resource.description,
-      priceAmount: resource.priceAmount,
+      priceAmount: resource.amount,
       currency: resource.currency,
-      billingPeriod: resource.billingPeriod,
+      billingPeriod: resource.billingCycle,
       maxUsers: resource.maxUsers,
       maxEquipment: resource.maxEquipment,
-      features: resource.features,
+      features: this.buildFeatures(resource),
       active: resource.active,
     });
   }
@@ -68,13 +68,27 @@ export class SubscriptionPlanAssembler implements BaseAssembler<
       code: entity.code,
       name: entity.name,
       description: entity.description,
-      priceAmount: entity.priceAmount,
+      amount: entity.priceAmount,
       currency: entity.currency,
-      billingPeriod: entity.billingPeriod,
+      billingCycle: entity.billingPeriod,
+      stripePriceId: '',
       maxUsers: entity.maxUsers,
       maxEquipment: entity.maxEquipment,
-      features: entity.features,
       active: entity.active,
     };
+  }
+
+  /**
+   * Builds display features from backend plan limits.
+   *
+   * @param resource - Plan resource returned by the API
+   * @returns Human-readable feature list
+   */
+  private buildFeatures(resource: SubscriptionPlanResource): string[] {
+    return [
+      `${resource.maxUsers} users included`,
+      `${resource.maxEquipment} equipment records`,
+      `${resource.billingCycle.toLowerCase()} billing`,
+    ];
   }
 }
