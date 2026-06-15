@@ -63,14 +63,31 @@ export class PlanList implements OnInit {
    * @param plan - Selected subscription plan
    */
   protected onSelectPlan(plan: SubscriptionPlan): void {
-    this.store.selectPlan({ planCode: plan.code });
+    this.store.selectPlan({
+      planCode: plan.code,
+      billingCycle: plan.billingPeriod,
+    });
 
     if (!this.iamStore.isSignedIn()) {
-      this.router.navigate(['/iam/sign-up'], { queryParams: { plan: plan.code } }).then();
+      this.router
+        .navigate(['/iam/sign-up'], {
+          queryParams: {
+            plan: plan.code,
+            billingCycle: plan.billingPeriod,
+          },
+        })
+        .then();
       return;
     }
 
-    this.router.navigate(['/subscriptions/checkout'], { queryParams: { plan: plan.code } }).then();
+    this.router
+      .navigate(['/subscriptions/checkout'], {
+        queryParams: {
+          plan: plan.code,
+          billingCycle: plan.billingPeriod,
+        },
+      })
+      .then();
   }
 
   /**
