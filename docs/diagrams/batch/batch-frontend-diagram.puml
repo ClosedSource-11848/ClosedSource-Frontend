@@ -1,219 +1,320 @@
 @startuml batch-frontend-diagram
-title QualiTrack – Batch Management Frontend
 
-package "batch-management" {
+title QualiTrack - Batch Frontend Class Diagram
 
-  package "domain" {
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+hide empty members
 
-    interface Batch {
-      +id: string
-      +labId: string
-      +batchCode: string
-      +productId: string
-      +productName: string
-      +equipmentId: string
-      +status: BatchStatus
-      +startDate: Date
-      +endDate: Date
-      +releasedBy: string
-      +releasedAt: Date
-      +rejectionReason: string
-      +rawMaterialUsages: RawMaterialUsage[]
-    }
+package "shared" {
+  interface BaseEntity
+  class BaseApi
+  class BaseApiEndpoint
+  interface BaseAssembler
+  interface BaseResource
+  interface BaseResponse
+}
 
-    interface RawMaterialUsage {
-      +materialId: string
-      +materialName: string
-      +supplier: string
-      +batchNumber: string
-      +quantityUsed: number
-      +unit: string
-    }
-
-    interface CreateBatchCommand {
-      +labId: string
-      +batchCode: string
-      +productId: string
-      +equipmentId: string
-      +startDate: Date
-    }
-
-    interface ReleaseBatchCommand {
-      +batchId: string
-      +qaManagerId: string
-      +observations: string
-    }
-
-    interface RejectBatchCommand {
-      +batchId: string
-      +rejectedBy: string
-      +rootCause: string
-      +correctiveAction: string
-    }
-
-    interface LinkRawMaterialCommand {
-      +batchId: string
-      +materialId: string
-      +quantityUsed: number
-      +unit: string
-    }
-
-    interface GetBatchesQuery {
-      +labId: string
-      +status: BatchStatus
-      +productId: string
-      +from: Date
-      +to: Date
-    }
-
-    enum BatchStatus {
-      IN_PROCESS
-      BLOCKED
-      UNDER_INVESTIGATION
-      RELEASED
-      REJECTED
-      COMPLETED
-    }
-  }
-
-  package "application" {
-
-    class BatchFacade {
-      -batchApiService: BatchApiService
-      +getBatches(query: GetBatchesQuery): Observable<Batch[]>
-      +getBatchById(labId: string, batchId: string): Observable<Batch>
-      +createBatch(command: CreateBatchCommand): Observable<Batch>
-      +releaseBatch(command: ReleaseBatchCommand): Observable<void>
-      +rejectBatch(command: RejectBatchCommand): Observable<void>
-      +linkRawMaterial(command: LinkRawMaterialCommand): Observable<void>
-      +getRawMaterialUsage(batchId: string): Observable<RawMaterialUsage[]>
-    }
-  }
-
-  package "infrastructure" {
-
-    class BatchApiService {
-      -http: HttpClient
-      -baseUrl: string
-      +getBatches(labId: string, params: GetBatchesQuery): Observable<Batch[]>
-      +getBatchById(labId: string, batchId: string): Observable<Batch>
-      +createBatch(labId: string, body: CreateBatchCommand): Observable<Batch>
-      +releaseBatch(labId: string, batchId: string, body: ReleaseBatchCommand): Observable<void>
-      +rejectBatch(labId: string, batchId: string, body: RejectBatchCommand): Observable<void>
-      +linkRawMaterial(batchId: string, body: LinkRawMaterialCommand): Observable<void>
-      +getRawMaterialUsage(batchId: string): Observable<RawMaterialUsage[]>
-    }
-  }
-
-  package "interfaces" {
-
-    class BatchListComponent {
-      -batchFacade: BatchFacade
-      +batches: Batch[]
-      +filter: GetBatchesQuery
-      +isLoading: boolean
-      +statusOptions: BatchStatus[]
-      +ngOnInit(): void
-      +loadBatches(): void
-      +onFilterChange(filter: GetBatchesQuery): void
-      +onViewDetail(batchId: string): void
-    }
-
-    class BatchFilterComponent {
-      +filter: GetBatchesQuery
-      +filterChange: EventEmitter<GetBatchesQuery>
-      +statusOptions: BatchStatus[]
-      +products: string[]
-      +onApply(): void
-      +onReset(): void
-    }
-
-    class BatchDetailComponent {
-      -batchFacade: BatchFacade
-      -toastService: ToastService
-      +batchId: string
-      +batch: Batch
-      +rawMaterials: RawMaterialUsage[]
-      +isLoading: boolean
-      +canRelease: boolean
-      +canReject: boolean
-      +ngOnInit(): void
-      +loadDetail(): void
-      +getStatusColor(): string
-      +checkPermissions(): void
-    }
-
-    class BatchFormComponent {
-      -batchFacade: BatchFacade
-      -toastService: ToastService
-      +form: FormGroup
-      +products: string[]
-      +equipments: string[]
-      +isLoading: boolean
-      +buildForm(): void
-      +onSubmit(): void
-    }
-
-    class BatchReleaseFormComponent {
-      -batchFacade: BatchFacade
-      -toastService: ToastService
-      +batchId: string
-      +form: FormGroup
-      +isLoading: boolean
-      +buildForm(): void
-      +onRelease(): void
-    }
-
-    class BatchRejectFormComponent {
-      -batchFacade: BatchFacade
-      -toastService: ToastService
-      +batchId: string
-      +form: FormGroup
-      +rootCauseOptions: string[]
-      +isLoading: boolean
-      +buildForm(): void
-      +onReject(): void
-    }
-
-    class RawMaterialUsageComponent {
-      -batchFacade: BatchFacade
-      -toastService: ToastService
-      +batchId: string
-      +usages: RawMaterialUsage[]
-      +isLoading: boolean
-      +ngOnInit(): void
-      +loadUsages(): void
-      +onLinkMaterial(): void
-    }
-
-    class BatchStatusBadgeComponent {
-      +status: BatchStatus
-      +getColor(): string
-      +getLabel(): string
-    }
+package "iam.application" {
+  class IamStore {
+    +currentUserId()
+    +currentLaboratoryId()
+    +isSignedIn()
   }
 }
 
-BatchFacade --> BatchApiService
-BatchFacade ..> Batch
-BatchFacade ..> RawMaterialUsage
-BatchFacade ..> CreateBatchCommand
-BatchFacade ..> ReleaseBatchCommand
-BatchFacade ..> RejectBatchCommand
-BatchFacade ..> LinkRawMaterialCommand
-BatchFacade ..> GetBatchesQuery
+package "laboratory.application" {
+  class LaboratoryStore {
+    +products
+    +rawMaterials
+    +loadProducts(laboratoryId: number): void
+    +loadRawMaterials(laboratoryId: number): void
+  }
+}
 
-BatchListComponent --> BatchFacade
-BatchListComponent --> BatchFilterComponent
-BatchListComponent --> BatchStatusBadgeComponent
-BatchDetailComponent --> BatchFacade
-BatchDetailComponent --> BatchReleaseFormComponent
-BatchDetailComponent --> BatchRejectFormComponent
-BatchDetailComponent --> RawMaterialUsageComponent
-BatchDetailComponent --> BatchStatusBadgeComponent
-BatchFormComponent --> BatchFacade
-BatchReleaseFormComponent --> BatchFacade
-BatchRejectFormComponent --> BatchFacade
-RawMaterialUsageComponent --> BatchFacade
+package "batch.domain.model" {
+  class Batch {
+    +id: number
+    +labId: number
+    +productId: number
+    +productName: string
+    +batchNumber: string
+    +quantity: number
+    +unit: string
+    +status: "PENDING | IN_PROGRESS | RELEASED | REJECTED"
+    +startDate: string
+    +endDate?: string
+    +notes?: string
+    +createdAt: string
+  }
+
+  class RawMaterialUsage {
+    +id: number
+    +batchId: number
+    +rawMaterialId: number
+    +rawMaterialName: string
+    +quantityUsed: number
+    +unit: string
+    +usageDate: string
+    +createdAt: string
+  }
+
+  interface CreateBatchCommand {
+    +labId: number
+    +productId: number
+    +batchNumber: string
+    +quantity: number
+    +unit: string
+    +startDate: string
+    +notes?: string
+  }
+
+  interface ReleaseBatchCommand {
+    +releaseDate: string
+    +notes: string
+  }
+
+  interface RejectBatchCommand {
+    +rejectionDate: string
+    +reason: string
+  }
+
+  interface LinkRawMaterialCommand {
+    +rawMaterialId: number
+    +quantityUsed: number
+  }
+}
+
+package "batch.application" {
+  class BatchStore {
+    -api: BatchApi
+    -_batches
+    -_currentBatchUsage
+    -_selectedBatch
+    -_isLoading
+    -_error
+    -_successMsg
+
+    +batches
+    +currentBatchUsage
+    +selectedBatch
+    +isLoading
+    +error
+    +successMsg
+    +pendingBatches
+    +finishedBatches
+
+    +loadBatchById(batchId: number): void
+    +loadBatches(labId: number): void
+    +createBatch(command: CreateBatchCommand): void
+    +releaseBatch(batchId: number, command: ReleaseBatchCommand): void
+    +rejectBatch(batchId: number, command: RejectBatchCommand): void
+    +loadBatchUsage(batchId: number): void
+    +linkMaterial(batchId: number, command: LinkRawMaterialCommand): void
+    +clearMessages(): void
+  }
+}
+
+package "batch.infrastructure" {
+  class BatchApi {
+    -_batchEndpoint: BatchApiEndpoint
+    -_usageEndpoint: RawMaterialUsageApiEndpoint
+
+    +getBatchById(batchId: number)
+    +getBatches(labId: number)
+    +createBatch(request: CreateBatchRequest)
+    +releaseBatch(batchId: number, request: ReleaseBatchRequest)
+    +rejectBatch(batchId: number, request: RejectBatchRequest)
+    +getRawMaterialUsage(batchId: number)
+    +linkRawMaterial(batchId: number, request: LinkRawMaterialRequest)
+  }
+
+  class BatchApiEndpoint {
+    +getBatchById(batchId: number)
+    +getBatchesByLab(labId: number)
+    +createBatch(request: CreateBatchRequest)
+    +releaseBatch(batchId: number, request: ReleaseBatchRequest)
+    +rejectBatch(batchId: number, request: RejectBatchRequest)
+  }
+
+  class RawMaterialUsageApiEndpoint {
+    +getUsageByBatch(batchId: number)
+    +linkRawMaterial(batchId: number, request: LinkRawMaterialRequest)
+  }
+
+  class BatchAssembler
+  class RawMaterialUsageAssembler
+
+  interface BatchResource {
+    +id: number
+    +labId: number
+    +productId: number
+    +productName: string
+    +batchNumber: string
+    +quantity: number
+    +unit: string
+    +status: string
+    +startDate: string
+    +endDate?: string
+    +notes?: string
+    +createdAt?: string
+  }
+
+  interface BatchesResponse {
+    +batches: BatchResource[]
+  }
+
+  interface RawMaterialUsageResource {
+    +id: number
+    +batchId: number
+    +rawMaterialId: number
+    +rawMaterialName: string
+    +quantityUsed: number
+    +unit: string
+    +usageDate: string
+    +createdAt?: string
+  }
+
+  interface RawMaterialUsagesResponse {
+    +rawMaterialUsages: RawMaterialUsageResource[]
+  }
+
+  interface CreateBatchRequest {
+    +labId: number
+    +productId: number
+    +batchNumber: string
+    +quantity: number
+    +unit: string
+    +startDate: string
+    +notes?: string
+  }
+
+  interface ReleaseBatchRequest {
+    +releaseDate: string
+    +notes: string
+  }
+
+  interface RejectBatchRequest {
+    +rejectionDate: string
+    +reason: string
+  }
+
+  interface LinkRawMaterialRequest {
+    +rawMaterialId: number
+    +quantityUsed: number
+  }
+}
+
+package "batch.presentation" {
+  class BatchRoutes
+
+  class BatchList {
+    +displayedColumns: string[]
+    +ngOnInit(): void
+    +onRefresh(): void
+    +getStatusClass(status: string): string
+    +getStatusKey(status: string): string
+  }
+
+  class BatchForm {
+    +units: string[]
+    +batchForm
+    +ngOnInit(): void
+    +onSubmit(): void
+  }
+
+  class BatchDetail {
+    +batchId: number
+    +ngOnInit(): void
+    +currentBatch
+    +getStatusClass(status?: string): string
+    +getStatusKey(status?: string): string
+  }
+
+  class BatchReleaseForm {
+    +releaseForm
+    +batchId: number
+    +ngOnInit(): void
+    +onSubmit(): void
+  }
+
+  class BatchRejectForm {
+    +rejectForm
+    +batchId: number
+    +ngOnInit(): void
+    +onSubmit(): void
+  }
+
+  class RawMaterialUsageComponent {
+    +batchId: number
+    +usageForm
+    +displayedColumns: string[]
+    +ngOnInit(): void
+    +onAddMaterial(): void
+  }
+}
+
+Batch ..|> BaseEntity
+RawMaterialUsage ..|> BaseEntity
+
+BatchApi --|> BaseApi
+BatchApiEndpoint --|> BaseApiEndpoint
+RawMaterialUsageApiEndpoint --|> BaseApiEndpoint
+
+BatchAssembler ..|> BaseAssembler
+RawMaterialUsageAssembler ..|> BaseAssembler
+
+BatchResource ..|> BaseResource
+BatchesResponse ..|> BaseResponse
+RawMaterialUsageResource ..|> BaseResource
+RawMaterialUsagesResponse ..|> BaseResponse
+
+BatchStore --> BatchApi
+
+BatchStore ..> Batch
+BatchStore ..> RawMaterialUsage
+BatchStore ..> CreateBatchCommand
+BatchStore ..> ReleaseBatchCommand
+BatchStore ..> RejectBatchCommand
+BatchStore ..> LinkRawMaterialCommand
+
+BatchApi --> BatchApiEndpoint
+BatchApi --> RawMaterialUsageApiEndpoint
+
+BatchApiEndpoint --> BatchAssembler
+RawMaterialUsageApiEndpoint --> RawMaterialUsageAssembler
+
+BatchApiEndpoint ..> CreateBatchRequest
+BatchApiEndpoint ..> ReleaseBatchRequest
+BatchApiEndpoint ..> RejectBatchRequest
+RawMaterialUsageApiEndpoint ..> LinkRawMaterialRequest
+
+BatchAssembler ..> Batch
+BatchAssembler ..> BatchResource
+RawMaterialUsageAssembler ..> RawMaterialUsage
+RawMaterialUsageAssembler ..> RawMaterialUsageResource
+
+BatchList --> BatchStore
+BatchList --> IamStore
+
+BatchForm --> BatchStore
+BatchForm --> LaboratoryStore
+BatchForm --> IamStore
+
+BatchDetail --> BatchStore
+BatchDetail --> RawMaterialUsageComponent
+
+BatchReleaseForm --> BatchStore
+BatchRejectForm --> BatchStore
+
+RawMaterialUsageComponent --> BatchStore
+RawMaterialUsageComponent --> LaboratoryStore
+RawMaterialUsageComponent --> IamStore
+
+BatchRoutes ..> BatchList
+BatchRoutes ..> BatchForm
+BatchRoutes ..> BatchDetail
+BatchRoutes ..> BatchReleaseForm
+BatchRoutes ..> BatchRejectForm
 
 @enduml

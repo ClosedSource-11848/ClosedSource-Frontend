@@ -1,244 +1,356 @@
 @startuml laboratory-frontend-diagram
-title QualiTrack – Laboratory Management Frontend
 
-package "laboratory-management" {
+title QualiTrack - Laboratory Frontend Class Diagram
 
-  package "domain" {
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+hide empty members
 
-    interface Laboratory {
-      +id: string
-      +name: string
-      +ruc: string
-      +address: string
-      +phone: string
-      +applicableRegulations: string[]
-    }
+package "shared" {
+  interface BaseEntity
+  class BaseApi
+  class BaseApiEndpoint
+  interface BaseAssembler
+  interface BaseResource
+  interface BaseResponse
+  interface MessageResource
+}
 
-    interface StaffMember {
-      +id: string
-      +labId: string
-      +fullName: string
-      +role: string
-      +email: string
-      +active: boolean
-    }
-
-    interface PharmaceuticalProduct {
-      +id: string
-      +labId: string
-      +code: string
-      +name: string
-      +description: string
-      +specifications: string
-      +active: boolean
-    }
-
-    interface RawMaterial {
-      +id: string
-      +labId: string
-      +name: string
-      +code: string
-      +supplier: string
-      +batchNumber: string
-      +expirationDate: Date
-      +quantityInStock: number
-      +unit: string
-      +minimumStock: number
-    }
-
-    interface CreateLaboratoryCommand {
-      +name: string
-      +ruc: string
-      +address: string
-      +phone: string
-    }
-
-    interface UpdateLaboratoryCommand {
-      +labId: string
-      +name: string
-      +address: string
-      +phone: string
-      +applicableRegulations: string[]
-    }
-
-    interface RegisterStaffCommand {
-      +labId: string
-      +fullName: string
-      +role: string
-      +email: string
-    }
-
-    interface CreateProductCommand {
-      +labId: string
-      +code: string
-      +name: string
-      +description: string
-      +specifications: string
-    }
-
-    interface CreateRawMaterialCommand {
-      +labId: string
-      +name: string
-      +code: string
-      +supplier: string
-      +batchNumber: string
-      +expirationDate: Date
-      +quantityInStock: number
-      +unit: string
-      +minimumStock: number
-    }
-
-    enum Regulation {
-      BPM_DIGEMID
-      ISO_9001
-      ISO_13485
-      GMP_WHO
-    }
-  }
-
-  package "application" {
-
-    class LaboratoryFacade {
-      -laboratoryApiService: LaboratoryApiService
-      +getLaboratory(labId: string): Observable<Laboratory>
-      +updateLaboratory(command: UpdateLaboratoryCommand): Observable<Laboratory>
-      +getStaff(labId: string): Observable<StaffMember[]>
-      +registerStaff(command: RegisterStaffCommand): Observable<StaffMember>
-      +deactivateStaff(labId: string, staffId: string): Observable<void>
-      +getProducts(labId: string): Observable<PharmaceuticalProduct[]>
-      +createProduct(command: CreateProductCommand): Observable<PharmaceuticalProduct>
-      +getRawMaterials(labId: string): Observable<RawMaterial[]>
-      +getLowStockMaterials(labId: string): Observable<RawMaterial[]>
-      +createRawMaterial(command: CreateRawMaterialCommand): Observable<RawMaterial>
-    }
-  }
-
-  package "infrastructure" {
-
-    class LaboratoryApiService {
-      -http: HttpClient
-      -baseUrl: string
-      +getLaboratory(labId: string): Observable<Laboratory>
-      +updateLaboratory(labId: string, body: UpdateLaboratoryCommand): Observable<Laboratory>
-      +getStaff(labId: string): Observable<StaffMember[]>
-      +registerStaff(labId: string, body: RegisterStaffCommand): Observable<StaffMember>
-      +deactivateStaff(labId: string, staffId: string): Observable<void>
-      +getProducts(labId: string): Observable<PharmaceuticalProduct[]>
-      +createProduct(labId: string, body: CreateProductCommand): Observable<PharmaceuticalProduct>
-      +getRawMaterials(labId: string): Observable<RawMaterial[]>
-      +createRawMaterial(labId: string, body: CreateRawMaterialCommand): Observable<RawMaterial>
-    }
-  }
-
-  package "interfaces" {
-
-    class LabProfileComponent {
-      -laboratoryFacade: LaboratoryFacade
-      -toastService: ToastService
-      +laboratory: Laboratory
-      +isLoading: boolean
-      +isEditing: boolean
-      +form: FormGroup
-      +availableRegulations: Regulation[]
-      +ngOnInit(): void
-      +loadLaboratory(): void
-      +onEdit(): void
-      +onSave(): void
-      +buildForm(lab: Laboratory): void
-    }
-
-    class StaffListComponent {
-      -laboratoryFacade: LaboratoryFacade
-      -toastService: ToastService
-      +staffMembers: StaffMember[]
-      +isLoading: boolean
-      +searchTerm: string
-      +ngOnInit(): void
-      +loadStaff(): void
-      +onDeactivate(staffId: string): void
-      +onSearch(): void
-    }
-
-    class StaffFormComponent {
-      -laboratoryFacade: LaboratoryFacade
-      -toastService: ToastService
-      +form: FormGroup
-      +availableRoles: string[]
-      +isLoading: boolean
-      +ngOnInit(): void
-      +buildForm(): void
-      +onSubmit(): void
-    }
-
-    class ProductCatalogComponent {
-      -laboratoryFacade: LaboratoryFacade
-      +products: PharmaceuticalProduct[]
-      +isLoading: boolean
-      +searchTerm: string
-      +ngOnInit(): void
-      +loadProducts(): void
-      +onSearch(): void
-    }
-
-    class ProductFormComponent {
-      -laboratoryFacade: LaboratoryFacade
-      -toastService: ToastService
-      +form: FormGroup
-      +isLoading: boolean
-      +buildForm(): void
-      +onSubmit(): void
-    }
-
-    class RawMaterialListComponent {
-      -laboratoryFacade: LaboratoryFacade
-      -toastService: ToastService
-      +rawMaterials: RawMaterial[]
-      +lowStockMaterials: RawMaterial[]
-      +isLoading: boolean
-      +ngOnInit(): void
-      +loadMaterials(): void
-      +isLowStock(material: RawMaterial): boolean
-    }
-
-    class RawMaterialFormComponent {
-      -laboratoryFacade: LaboratoryFacade
-      -toastService: ToastService
-      +form: FormGroup
-      +isLoading: boolean
-      +buildForm(): void
-      +onSubmit(): void
-    }
-
-    class RegulationSettingsComponent {
-      -laboratoryFacade: LaboratoryFacade
-      -toastService: ToastService
-      +availableRegulations: Regulation[]
-      +selectedRegulations: string[]
-      +labId: string
-      +isSaving: boolean
-      +ngOnInit(): void
-      +onSave(): void
-    }
+package "iam.application" {
+  class IamStore {
+    +currentUserId()
+    +currentLaboratoryId()
+    +isSignedIn()
   }
 }
 
-LaboratoryFacade --> LaboratoryApiService
-LaboratoryFacade ..> Laboratory
-LaboratoryFacade ..> StaffMember
-LaboratoryFacade ..> PharmaceuticalProduct
-LaboratoryFacade ..> RawMaterial
-LaboratoryFacade ..> UpdateLaboratoryCommand
-LaboratoryFacade ..> RegisterStaffCommand
-LaboratoryFacade ..> CreateProductCommand
-LaboratoryFacade ..> CreateRawMaterialCommand
+package "laboratory.domain.model" {
+  class Laboratory {
+    +id: number
+    +name: string
+    +ruc: string
+    +address: string
+    +phone: string
+    +applicableRegulations: string[]
+    +createdAt: string
+    +updatedAt: string
+  }
 
-LabProfileComponent --> LaboratoryFacade
-StaffListComponent --> LaboratoryFacade
-StaffFormComponent --> LaboratoryFacade
-ProductCatalogComponent --> LaboratoryFacade
-ProductFormComponent --> LaboratoryFacade
-RawMaterialListComponent --> LaboratoryFacade
-RawMaterialFormComponent --> LaboratoryFacade
-RegulationSettingsComponent --> LaboratoryFacade
+  class StaffMember {
+    +id: number
+    +laboratoryId: number
+    +fullName: string
+    +role: string
+    +email: string
+    +active: boolean
+    +createdAt: string
+  }
+
+  class PharmaceuticalProduct {
+    +id: number
+    +laboratoryId: number
+    +code: string
+    +name: string
+    +description: string
+    +specifications: string
+    +active: boolean
+    +createdAt: string
+  }
+
+  class RawMaterial {
+    +id: number
+    +laboratoryId: number
+    +name: string
+    +code: string
+    +supplier: string
+    +batchNumber: string
+    +expirationDate: string
+    +quantityInStock: number
+    +unit: string
+    +minimumStock: number
+    +createdAt: string
+  }
+
+  interface CreateLaboratoryCommand {
+    +name: string
+    +ruc: string
+    +address: string
+    +phone: string
+    +applicableRegulations: string[]
+  }
+
+  interface UpdateLaboratoryCommand {
+    +name: string
+    +address: string
+    +phone: string
+    +applicableRegulations: string[]
+  }
+
+  interface RegisterStaffCommand {
+    +laboratoryId: number
+    +fullName: string
+    +role: string
+    +email: string
+  }
+
+  interface CreateProductCommand {
+    +laboratoryId: number
+    +code: string
+    +name: string
+    +description: string
+    +specifications: string
+  }
+
+  interface CreateRawMaterialCommand {
+    +laboratoryId: number
+    +name: string
+    +code: string
+    +supplier: string
+    +batchNumber: string
+    +expirationDate: string
+    +quantityInStock: number
+    +unit: string
+    +minimumStock: number
+  }
+}
+
+package "laboratory.application" {
+  class LaboratoryStore {
+    -_laboratory
+    -_staffList
+    -_products
+    -_rawMaterials
+    -_lowStock
+    -_isLoading
+    -_error
+    -_successMsg
+
+    +laboratory
+    +staffList
+    +products
+    +rawMaterials
+    +lowStock
+    +isLoading
+    +error
+    +successMsg
+    +hasLowStock
+    +activeStaff
+
+    +createLaboratory(command: CreateLaboratoryCommand): void
+    +loadLaboratory(laboratoryId: number): void
+    +updateLaboratory(laboratoryId: number, command: UpdateLaboratoryCommand): void
+    +loadStaff(laboratoryId: number): void
+    +registerStaff(laboratoryId: number, command: RegisterStaffCommand): void
+    +deactivateStaff(laboratoryId: number, staffId: number): void
+    +loadProducts(laboratoryId: number): void
+    +createProduct(laboratoryId: number, command: CreateProductCommand): void
+    +loadRawMaterials(laboratoryId: number): void
+    +createRawMaterial(laboratoryId: number, command: CreateRawMaterialCommand): void
+    +clearMessages(): void
+  }
+}
+
+package "laboratory.infrastructure" {
+  class LaboratoryApi {
+    -laboratoryEndpoint: LaboratoryApiEndpoint
+    -staffEndpoint: StaffApiEndpoint
+    -productsEndpoint: ProductApiEndpoint
+    -materialsEndpoint: RawMaterialApiEndpoint
+
+    +createLaboratory(request: CreateLaboratoryRequest)
+    +getLaboratory(laboratoryId: number)
+    +updateLaboratory(laboratoryId: number, request: UpdateLaboratoryRequest)
+    +getStaff(laboratoryId: number)
+    +registerStaff(laboratoryId: number, request: RegisterStaffRequest)
+    +deactivateStaff(staffId: number)
+    +getProducts(laboratoryId: number)
+    +createProduct(laboratoryId: number, request: CreateProductRequest)
+    +getRawMaterials(laboratoryId: number)
+    +getLowStockMaterials(laboratoryId: number)
+    +createRawMaterial(laboratoryId: number, request: CreateRawMaterialRequest)
+  }
+
+  class LaboratoryApiEndpoint {
+    +createLaboratory(request: CreateLaboratoryRequest)
+    +getByLaboratoryId(laboratoryId: number)
+    +updateLaboratory(laboratoryId: number, request: UpdateLaboratoryRequest)
+  }
+
+  class StaffApiEndpoint {
+    +getStaffByLaboratoryId(laboratoryId: number)
+    +registerStaff(laboratoryId: number, request: RegisterStaffRequest)
+    +deactivateStaff(staffId: number)
+  }
+
+  class ProductApiEndpoint {
+    +getProductsByLaboratoryId(laboratoryId: number)
+    +createProduct(laboratoryId: number, request: CreateProductRequest)
+  }
+
+  class RawMaterialApiEndpoint {
+    +getRawMaterialsByLaboratoryId(laboratoryId: number)
+    +getLowStockMaterials(laboratoryId: number)
+    +createRawMaterial(laboratoryId: number, request: CreateRawMaterialRequest)
+  }
+
+  class LaboratoryAssembler
+  class StaffAssembler
+  class ProductAssembler
+  class RawMaterialAssembler
+
+  interface LaboratoryResource
+  interface LaboratoriesResponse
+  interface StaffMemberResource
+  interface StaffMembersResponse
+  interface PharmaceuticalProductResource
+  interface PharmaceuticalProductsResponse
+  interface RawMaterialResource
+  interface RawMaterialsResponse
+
+  interface CreateLaboratoryRequest
+  interface UpdateLaboratoryRequest
+  interface RegisterStaffRequest
+  interface CreateProductRequest
+  interface CreateRawMaterialRequest
+}
+
+package "laboratory.presentation" {
+  class LaboratoryRoutes
+
+  class LabProfile {
+    +ngOnInit(): void
+    +loadLaboratory(): void
+    +enableEdit(): void
+    +cancelEdit(): void
+    +onSubmit(): void
+  }
+
+  class LabForm {
+    +ngOnInit(): void
+    +onSubmit(): void
+  }
+
+  class StaffList {
+    +ngOnInit(): void
+    +loadStaff(): void
+    +onDeactivateStaff(staffId: number): void
+  }
+
+  class StaffForm {
+    +ngOnInit(): void
+    +onSubmit(): void
+  }
+
+  class ProductCatalog {
+    +ngOnInit(): void
+    +loadProducts(): void
+  }
+
+  class ProductForm {
+    +ngOnInit(): void
+    +onSubmit(): void
+  }
+
+  class RawMaterialList {
+    +ngOnInit(): void
+    +loadRawMaterials(): void
+  }
+
+  class RawMaterialForm {
+    +ngOnInit(): void
+    +onSubmit(): void
+  }
+}
+
+Laboratory ..|> BaseEntity
+StaffMember ..|> BaseEntity
+PharmaceuticalProduct ..|> BaseEntity
+RawMaterial ..|> BaseEntity
+
+LaboratoryApi --|> BaseApi
+LaboratoryApiEndpoint --|> BaseApiEndpoint
+StaffApiEndpoint --|> BaseApiEndpoint
+ProductApiEndpoint --|> BaseApiEndpoint
+RawMaterialApiEndpoint --|> BaseApiEndpoint
+
+LaboratoryAssembler ..|> BaseAssembler
+StaffAssembler ..|> BaseAssembler
+ProductAssembler ..|> BaseAssembler
+RawMaterialAssembler ..|> BaseAssembler
+
+LaboratoryResource ..|> BaseResource
+LaboratoriesResponse ..|> BaseResponse
+StaffMemberResource ..|> BaseResource
+StaffMembersResponse ..|> BaseResponse
+PharmaceuticalProductResource ..|> BaseResource
+PharmaceuticalProductsResponse ..|> BaseResponse
+RawMaterialResource ..|> BaseResource
+RawMaterialsResponse ..|> BaseResponse
+
+LaboratoryStore --> LaboratoryApi
+
+LaboratoryStore ..> Laboratory
+LaboratoryStore ..> StaffMember
+LaboratoryStore ..> PharmaceuticalProduct
+LaboratoryStore ..> RawMaterial
+
+LaboratoryStore ..> CreateLaboratoryCommand
+LaboratoryStore ..> UpdateLaboratoryCommand
+LaboratoryStore ..> RegisterStaffCommand
+LaboratoryStore ..> CreateProductCommand
+LaboratoryStore ..> CreateRawMaterialCommand
+
+LaboratoryApi --> LaboratoryApiEndpoint
+LaboratoryApi --> StaffApiEndpoint
+LaboratoryApi --> ProductApiEndpoint
+LaboratoryApi --> RawMaterialApiEndpoint
+
+LaboratoryApiEndpoint --> LaboratoryAssembler
+StaffApiEndpoint --> StaffAssembler
+ProductApiEndpoint --> ProductAssembler
+RawMaterialApiEndpoint --> RawMaterialAssembler
+
+LaboratoryApiEndpoint ..> CreateLaboratoryRequest
+LaboratoryApiEndpoint ..> UpdateLaboratoryRequest
+StaffApiEndpoint ..> RegisterStaffRequest
+ProductApiEndpoint ..> CreateProductRequest
+RawMaterialApiEndpoint ..> CreateRawMaterialRequest
+
+LaboratoryAssembler ..> Laboratory
+LaboratoryAssembler ..> LaboratoryResource
+StaffAssembler ..> StaffMember
+StaffAssembler ..> StaffMemberResource
+ProductAssembler ..> PharmaceuticalProduct
+ProductAssembler ..> PharmaceuticalProductResource
+RawMaterialAssembler ..> RawMaterial
+RawMaterialAssembler ..> RawMaterialResource
+
+LabProfile --> LaboratoryStore
+LabProfile --> IamStore
+LabForm --> LaboratoryStore
+
+StaffList --> LaboratoryStore
+StaffList --> IamStore
+StaffForm --> LaboratoryStore
+StaffForm --> IamStore
+
+ProductCatalog --> LaboratoryStore
+ProductCatalog --> IamStore
+ProductForm --> LaboratoryStore
+ProductForm --> IamStore
+
+RawMaterialList --> LaboratoryStore
+RawMaterialList --> IamStore
+RawMaterialForm --> LaboratoryStore
+RawMaterialForm --> IamStore
+
+LaboratoryRoutes ..> LabProfile
+LaboratoryRoutes ..> LabForm
+LaboratoryRoutes ..> StaffList
+LaboratoryRoutes ..> StaffForm
+LaboratoryRoutes ..> ProductCatalog
+LaboratoryRoutes ..> ProductForm
+LaboratoryRoutes ..> RawMaterialList
+LaboratoryRoutes ..> RawMaterialForm
 
 @enduml
