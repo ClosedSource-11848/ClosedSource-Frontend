@@ -301,7 +301,6 @@ export class Dashboard implements OnInit, OnDestroy {
 
     this.equipmentStore.loadEquipment(labId);
     this.batchStore.loadBatches(labId);
-    this.caStore.loadAlerts();
     this.raStore.loadDashboard(labId);
 
     this.subscriptionStore.loadCurrentSubscription(labId);
@@ -325,6 +324,8 @@ export class Dashboard implements OnInit, OnDestroy {
       if (!equipment || this.telemetryInitialized) return;
 
       this.telemetryInitialized = true;
+
+      this.caStore.loadAlerts({ equipmentId: equipment.id });
       this.trackingStore.loadEquipmentStatus(equipment.id);
       this.trackingStore.loadLatestMeasurements(equipment.id);
       this.trackingStore.loadTelemetryHistory({ equipmentId: equipment.id });
