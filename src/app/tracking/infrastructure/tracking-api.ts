@@ -52,7 +52,7 @@ export class TrackingApi {
    * @param equipmentId - Optional numeric equipment identifier used for filtering
    * @returns Observable stream emitting Measurement domain entities
    */
-  getLatestMeasurements(equipmentId?: number): Observable<Measurement[]> {
+  getLatestMeasurements(equipmentId: number): Observable<Measurement[]> {
     return this.measurementEndpoint.getLatestMeasurements(equipmentId);
   }
 
@@ -72,8 +72,8 @@ export class TrackingApi {
    * @param filters - Optional telemetry history filters
    * @returns Observable stream emitting TelemetryHistoryPoint domain entities
    */
-  getTelemetryHistory(filters?: {
-    equipmentId?: number;
+  getTelemetryHistory(filters: {
+    equipmentId: number;
     from?: string;
     to?: string;
   }): Observable<TelemetryHistoryPoint[]> {

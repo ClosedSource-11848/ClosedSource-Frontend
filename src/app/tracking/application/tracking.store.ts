@@ -111,7 +111,9 @@ export class TrackingStore {
    * measurements for that specific equipment. This keeps dashboards and charts
    * aligned with the currently selected device.
    */
-  loadLatestMeasurements(equipmentId?: number): void {
+  loadLatestMeasurements(equipmentId: number): void {
+    if (!equipmentId) return;
+
     this._isLoading.set(true);
     this._error.set(null);
 
@@ -162,7 +164,9 @@ export class TrackingStore {
    * @param filters.from - Start timestamp in ISO string format
    * @param filters.to - End timestamp in ISO string format
    */
-  loadTelemetryHistory(filters?: { equipmentId?: number; from?: string; to?: string }): void {
+  loadTelemetryHistory(filters: { equipmentId: number; from?: string; to?: string }): void {
+    if (!filters.equipmentId) return;
+
     this._isLoading.set(true);
     this._error.set(null);
 
