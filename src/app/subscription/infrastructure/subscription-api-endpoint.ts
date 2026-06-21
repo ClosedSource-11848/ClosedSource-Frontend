@@ -48,16 +48,21 @@ export class SubscriptionApiEndpoint extends ErrorHandlingEnabledBaseType {
     const params = new HttpParams().set('status', 'ACTIVE');
 
     return this.http
-      .get<
-        SubscriptionResource[]
-      >(`${laboratoriesEndpointUrl}/${laboratoryId}${environment.laboratorySubscriptionsEndpointPath}`, { params })
+      .get<SubscriptionResource | SubscriptionResource[]>(
+        `${laboratoriesEndpointUrl}/${laboratoryId}${environment.laboratorySubscriptionsEndpointPath}`,
+        { params }
+      )
       .pipe(
-        map((resources) => {
-          if (!resources.length) {
+        map((response) => {
+          const resource = Array.isArray(response)
+            ? response.find((subscription) => subscription.status === 'ACTIVE')
+            : response;
+
+          if (!resource) {
             throw new Error('Resource not found');
           }
 
-          return this.subscriptionAssembler.toEntityFromResource(resources[0]);
+          return this.subscriptionAssembler.toEntityFromResource(resource);
         }),
         catchError(this.handleError(`Failed to fetch subscription for laboratory ${laboratoryId}`)),
       );
