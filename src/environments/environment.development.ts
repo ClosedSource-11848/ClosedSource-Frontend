@@ -4,10 +4,14 @@ export const environment = {
   // Base API URL
   serverBasePath: 'https://qualitrack-platform.onrender.com/api/v1',
 
-  // IAM (Identity and Access Management)
+  // IAM
   iamSignInEndpointPath: '/authentication/sign-in',
   iamSignUpEndpointPath: '/authentication/sign-up',
   iamRecoverPasswordEndpointPath: '/authentication/recover-password',
+
+  // Users / Roles
+  usersEndpointPath: '/users',
+  rolesEndpointPath: '/roles',
 
   // Laboratory
   laboratoryLabsEndpointPath: '/laboratories',
@@ -17,31 +21,43 @@ export const environment = {
 
   // Equipment
   equipmentEndpointPath: '/equipments',
-  equipmentBpmConfigEndpointPath: '/bpm-config',
-  equipmentMaintenanceEndpointPath: '/maintenance',
+  equipmentBpmConfigEndpointPath: '/bpm-configs',
+  equipmentMaintenanceEndpointPath: '/maintenance-records',
+  equipmentTelemetryStatusEndpointPath: '/telemetry-status',
+  equipmentTelemetryMeasurementsEndpointPath: '/telemetry-measurements',
+  equipmentTelemetryHistoryEndpointPath: '/telemetry-history',
+  equipmentDeviationTrendsEndpointPath: '/deviation-trends',
+  equipmentDeviationAlertsEndpointPath: '/deviation-alerts',
+  equipmentComplianceEventsEndpointPath: '/compliance-events',
+  equipmentAuditLogsEndpointPath: '/audit-logs',
+  equipmentReportsEndpointPath: '/reports',
+  equipmentLogReportsEndpointPath: '/log-reports',
 
   // Batch
   batchEndpointPath: '/batches',
-  batchRawMaterialUsageEndpointPath: '/raw-material-usages',
+  batchRawMaterialUsageEndpointPath: '/raw-materials',
+  batchAuditLogsEndpointPath: '/audit-logs',
+  batchDeviationAlertsEndpointPath: '/deviation-alerts',
+  batchComplianceEventsEndpointPath: '/compliance-events',
+  batchReportsEndpointPath: '/reports',
 
-  // Tracking (IoT)
-  trackingTelemetryEndpointPath: '/telemetry',
-  trackingDeviceBindingsEndpointPath: '/device-bindings',
-
-  // CA (Compliance & Alerting)
-  caComplianceEndpointPath: '/compliance-events',
-  caAlertsEndpointPath: '/alerts',
+  // CA
+  rawMaterialComplianceEventsEndpointPath: '/compliance-events',
   caNotificationPrefsEndpointPath: '/notification-preferences',
 
-  // RA (Reporting & Audit)
+  // RA
   raReportsEndpointPath: '/reports',
-  raKpisEndpointPath: '/kpis',
-  raAuditLogEndpointPath: '/audit-log',
-  raDeviationTrendsEndpointPath: '/deviation-trends',
+  raAuditLogsEndpointPath: '/audit-logs',
+  raKpiDashboardsEndpointPath: '/kpi-dashboards',
+  raComplianceReportsEndpointPath: '/compliance-reports',
 
-  // Payments
-  subscriptionPlansEndpointPath: '/subscriptions/plans',
+  // Subscriptions & Payments
+  subscriptionPlansEndpointPath: '/subscription-plans',
+  subscriptionCheckoutSessionsEndpointPath: '/subscription-checkout-sessions',
   subscriptionsEndpointPath: '/subscriptions',
-  paymentsEndpointPath: '/subscriptions',
-  checkoutEndpointPath: '/subscriptions/checkout-sessions',
+  laboratorySubscriptionsEndpointPath: '/subscriptions',
+  laboratoryBillingSummaryEndpointPath: '/billing-summary',
+
+  // Stripe
+  stripeWebhooksEndpointPath: '/stripe/webhooks',
 };

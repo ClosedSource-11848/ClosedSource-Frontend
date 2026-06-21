@@ -36,42 +36,42 @@ export class BatchStore {
   readonly successMsg = this._successMsg.asReadonly();
 
   readonly pendingBatches = computed(() =>
-      this._batches().filter((batch) => batch.status === 'PENDING' || batch.status === 'IN_PROGRESS'),
+    this._batches().filter((batch) => batch.status === 'PENDING' || batch.status === 'IN_PROGRESS'),
   );
 
   readonly finishedBatches = computed(() =>
-      this._batches().filter((batch) => batch.status === 'RELEASED' || batch.status === 'REJECTED'),
+    this._batches().filter((batch) => batch.status === 'RELEASED' || batch.status === 'REJECTED'),
   );
 
   loadBatchById(batchId: number): void {
     this.startRequest();
 
     this.api
-        .getBatchById(batchId)
-        .pipe(retry(2))
-        .subscribe({
-          next: (batch) => {
-            this._selectedBatch.set(batch);
-            this.upsertBatch(batch);
-            this.finishRequest();
-          },
-          error: (error) => this.failRequest(error, 'Failed to load batch detail'),
-        });
+      .getBatchById(batchId)
+      .pipe(retry(2))
+      .subscribe({
+        next: (batch) => {
+          this._selectedBatch.set(batch);
+          this.upsertBatch(batch);
+          this.finishRequest();
+        },
+        error: (error) => this.failRequest(error, 'Failed to load batch detail'),
+      });
   }
 
   loadBatches(labId: number): void {
     this.startRequest();
 
     this.api
-        .getBatches(labId)
-        .pipe(retry(2))
-        .subscribe({
-          next: (batches) => {
-            this._batches.set(batches);
-            this.finishRequest();
-          },
-          error: (error) => this.failRequest(error, 'Failed to load batch list'),
-        });
+      .getBatches(labId)
+      .pipe(retry(2))
+      .subscribe({
+        next: (batches) => {
+          this._batches.set(batches);
+          this.finishRequest();
+        },
+        error: (error) => this.failRequest(error, 'Failed to load batch list'),
+      });
   }
 
   createBatch(command: CreateBatchCommand): void {
@@ -79,17 +79,15 @@ export class BatchStore {
 
     const request = this.toCreateBatchRequest(command);
 
-    this.api
-        .createBatch(request)
-        .subscribe({
-          next: (batch) => {
-            this._batches.update((list) => [...list, batch]);
-            this._selectedBatch.set(batch);
-            this._successMsg.set('Batch created successfully');
-            this.finishRequest();
-          },
-          error: (error) => this.failRequest(error, 'Failed to create batch'),
-        });
+    this.api.createBatch(request).subscribe({
+      next: (batch) => {
+        this._batches.update((list) => [...list, batch]);
+        this._selectedBatch.set(batch);
+        this._successMsg.set('Batch created successfully');
+        this.finishRequest();
+      },
+      error: (error) => this.failRequest(error, 'Failed to create batch'),
+    });
   }
 
   releaseBatch(batchId: number, command: ReleaseBatchCommand): void {
@@ -97,17 +95,15 @@ export class BatchStore {
 
     const request = this.toReleaseBatchRequest(command);
 
-    this.api
-        .releaseBatch(batchId, request)
-        .subscribe({
-          next: (updatedBatch) => {
-            this.upsertBatch(updatedBatch);
-            this._selectedBatch.set(updatedBatch);
-            this._successMsg.set('Batch released successfully');
-            this.finishRequest();
-          },
-          error: (error) => this.failRequest(error, 'Failed to release batch'),
-        });
+    this.api.releaseBatch(batchId, request).subscribe({
+      next: (updatedBatch) => {
+        this.upsertBatch(updatedBatch);
+        this._selectedBatch.set(updatedBatch);
+        this._successMsg.set('Batch released successfully');
+        this.finishRequest();
+      },
+      error: (error) => this.failRequest(error, 'Failed to release batch'),
+    });
   }
 
   rejectBatch(batchId: number, command: RejectBatchCommand): void {
@@ -115,32 +111,30 @@ export class BatchStore {
 
     const request = this.toRejectBatchRequest(command);
 
-    this.api
-        .rejectBatch(batchId, request)
-        .subscribe({
-          next: (updatedBatch) => {
-            this.upsertBatch(updatedBatch);
-            this._selectedBatch.set(updatedBatch);
-            this._successMsg.set('Batch rejected successfully');
-            this.finishRequest();
-          },
-          error: (error) => this.failRequest(error, 'Failed to reject batch'),
-        });
+    this.api.rejectBatch(batchId, request).subscribe({
+      next: (updatedBatch) => {
+        this.upsertBatch(updatedBatch);
+        this._selectedBatch.set(updatedBatch);
+        this._successMsg.set('Batch rejected successfully');
+        this.finishRequest();
+      },
+      error: (error) => this.failRequest(error, 'Failed to reject batch'),
+    });
   }
 
   loadBatchUsage(batchId: number): void {
     this.startRequest();
 
     this.api
-        .getRawMaterialUsage(batchId)
-        .pipe(retry(2))
-        .subscribe({
-          next: (usage) => {
-            this._currentBatchUsage.set(usage);
-            this.finishRequest();
-          },
-          error: (error) => this.failRequest(error, 'Failed to load material usage'),
-        });
+      .getRawMaterialUsage(batchId)
+      .pipe(retry(2))
+      .subscribe({
+        next: (usage) => {
+          this._currentBatchUsage.set(usage);
+          this.finishRequest();
+        },
+        error: (error) => this.failRequest(error, 'Failed to load material usage'),
+      });
   }
 
   linkMaterial(batchId: number, command: LinkRawMaterialCommand): void {
@@ -148,16 +142,14 @@ export class BatchStore {
 
     const request = this.toLinkRawMaterialRequest(command);
 
-    this.api
-        .linkRawMaterial(batchId, request)
-        .subscribe({
-          next: (usage) => {
-            this._currentBatchUsage.update((list) => [...list, usage]);
-            this._successMsg.set('Raw material linked successfully');
-            this.finishRequest();
-          },
-          error: (error) => this.failRequest(error, 'Failed to link raw material'),
-        });
+    this.api.linkRawMaterial(batchId, request).subscribe({
+      next: (usage) => {
+        this._currentBatchUsage.update((list) => [...list, usage]);
+        this._successMsg.set('Raw material linked successfully');
+        this.finishRequest();
+      },
+      error: (error) => this.failRequest(error, 'Failed to link raw material'),
+    });
   }
 
   clearMessages(): void {
@@ -179,6 +171,7 @@ export class BatchStore {
 
   private toReleaseBatchRequest(command: ReleaseBatchCommand): ReleaseBatchRequest {
     return {
+      status: 'RELEASED',
       releaseDate: command.releaseDate,
       notes: command.notes,
     };
@@ -186,6 +179,7 @@ export class BatchStore {
 
   private toRejectBatchRequest(command: RejectBatchCommand): RejectBatchRequest {
     return {
+      status: 'REJECTED',
       rejectionDate: command.rejectionDate,
       reason: command.reason,
     };
@@ -223,8 +217,8 @@ export class BatchStore {
   private formatError(error: unknown, fallback: string): string {
     if (error instanceof Error) {
       return error.message.includes('Resource not found')
-          ? `${fallback}: Not Found`
-          : error.message;
+        ? `${fallback}: Not Found`
+        : error.message;
     }
 
     return fallback;

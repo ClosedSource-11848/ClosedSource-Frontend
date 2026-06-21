@@ -221,12 +221,12 @@ export class CaStore {
    *
    * @param entityId - The unique numeric identifier of the entity to audit.
    */
-  loadComplianceEvents(entityId: number): void {
+  loadEquipmentComplianceEvents(equipmentId: number): void {
     this._loadingSignal.set(true);
     this._errorSignal.set(null);
 
     this.caApi
-      .getEventsByEntity(entityId)
+      .getEquipmentComplianceEvents(equipmentId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (events) => {
@@ -234,9 +234,26 @@ export class CaStore {
           this._loadingSignal.set(false);
         },
         error: (err) => {
-          this._errorSignal.set(
-            this.formatError(err, `Failed to load events for entity ${entityId}`),
-          );
+          this._errorSignal.set(this.formatError(err, `Failed to load events for equipment ${equipmentId}`));
+          this._loadingSignal.set(false);
+        },
+      });
+  }
+
+  loadBatchComplianceEvents(batchId: number): void {
+    this._loadingSignal.set(true);
+    this._errorSignal.set(null);
+
+    this.caApi
+      .getBatchComplianceEvents(batchId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (events) => {
+          this._eventsSignal.set(events);
+          this._loadingSignal.set(false);
+        },
+        error: (err) => {
+          this._errorSignal.set(this.formatError(err, `Failed to load events for batch ${batchId}`));
           this._loadingSignal.set(false);
         },
       });
@@ -292,6 +309,18 @@ export class CaStore {
           this._loadingSignal.set(false);
         },
       });
+  }
+
+  clearAlerts(): void {
+    this._alertsSignal.set([]);
+  }
+
+  clearError(): void {
+    this._errorSignal.set(null);
+  }
+
+  setError(message: string): void {
+    this._errorSignal.set(message);
   }
 
   /**

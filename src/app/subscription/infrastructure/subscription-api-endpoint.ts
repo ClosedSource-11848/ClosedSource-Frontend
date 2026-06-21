@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ErrorHandlingEnabledBaseType } from '../../shared/infrastructure/error-handling-enabled-base-type';
@@ -17,54 +17,26 @@ import { SubscriptionPlanAssembler } from './subscription-plan-assembler';
 import { SubscriptionAssembler } from './subscription-assembler';
 import { PaymentAssembler } from './payment-assembler';
 import { CheckoutSessionAssembler } from './checkout-session-assembler';
+import { UpdateSubscriptionStatusRequest } from './update-subscription-status.request';
 
 const plansEndpointUrl = `${environment.serverBasePath}${environment.subscriptionPlansEndpointPath}`;
 const subscriptionsEndpointUrl = `${environment.serverBasePath}${environment.subscriptionsEndpointPath}`;
-const checkoutEndpointUrl = `${environment.serverBasePath}${environment.checkoutEndpointPath}`;
+const laboratoriesEndpointUrl = `${environment.serverBasePath}${environment.laboratoryLabsEndpointPath}`;
+const checkoutSessionsEndpointUrl = `${environment.serverBasePath}${environment.subscriptionCheckoutSessionsEndpointPath}`;
 
 /**
  * HTTP endpoint client for subscription and payment operations.
- *
- * @remarks
- * This endpoint belongs to the infrastructure layer. It encapsulates all HTTP
- * communication related to subscription plans, active subscriptions, payment
- * history, and checkout session creation.
  */
 export class SubscriptionApiEndpoint extends ErrorHandlingEnabledBaseType {
-  /**
-   * Assembler used to map subscription plan resources into domain entities.
-   */
   private readonly planAssembler = new SubscriptionPlanAssembler();
-
-  /**
-   * Assembler used to map subscription resources into domain entities.
-   */
   private readonly subscriptionAssembler = new SubscriptionAssembler();
-
-  /**
-   * Assembler used to map payment resources into domain entities.
-   */
   private readonly paymentAssembler = new PaymentAssembler();
-
-  /**
-   * Assembler used to map checkout session responses into resources.
-   */
   private readonly checkoutAssembler = new CheckoutSessionAssembler();
 
-  /**
-   * Creates a new SubscriptionApiEndpoint instance.
-   *
-   * @param http - Angular HttpClient used to execute HTTP requests
-   */
   constructor(private readonly http: HttpClient) {
     super();
   }
 
-  /**
-   * Retrieves all available subscription plans.
-   *
-   * @returns Observable stream emitting subscription plan domain entities
-   */
   getPlans(): Observable<SubscriptionPlan[]> {
     return this.http.get<SubscriptionPlanResource[]>(plansEndpointUrl).pipe(
       map((resources) => this.planAssembler.toEntitiesFromResources(resources)),
@@ -72,27 +44,25 @@ export class SubscriptionApiEndpoint extends ErrorHandlingEnabledBaseType {
     );
   }
 
-  /**
-   * Retrieves the active subscription for a laboratory.
-   *
-   * @param laboratoryId - Numeric identifier of the laboratory
-   * @returns Observable stream emitting the active Subscription entity
-   */
   getCurrentSubscription(laboratoryId: number): Observable<Subscription> {
+    const params = new HttpParams().set('status', 'ACTIVE');
+
     return this.http
-      .get<SubscriptionResource>(`${subscriptionsEndpointUrl}/laboratories/${laboratoryId}/active`)
+      .get<
+        SubscriptionResource[]
+      >(`${laboratoriesEndpointUrl}/${laboratoryId}${environment.laboratorySubscriptionsEndpointPath}`, { params })
       .pipe(
-        map((resource) => this.subscriptionAssembler.toEntityFromResource(resource)),
+        map((resources) => {
+          if (!resources.length) {
+            throw new Error('Resource not found');
+          }
+
+          return this.subscriptionAssembler.toEntityFromResource(resources[0]);
+        }),
         catchError(this.handleError(`Failed to fetch subscription for laboratory ${laboratoryId}`)),
       );
   }
 
-  /**
-   * Retrieves payment history for a subscription.
-   *
-   * @param subscriptionId - Numeric identifier of the subscription
-   * @returns Observable stream emitting payment domain entities
-   */
   getPaymentsBySubscription(subscriptionId: number): Observable<Payment[]> {
     return this.http
       .get<PaymentResource[]>(`${subscriptionsEndpointUrl}/${subscriptionId}/payments`)
@@ -102,18 +72,21 @@ export class SubscriptionApiEndpoint extends ErrorHandlingEnabledBaseType {
       );
   }
 
-  /**
-   * Creates a checkout session for the selected subscription plan.
-   *
-   * @param request - Request payload containing selected plan and user context
-   * @returns Observable stream emitting checkout session resource
-   */
   createCheckoutSession(
     request: CreateCheckoutSessionRequest,
   ): Observable<CheckoutSessionResource> {
-    return this.http.post<CheckoutSessionResponse>(checkoutEndpointUrl, request).pipe(
+    return this.http.post<CheckoutSessionResponse>(checkoutSessionsEndpointUrl, request).pipe(
       map((response) => this.checkoutAssembler.toResourceFromResponse(response)),
       catchError(this.handleError('Failed to create checkout session')),
     );
+  }
+
+  cancelSubscription(
+    subscriptionId: number,
+    request: UpdateSubscriptionStatusRequest,
+  ): Observable<number> {
+    return this.http
+      .patch<number>(`${subscriptionsEndpointUrl}/${subscriptionId}`, request)
+      .pipe(catchError(this.handleError(`Failed to cancel subscription ${subscriptionId}`)));
   }
 }

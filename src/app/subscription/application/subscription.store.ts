@@ -8,6 +8,7 @@ import { SelectPlanCommand } from '../domain/model/select-plan.command';
 import { CreateCheckoutSessionCommand } from '../domain/model/create-checkout-session.command';
 import { CreateCheckoutSessionRequest } from '../infrastructure/checkout.request';
 import { CheckoutSessionResource } from '../infrastructure/checkout-response';
+import { UpdateSubscriptionStatusRequest } from '../infrastructure/update-subscription-status.request';
 
 /**
  * Signal-based application store for the Subscription bounded context.
@@ -243,6 +244,34 @@ export class SubscriptionStore {
         }
       },
       error: (error) => this.failRequest(error, 'Failed to create checkout session'),
+    });
+  }
+
+  cancelSubscription(subscriptionId: number, cancelledBy: number): void {
+    this.startRequest();
+
+    const request: UpdateSubscriptionStatusRequest = {
+      status: 'CANCELLED',
+      cancelledBy,
+    };
+
+    this.api.cancelSubscription(subscriptionId, request).subscribe({
+      next: () => {
+        const current = this._currentSubscription();
+
+        if (current?.id === subscriptionId) {
+          this._currentSubscription.set({
+            ...current,
+            status: 'CANCELED',
+            cancelledBy,
+            cancelledAt: new Date().toISOString(),
+          });
+        }
+
+        this._successMsg.set('Subscription cancelled successfully');
+        this.finishRequest();
+      },
+      error: (error) => this.failRequest(error, 'Failed to cancel subscription'),
     });
   }
 

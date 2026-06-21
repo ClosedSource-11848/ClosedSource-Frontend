@@ -52,8 +52,7 @@ export class AuditLogViewerComponent implements OnInit {
   /**
    * Column identifiers displayed in the audit log data table.
    */
-  protected readonly displayedColumns = ['timestamp', 'action', 'entity', 'performedBy', 'details'];
-
+  protected readonly displayedColumns = ['timestamp', 'action', 'entity', 'performedBy'];
   /**
    * Current filter state for querying audit logs.
    *
