@@ -78,4 +78,13 @@ export class BillingSummary implements OnInit {
   protected getStatusClass(status?: string): string {
     return status ? status.toLowerCase().replace(/_/g, '-') : 'unknown';
   }
+
+  protected onCancelSubscription(): void {
+    const subscription = this.store.currentSubscription();
+    const userId = this.iamStore.currentUserId();
+
+    if (!subscription || !userId) return;
+
+    this.store.cancelSubscription(subscription.id, userId);
+  }
 }

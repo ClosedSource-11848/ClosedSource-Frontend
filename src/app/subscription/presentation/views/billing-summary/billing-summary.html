@@ -56,6 +56,18 @@
             <strong>{{ subscription.currentPeriodEnd | date:'mediumDate' }}</strong>
           </div>
         </div>
+
+        <div class="subscription-actions">
+          <button
+            mat-button
+            color="warn"
+            type="button"
+            [disabled]="store.isLoading() || subscription.status !== 'ACTIVE'"
+            (click)="onCancelSubscription()">
+            <mat-icon>cancel</mat-icon>
+            {{ 'subscription.billing.cancel-subscription' | translate }}
+          </button>
+        </div>
       } @else {
         <div class="empty-state">
           <mat-icon>workspace_premium</mat-icon>
@@ -70,7 +82,6 @@
 
     <div class="table-card mat-elevation-z2">
       <table mat-table [dataSource]="store.payments()" class="full-width-table">
-
         <ng-container matColumnDef="createdAt">
           <th mat-header-cell *matHeaderCellDef>
             {{ 'subscription.payments.date' | translate }}
