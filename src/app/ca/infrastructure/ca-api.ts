@@ -140,8 +140,12 @@ export class CaApi extends BaseApi {
    * @remarks
    * Accesses the audit trail to retrieve events linked to the provided entity identity.
    */
-  getEventsByEntity(entityId: number): Observable<ComplianceEvent[]> {
-    return this._complianceEventEndpoint.getEventsByEntity(entityId);
+  getEquipmentComplianceEvents(equipmentId: number): Observable<ComplianceEvent[]> {
+    return this._complianceEventEndpoint.getEquipmentEvents(equipmentId);
+  }
+
+  getBatchComplianceEvents(batchId: number): Observable<ComplianceEvent[]> {
+    return this._complianceEventEndpoint.getBatchEvents(batchId);
   }
 
   /**
