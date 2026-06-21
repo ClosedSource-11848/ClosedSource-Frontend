@@ -1,46 +1,55 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
 
 /**
- * Represents a user entity in the identity and access management domain.
- * @remarks Implements BaseEntity using a numeric identifier.
- * @author QualiTrack
+ * Represents an authenticated user within the Identity and Access Management domain.
+ *
+ * @remarks
+ * In Domain-Driven Design, User is an entity because it has a stable identity
+ * represented by its numeric identifier. This entity stores the minimum user
+ * information required by the frontend to manage authentication state,
+ * authorization checks, and session context.
+ *
+ * The roles collection determines which application areas and bounded contexts
+ * the user can access after authentication.
+ *
+ * @example
+ * ```typescript
+ * const user = new User({
+ *   id: 1,
+ *   username: 'qa.manager',
+ *   roles: ['ROLE_QA_MANAGER']
+ * });
+ *
+ * console.log(user.username); // 'qa.manager'
+ * ```
  */
 export class User implements BaseEntity {
-  private _id: number;
-  private _username: string;
-  private _roles: string[];
+  /**
+   * The unique numeric identifier of the authenticated user.
+   */
+  id: number;
 
   /**
-   * Creates a new User instance.
-   * @param user - The user data object containing id, username, and roles.
+   * The username used to identify the user in the system.
    */
-  constructor(user: { id: number; username: string; roles: string[] }) {
-    this._id = user.id;
-    this._username = user.username;
-    this._roles = user.roles;
-  }
+  username: string;
 
-  get id(): number {
-    return this._id;
-  }
+  /**
+   * The authorization roles assigned to the user.
+   */
+  roles: string[];
 
-  set id(value: number) {
-    this._id = value;
-  }
-
-  get username(): string {
-    return this._username;
-  }
-
-  set username(value: string) {
-    this._username = value;
-  }
-
-  get roles(): string[] {
-    return this._roles;
-  }
-
-  set roles(value: string[]) {
-    this._roles = value;
+  /**
+   * Creates a new User entity.
+   *
+   * @param params - Initialization properties
+   * @param params.id - Unique numeric user identifier
+   * @param params.username - User login name
+   * @param params.roles - Authorization roles assigned to the user
+   */
+  constructor(params: { id: number; username: string; roles: string[] }) {
+    this.id = params.id;
+    this.username = params.username;
+    this.roles = params.roles;
   }
 }

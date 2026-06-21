@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
 import { BaseApi } from '../../shared/infrastructure/base-api';
+import { MessageResource } from '../../shared/infrastructure/message-response';
 
 import { Laboratory } from '../domain/model/laboratory.entity';
 import { StaffMember } from '../domain/model/staff-member.entity';
@@ -13,209 +15,168 @@ import { StaffApiEndpoint } from './staff-api-endpoint';
 import { ProductApiEndpoint } from './product-api-endpoint';
 import { RawMaterialApiEndpoint } from './raw-material-api-endpoint';
 
-import { UpdateLaboratoryRequest } from './laboratory.request';
+import { CreateLaboratoryRequest, UpdateLaboratoryRequest } from './laboratory.request';
 import { RegisterStaffRequest } from './staff.request';
 import { CreateProductRequest } from './product.request';
 import { CreateRawMaterialRequest } from './raw-material.request';
-import { MessageResource } from '../../shared/infrastructure/message-response';
 
 /**
- * Unified API facade for all HTTP operations within the Laboratory domain.
+ * Infrastructure facade for Laboratory bounded context API operations.
  *
  * @remarks
- * `LaboratoryApi` acts as the single entry point for the presentation and
- * application layers to communicate with the remote API across all Laboratory
- * bounded context resources: laboratories, staff members, pharmaceutical
- * products, and raw materials.
- *
- * Internally it delegates each operation to a dedicated endpoint class
- * ({@link LaboratoryApiEndpoint}, {@link StaffApiEndpoint},
- * {@link ProductApiEndpoint}, {@link RawMaterialApiEndpoint}), keeping
- * HTTP concerns encapsulated and the facade interface clean.
- *
- * Provided at the root level and injectable anywhere in the application
- * without additional module configuration.
- *
- * @example
- * ```typescript
- * @Component({ ... })
- * export class LabDashboardComponent {
- * constructor(private readonly labApi: LaboratoryApi) {}
- *
- * loadDashboard(labId: number): void {
- * this.labApi.getLaboratory(labId).subscribe(lab => console.log(lab.name));
- * this.labApi.getStaff(labId).subscribe(staff => console.log(staff.length));
- * }
- * }
- * ```
+ * This service centralizes all HTTP access for the Laboratory bounded context.
+ * It delegates concrete HTTP operations to specialized endpoint clients while
+ * exposing a clean API to the application layer.
  */
 @Injectable({ providedIn: 'root' })
 export class LaboratoryApi extends BaseApi {
-  /** Endpoint handler for laboratory profile operations. */
-  private readonly _laboratoryEndpoint: LaboratoryApiEndpoint;
-
-  /** Endpoint handler for staff member operations. */
-  private readonly _staffEndpoint: StaffApiEndpoint;
-
-  /** Endpoint handler for pharmaceutical product operations. */
-  private readonly _productsEndpoint: ProductApiEndpoint;
-
-  /** Endpoint handler for raw material operations. */
-  private readonly _materialsEndpoint: RawMaterialApiEndpoint;
+  /**
+   * Endpoint client for laboratory profile operations.
+   */
+  private readonly laboratoryEndpoint: LaboratoryApiEndpoint;
 
   /**
-   * Creates an instance of `LaboratoryApi` and initializes all endpoint handlers.
+   * Endpoint client for laboratory staff operations.
+   */
+  private readonly staffEndpoint: StaffApiEndpoint;
+
+  /**
+   * Endpoint client for pharmaceutical product operations.
+   */
+  private readonly productsEndpoint: ProductApiEndpoint;
+
+  /**
+   * Endpoint client for raw material inventory operations.
+   */
+  private readonly materialsEndpoint: RawMaterialApiEndpoint;
+
+  /**
+   * Creates a new LaboratoryApi facade.
    *
-   * @param http - The Angular `HttpClient` instance injected by the DI container,
-   * forwarded to each endpoint handler to perform HTTP requests.
-   *
-   * @remarks
-   * Each endpoint class is instantiated here rather than injected, centralizing
-   * HTTP client propagation and keeping individual endpoint classes free of
-   * Angular DI decoration.
+   * @param http - Angular HttpClient used by the internal endpoint clients
    */
   constructor(http: HttpClient) {
     super();
-    this._laboratoryEndpoint = new LaboratoryApiEndpoint(http);
-    this._staffEndpoint = new StaffApiEndpoint(http);
-    this._productsEndpoint = new ProductApiEndpoint(http);
-    this._materialsEndpoint = new RawMaterialApiEndpoint(http);
-  }
-
-  // ── Laboratory ────────────────────────────────────────────────────────────
-
-  /**
-   * Retrieves the profile of a laboratory by its numeric identifier.
-   *
-   * @param labId - The unique numeric identifier of the laboratory to retrieve.
-   * @returns An `Observable` that emits the matching {@link Laboratory} entity.
-   */
-  getLaboratory(labId: number): Observable<Laboratory> {
-    return this._laboratoryEndpoint.getByLabId(labId);
+    this.laboratoryEndpoint = new LaboratoryApiEndpoint(http);
+    this.staffEndpoint = new StaffApiEndpoint(http);
+    this.productsEndpoint = new ProductApiEndpoint(http);
+    this.materialsEndpoint = new RawMaterialApiEndpoint(http);
   }
 
   /**
-   * Updates the profile information of an existing laboratory.
+   * Creates a new laboratory.
    *
-   * @param labId - The unique numeric identifier of the laboratory to update.
-   * @param request - The {@link UpdateLaboratoryRequest} payload containing
-   * the new values for the laboratory's mutable fields.
-   * @returns An `Observable` that emits the updated {@link Laboratory} entity
-   * as returned by the server after applying the changes.
+   * @param request - Request payload containing laboratory registration data
+   * @returns Observable stream emitting the created Laboratory entity
    */
-  updateLaboratory(labId: number, request: UpdateLaboratoryRequest): Observable<Laboratory> {
-    return this._laboratoryEndpoint.updateLaboratory(labId, request);
+  createLaboratory(request: CreateLaboratoryRequest): Observable<Laboratory> {
+    return this.laboratoryEndpoint.createLaboratory(request);
   }
 
-  // ── Staff ─────────────────────────────────────────────────────────────────
+  /**
+   * Retrieves a laboratory profile by its numeric identifier.
+   *
+   * @param laboratoryId - Numeric identifier of the laboratory
+   * @returns Observable stream emitting a Laboratory domain entity
+   */
+  getLaboratory(laboratoryId: number): Observable<Laboratory> {
+    return this.laboratoryEndpoint.getByLaboratoryId(laboratoryId);
+  }
+
+  /**
+   * Updates mutable laboratory profile information.
+   *
+   * @param laboratoryId - Numeric identifier of the laboratory to update
+   * @param request - Request payload containing updated laboratory data
+   * @returns Observable stream emitting the updated Laboratory entity
+   */
+  updateLaboratory(laboratoryId: number, request: UpdateLaboratoryRequest): Observable<Laboratory> {
+    return this.laboratoryEndpoint.updateLaboratory(laboratoryId, request);
+  }
 
   /**
    * Retrieves all staff members associated with a laboratory.
    *
-   * @param labId - The unique numeric identifier of the laboratory whose staff to retrieve.
-   * @returns An `Observable` that emits an array of {@link StaffMember} entities
-   * belonging to the specified laboratory.
+   * @param laboratoryId - Numeric identifier of the laboratory
+   * @returns Observable stream emitting StaffMember domain entities
    */
-  getStaff(labId: number): Observable<StaffMember[]> {
-    return this._staffEndpoint.getStaffByLab(labId);
+  getStaff(laboratoryId: number): Observable<StaffMember[]> {
+    return this.staffEndpoint.getStaffByLaboratoryId(laboratoryId);
   }
 
   /**
-   * Registers a new staff member under a specific laboratory.
+   * Registers a new staff member under a laboratory.
    *
-   * @param labId - The unique numeric identifier of the laboratory to register the staff member under.
-   * @param request - The {@link RegisterStaffRequest} payload containing the
-   * new staff member's profile information.
-   * @returns An `Observable` that emits the newly created {@link StaffMember}
-   * entity as returned by the server.
+   * @param laboratoryId - Numeric identifier of the laboratory
+   * @param request - Request payload containing staff registration data
+   * @returns Observable stream emitting a message response
    */
-  registerStaff(labId: number, request: RegisterStaffRequest): Observable<MessageResource> {
-    return this._staffEndpoint.registerStaff(labId, request);
+  registerStaff(laboratoryId: number, request: RegisterStaffRequest): Observable<MessageResource> {
+    return this.staffEndpoint.registerStaff(laboratoryId, request);
   }
 
   /**
-   * Deactivates an existing staff member within a laboratory.
+   * Deactivates an existing staff member.
    *
-   * @param labId - The unique numeric identifier of the laboratory the staff member belongs to.
-   * @param staffId - The unique numeric identifier of the staff member to deactivate.
-   * @returns An `Observable` that completes when the deactivation has been
-   * successfully processed by the server.
-   *
-   * @remarks
-   * Deactivation does not delete the record. It is retained for historical
-   * traceability including authorship on past audit entries and batch approvals.
-   * See {@link StaffMember.active} for details.
+   * @param staffId - Numeric identifier of the staff member to deactivate
+   * @returns Observable stream completing when the deactivation succeeds
    */
-  deactivateStaff(labId: number, staffId: number): Observable<void> {
-    return this._staffEndpoint.deactivateStaff(labId, staffId);
+  deactivateStaff(staffId: number): Observable<void> {
+    return this.staffEndpoint.deactivateStaff(staffId);
   }
-
-  // ── Products ──────────────────────────────────────────────────────────────
 
   /**
    * Retrieves all pharmaceutical products registered under a laboratory.
    *
-   * @param labId - The unique numeric identifier of the laboratory whose products to retrieve.
-   * @returns An `Observable` that emits an array of {@link PharmaceuticalProduct}
-   * entities belonging to the specified laboratory.
+   * @param laboratoryId - Numeric identifier of the laboratory
+   * @returns Observable stream emitting PharmaceuticalProduct domain entities
    */
-  getProducts(labId: number): Observable<PharmaceuticalProduct[]> {
-    return this._productsEndpoint.getProductsByLab(labId);
+  getProducts(laboratoryId: number): Observable<PharmaceuticalProduct[]> {
+    return this.productsEndpoint.getProductsByLaboratoryId(laboratoryId);
   }
 
   /**
-   * Creates a new pharmaceutical product under a specific laboratory.
+   * Creates a new pharmaceutical product under a laboratory.
    *
-   * @param labId - The unique numeric identifier of the laboratory to register the product under.
-   * @param request - The {@link CreateProductRequest} payload containing
-   * the new product's details.
-   * @returns An `Observable` that emits the newly created {@link PharmaceuticalProduct}
-   * entity as returned by the server.
+   * @param laboratoryId - Numeric identifier of the laboratory
+   * @param request - Request payload containing product creation data
+   * @returns Observable stream emitting a message response
    */
-  createProduct(labId: number, request: CreateProductRequest): Observable<MessageResource> {
-    return this._productsEndpoint.createProduct(labId, request);
+  createProduct(laboratoryId: number, request: CreateProductRequest): Observable<MessageResource> {
+    return this.productsEndpoint.createProduct(laboratoryId, request);
   }
-
-  // ── Raw Materials ─────────────────────────────────────────────────────────
 
   /**
    * Retrieves all raw materials registered under a laboratory.
    *
-   * @param labId - The unique numeric identifier of the laboratory whose raw materials to retrieve.
-   * @returns An `Observable` that emits an array of {@link RawMaterial} entities
-   * belonging to the specified laboratory.
+   * @param laboratoryId - Numeric identifier of the laboratory
+   * @returns Observable stream emitting RawMaterial domain entities
    */
-  getRawMaterials(labId: number): Observable<RawMaterial[]> {
-    return this._materialsEndpoint.getRawMaterialsByLab(labId);
+  getRawMaterials(laboratoryId: number): Observable<RawMaterial[]> {
+    return this.materialsEndpoint.getRawMaterialsByLaboratoryId(laboratoryId);
   }
 
   /**
-   * Retrieves all raw materials whose stock level is at or below their
-   * defined minimum stock threshold.
+   * Retrieves low-stock raw materials for a laboratory.
    *
-   * @param labId - The unique numeric identifier of the laboratory to check for low-stock materials.
-   * @returns An `Observable` that emits an array of {@link RawMaterial} entities
-   * that require restocking attention.
-   *
-   * @remarks
-   * Intended to support inventory monitoring and procurement alert workflows.
-   * See {@link RawMaterial.minimumStock} for the threshold definition used to
-   * determine low-stock status.
+   * @param laboratoryId - Numeric identifier of the laboratory
+   * @returns Observable stream emitting low-stock RawMaterial domain entities
    */
-  getLowStockMaterials(labId: number): Observable<RawMaterial[]> {
-    return this._materialsEndpoint.getLowStockMaterials(labId);
+  getLowStockMaterials(laboratoryId: number): Observable<RawMaterial[]> {
+    return this.materialsEndpoint.getLowStockMaterials(laboratoryId);
   }
 
   /**
-   * Creates a new raw material entry under a specific laboratory.
+   * Creates a new raw material under a laboratory.
    *
-   * @param labId - The unique numeric identifier of the laboratory to register the material under.
-   * @param request - The {@link CreateRawMaterialRequest} payload containing
-   * the new material's inventory and traceability details.
-   * @returns An `Observable` that emits the newly created {@link RawMaterial}
-   * entity as returned by the server.
+   * @param laboratoryId - Numeric identifier of the laboratory
+   * @param request - Request payload containing raw material registration data
+   * @returns Observable stream emitting a message response
    */
-  createRawMaterial(labId: number, request: CreateRawMaterialRequest): Observable<MessageResource> {
-    return this._materialsEndpoint.createRawMaterial(labId, request);
+  createRawMaterial(
+    laboratoryId: number,
+    request: CreateRawMaterialRequest,
+  ): Observable<MessageResource> {
+    return this.materialsEndpoint.createRawMaterial(laboratoryId, request);
   }
 }

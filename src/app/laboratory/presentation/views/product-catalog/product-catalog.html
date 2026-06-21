@@ -4,7 +4,8 @@
       <mat-icon class="title-icon">inventory_2</mat-icon>
       <h2>{{ 'product-catalog.title' | translate }}</h2>
     </div>
-    <button mat-flat-button color="primary" (click)="onAdd()">
+
+    <button mat-flat-button color="primary" type="button" (click)="onAdd()">
       <mat-icon>add</mat-icon>
       {{ 'product-catalog.add' | translate }}
     </button>
@@ -13,7 +14,13 @@
   <div class="filter-bar">
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>{{ 'common.search' | translate }}</mat-label>
-      <input matInput [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}" placeholder="Ex. Paracetamol or PRD-001">
+      <input
+        matInput
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)"
+        [ngModelOptions]="{ standalone: true }"
+        placeholder="Ex. Paracetamol or PRD-001"
+      >
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
   </div>
@@ -26,25 +33,27 @@
 
   <div class="table-card mat-elevation-z2">
     <table mat-table [dataSource]="filtered" class="full-width-table">
-      <!-- Code Column -->
       <ng-container matColumnDef="code">
         <th mat-header-cell *matHeaderCellDef>{{ 'product-catalog.code' | translate }}</th>
-        <td mat-cell *matCellDef="let product"><span class="code-badge">{{ product.code }}</span></td>
+        <td mat-cell *matCellDef="let product">
+          <span class="code-badge">{{ product.code }}</span>
+        </td>
       </ng-container>
 
-      <!-- Name Column -->
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>{{ 'product-catalog.name' | translate }}</th>
-        <td mat-cell *matCellDef="let product" class="name-cell">{{ product.name }}</td>
+        <td mat-cell *matCellDef="let product" class="name-cell">
+          {{ product.name }}
+        </td>
       </ng-container>
 
-      <!-- Specifications Column -->
       <ng-container matColumnDef="specifications">
         <th mat-header-cell *matHeaderCellDef>{{ 'product-catalog.specifications' | translate }}</th>
-        <td mat-cell *matCellDef="let product" class="spec-cell">{{ product.specifications }}</td>
+        <td mat-cell *matCellDef="let product" class="spec-cell">
+          {{ product.specifications }}
+        </td>
       </ng-container>
 
-      <!-- Status Column -->
       <ng-container matColumnDef="active">
         <th mat-header-cell *matHeaderCellDef>{{ 'common.status' | translate }}</th>
         <td mat-cell *matCellDef="let product">

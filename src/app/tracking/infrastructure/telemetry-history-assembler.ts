@@ -5,15 +5,34 @@ import {
   TelemetryHistoryResponse,
 } from './telemetry-history-response';
 
+/**
+ * Assembler for converting between TelemetryHistoryPoint domain entities and API resources.
+ *
+ * @remarks
+ * This assembler isolates the tracking domain model from the HTTP response
+ * structure used by the backend telemetry API.
+ */
 export class TelemetryHistoryAssembler implements BaseAssembler<
   TelemetryHistoryPoint,
   TelemetryHistoryPointResource,
   TelemetryHistoryResponse
 > {
+  /**
+   * Converts a telemetry history response envelope into domain entities.
+   *
+   * @param response - API response containing historical telemetry point resources
+   * @returns Array of TelemetryHistoryPoint domain entities
+   */
   toEntitiesFromResponse(response: TelemetryHistoryResponse): TelemetryHistoryPoint[] {
     return response.historyPoints.map((resource) => this.toEntityFromResource(resource));
   }
 
+  /**
+   * Converts a telemetry history point API resource into a domain entity.
+   *
+   * @param resource - Telemetry history point resource received from the API
+   * @returns TelemetryHistoryPoint domain entity
+   */
   toEntityFromResource(resource: TelemetryHistoryPointResource): TelemetryHistoryPoint {
     return new TelemetryHistoryPoint({
       id: resource.id,
@@ -26,6 +45,12 @@ export class TelemetryHistoryAssembler implements BaseAssembler<
     });
   }
 
+  /**
+   * Converts a TelemetryHistoryPoint domain entity into an API resource.
+   *
+   * @param entity - TelemetryHistoryPoint domain entity
+   * @returns TelemetryHistoryPoint resource ready for API communication
+   */
   toResourceFromEntity(entity: TelemetryHistoryPoint): TelemetryHistoryPointResource {
     return {
       id: entity.id,
@@ -35,6 +60,6 @@ export class TelemetryHistoryAssembler implements BaseAssembler<
       timestamp: entity.timestamp,
       isAnomaly: entity.isAnomaly,
       createdAt: entity.createdAt,
-    } as TelemetryHistoryPointResource;
+    };
   }
 }

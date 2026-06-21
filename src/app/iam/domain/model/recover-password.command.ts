@@ -1,23 +1,24 @@
 /**
- * Command to recover a user's password using their username/email.
- * @author QualiTrack
+ * Command for requesting password recovery.
+ *
+ * @remarks
+ * In a Domain-Driven Design (DDD) architecture, this command belongs to the
+ * application layer. It represents the intention to start a password recovery
+ * flow for a user account.
+ *
+ * The command carries the account identifier required by the backend to
+ * initiate the recovery process.
+ *
+ * @example
+ * ```typescript
+ * const command: RecoverPasswordCommand = {
+ *   username: 'qa.manager'
+ * };
+ * ```
  */
-export class RecoverPasswordCommand {
-  private _username: string;
-
+export interface RecoverPasswordCommand {
   /**
-   * Creates a new RecoverPasswordCommand instance.
-   * @param resource - The data containing the username to recover.
+   * The username associated with the account that requires password recovery.
    */
-  constructor(resource: { username: string }) {
-    this._username = resource.username;
-  }
-
-  get username(): string {
-    return this._username;
-  }
-
-  set username(value: string) {
-    this._username = value;
-  }
+  username: string;
 }

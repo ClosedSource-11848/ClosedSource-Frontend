@@ -5,35 +5,16 @@ import { environment } from '../../../environments/environment';
 import { Laboratory } from '../domain/model/laboratory.entity';
 import { LaboratoryResource, LaboratoriesResponse } from './laboratory-response';
 import { LaboratoryAssembler } from './laboratory-assembler';
-import { UpdateLaboratoryRequest } from './laboratory.request';
+import { CreateLaboratoryRequest, UpdateLaboratoryRequest } from './laboratory.request';
+
+const laboratoriesEndpointUrl = `${environment.serverBasePath}${environment.laboratoryLabsEndpointPath}`;
 
 /**
- * Base URL for all laboratory-related HTTP endpoints, composed from the
- * server base path and the laboratory-specific path defined in the
- * environment configuration. Resolved once at module load time.
- */
-const labEndpointUrl = `${environment.serverBasePath}${environment.laboratoryLabsEndpointPath}`;
-
-/**
- * HTTP endpoint handler for laboratory profile operations within the Laboratory domain.
+ * HTTP endpoint client for laboratory profile operations.
  *
  * @remarks
- * `LaboratoryApiEndpoint` extends {@link BaseApiEndpoint} specializing it with
- * {@link Laboratory} as the domain entity, {@link LaboratoryResource} as the
- * single resource shape, {@link LaboratoriesResponse} as the collection response
- * shape, and {@link LaboratoryAssembler} for mapping between both representations.
- *
- * This class is not managed by Angular's DI container and is instantiated
- * directly by {@link LaboratoryApi}, which owns its lifecycle and provides
- * the shared {@link HttpClient} instance. Each method maps the raw API resource
- * to a domain entity via the assembler and delegates error handling to the
- * base class `handleError` utility.
- *
- * @example
- * ```typescript
- * const endpoint = new LaboratoryApiEndpoint(http);
- * endpoint.getByLabId(123).subscribe(lab => console.log(lab.name));
- * ```
+ * This endpoint encapsulates HTTP communication for laboratory resources and
+ * maps API resources into Laboratory domain entities.
  */
 export class LaboratoryApiEndpoint extends BaseApiEndpoint<
   Laboratory,
@@ -42,59 +23,54 @@ export class LaboratoryApiEndpoint extends BaseApiEndpoint<
   LaboratoryAssembler
 > {
   /**
-   * Creates an instance of `LaboratoryApiEndpoint`.
+   * Creates a new LaboratoryApiEndpoint instance.
    *
-   * @param http - The Angular `HttpClient` instance forwarded from {@link LaboratoryApi},
-   * passed to the base class to perform HTTP requests.
-   *
-   * @remarks
-   * The {@link LaboratoryAssembler} is instantiated here rather than injected,
-   * as this class operates outside Angular's DI container.
+   * @param http - Angular HttpClient used to perform HTTP requests
    */
   constructor(http: HttpClient) {
-    super(http, labEndpointUrl, new LaboratoryAssembler());
+    super(http, laboratoriesEndpointUrl, new LaboratoryAssembler());
   }
 
   /**
-   * Retrieves the profile of a laboratory by its unique identifier.
+   * Creates a new laboratory.
    *
-   * @param labId - The unique numeric identifier of the laboratory to retrieve.
-   * @returns An `Observable` that emits the {@link Laboratory} domain entity
-   * mapped from the server response.
+   * @param request - Request payload containing laboratory registration data
+   * @returns Observable stream emitting the created Laboratory domain entity
    *
    * @remarks
-   * Performs an HTTP `GET` to `{labEndpointUrl}/{labId}`. The raw
-   * {@link LaboratoryResource} is mapped via
-   * {@link LaboratoryAssembler.toEntityFromResource}. Errors are forwarded
-   * through the base class error handler.
+   * Maps to `POST /laboratories`.
    */
-  getByLabId(labId: number): Observable<Laboratory> {
-    return this.http.get<LaboratoryResource>(`${this.endpointUrl}/${labId}`).pipe(
+  createLaboratory(request: CreateLaboratoryRequest): Observable<Laboratory> {
+    return this.http.post<LaboratoryResource>(this.endpointUrl, request).pipe(
       map((resource) => this.assembler.toEntityFromResource(resource)),
-      catchError(this.handleError(`Failed to fetch laboratory ${labId}`)),
+      catchError(this.handleError('Failed to create laboratory')),
     );
   }
 
   /**
-   * Updates the profile information of an existing laboratory.
+   * Retrieves a laboratory by its numeric identifier.
    *
-   * @param labId - The unique numeric identifier of the laboratory to update.
-   * @param request - The {@link UpdateLaboratoryRequest} payload containing
-   * the new values for the laboratory's mutable fields.
-   * @returns An `Observable` that emits the updated {@link Laboratory} domain
-   * entity as returned by the server after applying the changes.
-   *
-   * @remarks
-   * Performs an HTTP `PUT` to `{labEndpointUrl}/{labId}` with the request body
-   * serialized as JSON. The server is expected to return the full updated
-   * {@link LaboratoryResource}, which is then mapped via
-   * {@link LaboratoryAssembler.toEntityFromResource}. Errors are forwarded
-   * through the base class error handler.
+   * @param laboratoryId - Numeric identifier of the laboratory
+   * @returns Observable stream emitting a Laboratory domain entity
    */
-  updateLaboratory(labId: number, request: UpdateLaboratoryRequest): Observable<Laboratory> {
-    return this.http.put<LaboratoryResource>(`${this.endpointUrl}/${labId}`, request).pipe(
+  getByLaboratoryId(laboratoryId: number): Observable<Laboratory> {
+    return this.http.get<LaboratoryResource>(`${this.endpointUrl}/${laboratoryId}`).pipe(
       map((resource) => this.assembler.toEntityFromResource(resource)),
-      catchError(this.handleError(`Failed to update laboratory ${labId}`)),
+      catchError(this.handleError(`Failed to fetch laboratory ${laboratoryId}`)),
+    );
+  }
+
+  /**
+   * Updates mutable laboratory profile information.
+   *
+   * @param laboratoryId - Numeric identifier of the laboratory to update
+   * @param request - Request payload containing updated laboratory data
+   * @returns Observable stream emitting the updated Laboratory domain entity
+   */
+  updateLaboratory(laboratoryId: number, request: UpdateLaboratoryRequest): Observable<Laboratory> {
+    return this.http.put<LaboratoryResource>(`${this.endpointUrl}/${laboratoryId}`, request).pipe(
+      map((resource) => this.assembler.toEntityFromResource(resource)),
+      catchError(this.handleError(`Failed to update laboratory ${laboratoryId}`)),
     );
   }
 }

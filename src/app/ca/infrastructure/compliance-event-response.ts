@@ -47,7 +47,7 @@ export interface ComplianceEventResource extends BaseResource {
   /**
    * The timestamp of when the record was created in the system.
    */
-  createdAt: string;
+  createdAt?: string;
 }
 
 /**

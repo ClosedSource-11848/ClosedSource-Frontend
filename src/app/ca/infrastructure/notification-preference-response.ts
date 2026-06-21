@@ -1,4 +1,5 @@
 import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-response';
+import { AlertSeverity } from '../domain/model/deviation-alert.entity';
 
 /**
  * Resource representation of a notification preference for API communication.
@@ -42,12 +43,12 @@ export interface NotificationPreferenceResource extends BaseResource {
   /**
    * The minimum level of severity required to trigger a notification.
    */
-  minimumSeverity: string;
+  minimumSeverity: AlertSeverity;
 
   /**
    * The timestamp of when the preference record was created.
    */
-  createdAt: string;
+  createdAt?: string;
 }
 
 /**

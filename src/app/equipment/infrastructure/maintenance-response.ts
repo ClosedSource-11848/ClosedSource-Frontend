@@ -81,7 +81,7 @@ export interface MaintenanceResource extends BaseResource {
    * @remarks
    * This value is stored as a string, commonly using ISO 8601 date format.
    */
-  createdAt: string;
+  createdAt?: string;
 }
 
 /**

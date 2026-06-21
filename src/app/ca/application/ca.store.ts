@@ -1,12 +1,14 @@
-import { computed, Injectable, Signal, signal, DestroyRef, inject } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, Signal, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { retry } from 'rxjs';
 
-import { DeviationAlert } from '../domain/model/deviation-alert.entity';
+import { AlertSeverity, AlertStatus, DeviationAlert } from '../domain/model/deviation-alert.entity';
 import { ComplianceEvent } from '../domain/model/compliance-event.entity';
 import { NotificationPreference } from '../domain/model/notification-preference.entity';
 import { CaApi } from '../infrastructure/ca-api';
 import { UpdateNotificationPreferenceRequest } from '../infrastructure/notification-preference.request';
+import { AcknowledgeAlertRequest } from '../infrastructure/acknowledge-alert.request';
+import { ResolveAlertRequest } from '../infrastructure/resolve-alert.request';
 
 /**
  * Application store for managing Compliance and Alerts (CA) state.
@@ -23,8 +25,8 @@ import { UpdateNotificationPreferenceRequest } from '../infrastructure/notificat
  */
 @Injectable({ providedIn: 'root' })
 export class CaStore {
-  // Private signals for internal state management
   private readonly _alertsSignal = signal<DeviationAlert[]>([]);
+  private readonly _selectedAlertSignal = signal<DeviationAlert | null>(null);
   private readonly _eventsSignal = signal<ComplianceEvent[]>([]);
   private readonly _preferenceSignal = signal<NotificationPreference | null>(null);
 
@@ -35,6 +37,11 @@ export class CaStore {
    * Read-only signal providing the current list of deviation alerts.
    */
   readonly alerts = this._alertsSignal.asReadonly();
+
+  /**
+   * Read-only signal providing the currently selected deviation alert.
+   */
+  readonly selectedAlert = this._selectedAlertSignal.asReadonly();
 
   /**
    * Read-only signal providing the current list of compliance audit events.
@@ -91,19 +98,25 @@ export class CaStore {
    * @returns A computed signal that evaluates to the found alert or undefined.
    */
   getAlertById(id: number): Signal<DeviationAlert | undefined> {
-    return computed(() => (id ? this.alerts().find((alert) => alert.id === id) : undefined));
+    return computed(() => {
+      const selectedAlert = this.selectedAlert();
+
+      return selectedAlert?.id === id
+        ? selectedAlert
+        : this.alerts().find((alert) => alert.id === id);
+    });
   }
 
   /**
    * Fetches deviation alerts from the API based on optional filters.
    *
-   * @param filters - Optional criteria to filter alerts (numeric equipment, numeric batch, status, severity).
+   * @param filters - Optional criteria to filter alerts.
    */
   loadAlerts(filters?: {
     equipmentId?: number;
     batchId?: number;
-    status?: string;
-    severity?: string;
+    status?: AlertStatus;
+    severity?: AlertSeverity;
   }): void {
     this._loadingSignal.set(true);
     this._errorSignal.set(null);
@@ -118,6 +131,86 @@ export class CaStore {
         },
         error: (err) => {
           this._errorSignal.set(this.formatError(err, 'Failed to load deviation alerts'));
+          this._loadingSignal.set(false);
+        },
+      });
+  }
+
+  /**
+   * Fetches a specific deviation alert by its unique numeric identifier.
+   *
+   * @param alertId - The unique numeric identifier of the deviation alert.
+   */
+  loadAlertById(alertId: number): void {
+    if (!alertId) return;
+
+    this._loadingSignal.set(true);
+    this._errorSignal.set(null);
+
+    this.caApi
+      .getAlertById(alertId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (alert) => {
+          this.replaceAlert(alert);
+          this._loadingSignal.set(false);
+        },
+        error: (err) => {
+          this._errorSignal.set(this.formatError(err, `Failed to load deviation alert ${alertId}`));
+          this._loadingSignal.set(false);
+        },
+      });
+  }
+
+  /**
+   * Acknowledges a deviation alert and updates local state.
+   *
+   * @param alertId - The unique numeric identifier of the deviation alert.
+   * @param request - DTO containing the user acknowledging the alert.
+   */
+  acknowledgeAlert(alertId: number, request: AcknowledgeAlertRequest): void {
+    if (!alertId) return;
+
+    this._loadingSignal.set(true);
+    this._errorSignal.set(null);
+
+    this.caApi
+      .acknowledgeAlert(alertId, request)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (updatedAlert) => {
+          this.replaceAlert(updatedAlert);
+          this._loadingSignal.set(false);
+        },
+        error: (err) => {
+          this._errorSignal.set(this.formatError(err, 'Failed to acknowledge deviation alert'));
+          this._loadingSignal.set(false);
+        },
+      });
+  }
+
+  /**
+   * Resolves a deviation alert and updates local state.
+   *
+   * @param alertId - The unique numeric identifier of the deviation alert.
+   * @param request - DTO containing the user and resolution notes.
+   */
+  resolveAlert(alertId: number, request: ResolveAlertRequest): void {
+    if (!alertId) return;
+
+    this._loadingSignal.set(true);
+    this._errorSignal.set(null);
+
+    this.caApi
+      .resolveAlert(alertId, request)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (updatedAlert) => {
+          this.replaceAlert(updatedAlert);
+          this._loadingSignal.set(false);
+        },
+        error: (err) => {
+          this._errorSignal.set(this.formatError(err, 'Failed to resolve deviation alert'));
           this._loadingSignal.set(false);
         },
       });
@@ -188,7 +281,7 @@ export class CaStore {
 
     this.caApi
       .updatePreferences(userId, request)
-      .pipe(retry(2))
+      .pipe(retry(2), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (updatedPreference) => {
           this._preferenceSignal.set(updatedPreference);
@@ -199,6 +292,26 @@ export class CaStore {
           this._loadingSignal.set(false);
         },
       });
+  }
+
+  /**
+   * Replaces an alert in the local collection and marks it as the selected alert.
+   *
+   * @param updatedAlert - The latest version of the deviation alert.
+   * @private
+   */
+  private replaceAlert(updatedAlert: DeviationAlert): void {
+    this._selectedAlertSignal.set(updatedAlert);
+
+    this._alertsSignal.update((alerts) => {
+      const exists = alerts.some((alert) => alert.id === updatedAlert.id);
+
+      if (!exists) {
+        return [updatedAlert, ...alerts];
+      }
+
+      return alerts.map((alert) => (alert.id === updatedAlert.id ? updatedAlert : alert));
+    });
   }
 
   /**

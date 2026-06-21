@@ -2,9 +2,11 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, map } from 'rxjs';
 import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
 import { environment } from '../../../environments/environment';
-import { DeviationAlert } from '../domain/model/deviation-alert.entity';
+import { AlertSeverity, AlertStatus, DeviationAlert } from '../domain/model/deviation-alert.entity';
 import { AlertResource, AlertsResponse } from './alert-response';
 import { AlertAssembler } from './alert-assembler';
+import { AcknowledgeAlertRequest } from './acknowledge-alert.request';
+import { ResolveAlertRequest } from './resolve-alert.request';
 
 const alertsEndpointUrl = `${environment.serverBasePath}${environment.caAlertsEndpointPath}`;
 
@@ -18,7 +20,10 @@ const alertsEndpointUrl = `${environment.serverBasePath}${environment.caAlertsEn
  *
  * The endpoint handles:
  * - GET /alerts - Retrieve deviation alerts with optional specialized filtering
- * - Resource conversion from {@link AlertsResponse} to {@link DeviationAlert} domain entities
+ * - GET /alerts/{alertId} - Retrieve one deviation alert by ID
+ * - PATCH /alerts/{alertId}/acknowledge - Acknowledge one deviation alert
+ * - PATCH /alerts/{alertId}/resolve - Resolve one deviation alert
+ * - Resource conversion from API resources to {@link DeviationAlert} domain entities
  *
  * Data transformation is delegated to the {@link AlertAssembler}.
  */
@@ -55,25 +60,79 @@ export class AlertApiEndpoint extends BaseApiEndpoint<
    *
    * @remarks
    * This method constructs dynamic query parameters and performs a GET request.
-   * It maps the infrastructure response using the assembler and includes
-   * error handling specific to the alert fetching process.
+   * It expects a direct array response from the backend, matching the current
+   * bounded context API style used by laboratory, equipment, and batch.
    */
   getAlerts(filters?: {
     equipmentId?: number;
     batchId?: number;
-    status?: string;
-    severity?: string;
+    status?: AlertStatus;
+    severity?: AlertSeverity;
   }): Observable<DeviationAlert[]> {
     let params = new HttpParams();
+
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
-        if (value) params = params.append(key, value);
+        if (value !== undefined && value !== null) {
+          params = params.append(key, String(value));
+        }
       });
     }
 
-    return this.http.get<AlertsResponse>(this.endpointUrl, { params }).pipe(
-      map((response) => this.assembler.toEntitiesFromResponse(response)),
+    return this.http.get<AlertResource[]>(this.endpointUrl, { params }).pipe(
+      map((resources) => this.assembler.toEntitiesFromResources(resources)),
       catchError(this.handleError('Failed to fetch deviation alerts')),
+    );
+  }
+
+  /**
+   * Retrieves a single deviation alert by its unique numeric identifier.
+   *
+   * @param alertId - The unique numeric identifier of the deviation alert
+   * @returns An Observable of {@link DeviationAlert}
+   */
+  getAlertById(alertId: number): Observable<DeviationAlert> {
+    return this.http.get<AlertResource>(`${this.endpointUrl}/${alertId}`).pipe(
+      map((resource) => this.assembler.toEntityFromResource(resource)),
+      catchError(this.handleError(`Failed to fetch deviation alert ${alertId}`)),
+    );
+  }
+
+  /**
+   * Acknowledges a deviation alert.
+   *
+   * @param alertId - The unique numeric identifier of the deviation alert
+   * @param request - DTO containing the user acknowledging the alert
+   * @returns An Observable of the updated {@link DeviationAlert}
+   *
+   * @remarks
+   * Sends a PATCH request to the backend lifecycle endpoint and maps the updated
+   * alert resource back into a domain entity.
+   */
+  acknowledgeAlert(alertId: number, request: AcknowledgeAlertRequest): Observable<DeviationAlert> {
+    return this.http
+      .patch<AlertResource>(`${this.endpointUrl}/${alertId}/acknowledge`, request)
+      .pipe(
+        map((resource) => this.assembler.toEntityFromResource(resource)),
+        catchError(this.handleError(`Failed to acknowledge deviation alert ${alertId}`)),
+      );
+  }
+
+  /**
+   * Resolves a deviation alert.
+   *
+   * @param alertId - The unique numeric identifier of the deviation alert
+   * @param request - DTO containing the user and resolution notes
+   * @returns An Observable of the updated {@link DeviationAlert}
+   *
+   * @remarks
+   * Sends a PATCH request to the backend lifecycle endpoint and maps the updated
+   * alert resource back into a domain entity.
+   */
+  resolveAlert(alertId: number, request: ResolveAlertRequest): Observable<DeviationAlert> {
+    return this.http.patch<AlertResource>(`${this.endpointUrl}/${alertId}/resolve`, request).pipe(
+      map((resource) => this.assembler.toEntityFromResource(resource)),
+      catchError(this.handleError(`Failed to resolve deviation alert ${alertId}`)),
     );
   }
 }

@@ -1,5 +1,9 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
 
+export type AlertSeverity = 'LOW' | 'WARNING' | 'CRITICAL';
+
+export type AlertStatus = 'UNRESOLVED' | 'ACKNOWLEDGED' | 'RESOLVED';
+
 /**
  * Represents a deviation alert within the Manufacturing or Quality domain.
  *
@@ -22,7 +26,7 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  * unit: '°C',
  * timestamp: '2026-05-12T11:00:00Z',
  * severity: 'CRITICAL',
- * status: 'OPEN',
+ * status: 'UNRESOLVED',
  * createdAt: '2026-05-12T11:05:00Z'
  * });
  *
@@ -71,19 +75,19 @@ export class DeviationAlert implements BaseEntity {
   timestamp: string;
 
   /**
-   * The level of impact or urgency (e.g., LOW, MEDIUM, CRITICAL).
+   * The level of impact or urgency.
    */
-  severity: string;
+  severity: AlertSeverity;
 
   /**
-   * The current lifecycle state of the alert (e.g., OPEN, ACKNOWLEDGED, CLOSED).
+   * The current lifecycle state of the alert.
    */
-  status: string;
+  status: AlertStatus;
 
   /**
    * The timestamp indicating when the alert record was created in the system.
    */
-  createdAt: string;
+  createdAt?: string;
 
   /**
    * Creates a new DeviationAlert entity.
@@ -114,9 +118,9 @@ export class DeviationAlert implements BaseEntity {
     thresholdValue: number;
     unit: string;
     timestamp: string;
-    severity: string;
-    status: string;
-    createdAt: string;
+    severity: AlertSeverity;
+    status: AlertStatus;
+    createdAt?: string;
   }) {
     this.id = params.id;
     this.equipmentId = params.equipmentId;

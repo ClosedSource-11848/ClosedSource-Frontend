@@ -1,34 +1,12 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
 
 /**
- * Represents a pharmaceutical product entity within the Pharmaceutical domain.
+ * Represents a pharmaceutical product entity within the Laboratory domain.
  *
  * @remarks
- * In Domain-Driven Design, a PharmaceuticalProduct is an entity that models a
- * registered drug or pharmaceutical item manufactured or distributed by a laboratory.
- * Each product has a unique numeric identity that persists throughout its lifecycle and is
- * always associated with the laboratory that produces it.
- *
- * This entity encapsulates the core attributes of a pharmaceutical product as
- * understood within the domain, including its internal code, technical specifications,
- * and its current active status within the system.
- *
- * @example
- * ```typescript
- * const product = new PharmaceuticalProduct({
- * id: 1,
- * labId: '1',
- * code: 'MED-2024-001',
- * name: 'Amoxicilina 500mg',
- * description: 'Antibiótico de amplio espectro en cápsulas',
- * specifications: 'Cápsulas de 500mg, blister x 12 unidades',
- * active: true,
- * createdAt: '2024-03-01T09:00:00Z',
- * });
- *
- * console.log(product.name);  // 'Amoxicilina 500mg'
- * console.log(product.active); // true
- * ```
+ * In DDD, a PharmaceuticalProduct is an entity registered under a laboratory.
+ * It captures product identity, catalog code, descriptive information, technical
+ * specifications, and active state for operational traceability.
  */
 export class PharmaceuticalProduct implements BaseEntity {
   /**
@@ -37,44 +15,48 @@ export class PharmaceuticalProduct implements BaseEntity {
   id: number;
 
   /**
-   * The numeric identifier of the laboratory that manufactures or owns this product.
+   * The numeric identifier of the laboratory that owns this product.
    */
-  labId: number;
+  laboratoryId: number;
 
   /**
-   * The internal registration code that uniquely identifies this product
-   * within the laboratory's catalog.
+   * The internal catalog code that identifies this product.
    */
   code: string;
 
   /**
-   * The commercial or scientific name of the pharmaceutical product.
+   * The commercial or scientific name of the product.
    */
   name: string;
 
   /**
-   * A human-readable description of the pharmaceutical product.
+   * A human-readable product description.
    */
   description: string;
 
   /**
-   * The technical specifications of the pharmaceutical product.
+   * The technical specifications of the product.
    */
   specifications: string;
 
   /**
-   * Indicates whether this pharmaceutical product is currently active in the system.
+   * Indicates whether this product is active.
    */
   active: boolean;
 
   /**
-   * The ISO 8601 timestamp indicating when this pharmaceutical product record was created.
+   * The ISO 8601 timestamp indicating when this product was created.
    */
   createdAt: string;
 
+  /**
+   * Creates a new PharmaceuticalProduct entity.
+   *
+   * @param params - Initialization properties
+   */
   constructor(params: {
     id: number;
-    labId: number;
+    laboratoryId: number;
     code: string;
     name: string;
     description: string;
@@ -83,7 +65,7 @@ export class PharmaceuticalProduct implements BaseEntity {
     createdAt: string;
   }) {
     this.id = params.id;
-    this.labId = params.labId;
+    this.laboratoryId = params.laboratoryId;
     this.code = params.code;
     this.name = params.name;
     this.description = params.description;

@@ -3,66 +3,37 @@ import { StaffMember } from '../domain/model/staff-member.entity';
 import { StaffMemberResource, StaffMembersResponse } from './staff-response';
 
 /**
- * Assembler responsible for mapping between {@link StaffMemberResource} API
- * response shapes and {@link StaffMember} domain entities within the
- * Laboratory domain.
+ * Assembler for converting between StaffMember domain entities and API resources.
  *
  * @remarks
- * `StaffAssembler` implements {@link BaseAssembler} to fulfill the mapping
- * contract required by `StaffApiEndpoint`. It acts as the translation boundary
- * between the raw server representation ({@link StaffMemberResource}) and the
- * domain model ({@link StaffMember}), ensuring that neither layer needs to be
- * aware of the other's structure.
- *
- * This class is instantiated directly by `StaffApiEndpoint` and is not managed
- * by Angular's DI container. It carries no state and all methods are pure
- * transformations with no side effects.
- *
- * @example
- * ```typescript
- * const assembler = new StaffAssembler();
- * const entity = assembler.toEntityFromResource(resource);
- * console.log(entity instanceof StaffMember); // true
- * ```
+ * This assembler keeps staff member domain objects independent from backend
+ * transport contracts.
  */
 export class StaffAssembler implements BaseAssembler<
-StaffMember,
+  StaffMember,
   StaffMemberResource,
-StaffMembersResponse
+  StaffMembersResponse
 > {
   /**
-   * Maps a {@link StaffMembersResponse} collection response into an array
-   * of {@link StaffMember} domain entities.
+   * Converts a staff response envelope into domain entities.
    *
-   * @param response - The raw collection response received from the server.
-   * @returns An array of {@link StaffMember} entities, one per resource
-   * present in the response.
-   *
-   * @remarks
-   * Delegates each individual mapping to {@link toEntityFromResource}, ensuring
-   * consistent transformation logic across single and collection responses.
+   * @param response - API response containing staff member resources
+   * @returns Array of StaffMember domain entities
    */
   toEntitiesFromResponse(response: StaffMembersResponse): StaffMember[] {
     return response.staffMembers.map((resource) => this.toEntityFromResource(resource));
   }
 
   /**
-   * Maps a single {@link StaffMemberResource} into a {@link StaffMember}
-   * domain entity.
+   * Converts a staff member API resource into a domain entity.
    *
-   * @param resource - The raw resource object deserialized from the server response.
-   * @returns A new {@link StaffMember} instance populated with the resource data.
-   *
-   * @remarks
-   * This is the canonical entry point for inbound server-to-domain transformations
-   * within this assembler. All fields are mapped one-to-one onto the
-   * {@link StaffMember} constructor parameters. Reused by
-   * {@link toEntitiesFromResponse} for collection mapping.
+   * @param resource - Staff member resource received from the API
+   * @returns StaffMember domain entity
    */
   toEntityFromResource(resource: StaffMemberResource): StaffMember {
     return new StaffMember({
       id: resource.id,
-      labId: resource.laboratoryId,
+      laboratoryId: resource.laboratoryId,
       fullName: resource.fullName,
       role: resource.role,
       email: resource.email,
@@ -72,25 +43,20 @@ StaffMembersResponse
   }
 
   /**
-   * Maps a {@link StaffMember} domain entity into a {@link StaffMemberResource} shape.
+   * Converts a StaffMember domain entity into an API resource.
    *
-   * @param entity - The domain entity to convert into its resource representation.
-   * @returns A {@link StaffMemberResource} object populated with the entity's data.
-   *
-   * @remarks
-   * Performs the inverse transformation of {@link toEntityFromResource}. The result
-   * is cast as {@link StaffMemberResource} to satisfy any additional fields inherited
-   * from {@link BaseResource} that are not present on the {@link StaffMember} entity.
+   * @param entity - StaffMember domain entity
+   * @returns StaffMember resource ready for API communication
    */
   toResourceFromEntity(entity: StaffMember): StaffMemberResource {
     return {
       id: entity.id,
-      laboratoryId: entity.labId,
+      laboratoryId: entity.laboratoryId,
       fullName: entity.fullName,
       role: entity.role,
       email: entity.email,
       active: entity.active,
       createdAt: entity.createdAt,
-    } as StaffMemberResource;
+    };
   }
 }

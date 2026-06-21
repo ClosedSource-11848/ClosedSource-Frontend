@@ -22,11 +22,6 @@
  */
 export interface ReleaseBatchCommand {
   /**
-   * The unique numeric identifier of the production batch being released.
-   */
-  batchId: number;
-
-  /**
    * The ISO date string representing the exact moment the batch was officially approved and released.
    */
   releaseDate: string;

@@ -6,6 +6,7 @@ import { MaintenanceRecord } from '../domain/model/maintenance-record.entity';
 import { MaintenanceResource, MaintenancesResponse } from './maintenance-response';
 import { MaintenanceAssembler } from './maintenance-assembler';
 import { RegisterMaintenanceRequest } from './maintenance.request';
+import { MessageResource } from '../../shared/infrastructure/message-response';
 
 /**
  * The base endpoint URL used to access equipment-related API resources.
@@ -83,9 +84,11 @@ export class MaintenanceApiEndpoint extends BaseApiEndpoint<
    */
   getMaintenanceHistory(equipmentId: number): Observable<MaintenanceRecord[]> {
     return this.http
-      .get<MaintenancesResponse>(`${this.endpointUrl}/${equipmentId}/maintenance`)
+      .get<MaintenanceResource[]>(`${this.endpointUrl}/${equipmentId}/maintenance-records`)
       .pipe(
-        map((response) => this.assembler.toEntitiesFromResponse(response)),
+        map((resources) =>
+          resources.map((resource) => this.assembler.toEntityFromResource(resource)),
+        ),
         catchError(
           this.handleError(`Failed to fetch maintenance history for equipment ${equipmentId}`),
         ),
@@ -106,10 +109,12 @@ export class MaintenanceApiEndpoint extends BaseApiEndpoint<
    * If the registration request fails, the inherited handleError method
    * manages the error.
    */
-  registerMaintenance(request: RegisterMaintenanceRequest): Observable<MaintenanceRecord> {
-    return this.http.post<MaintenanceResource>(`${this.endpointUrl}/maintenance`, request).pipe(
-      map((resource) => this.assembler.toEntityFromResource(resource)),
-      catchError(this.handleError('Failed to register maintenance record')),
-    );
+  registerMaintenance(request: RegisterMaintenanceRequest): Observable<MessageResource> {
+    return this.http
+      .post<MessageResource>(
+        `${this.endpointUrl}/${request.equipmentId}/maintenance-records`,
+        request,
+      )
+      .pipe(catchError(this.handleError('Failed to register maintenance record')));
   }
 }

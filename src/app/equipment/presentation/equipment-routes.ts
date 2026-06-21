@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
 import { Layout } from '../../shared/presentation/components/layout/layout';
 
-// Lazy loading de las vistas siguiendo el patrón del BC Laboratory
-
 /**
  * Lazy loads the equipment list view component.
  *
@@ -76,27 +74,18 @@ const maintenanceForm = () =>
   import('./views/maintenance-form/maintenance-form').then((m) => m.MaintenanceForm);
 
 /**
- * Defines the routing configuration for the equipment bounded context.
+ * Defines the routing configuration for the Equipment bounded context.
  *
  * @remarks
  * This route configuration groups all equipment-related views under the shared
  * Layout component. Each child route uses Angular lazy loading through
  * loadComponent, allowing the application to load each view only when needed.
  *
- * The routes include equipment listing, equipment registration, equipment
- * detail, BPM configuration, maintenance history, and maintenance registration.
+ * Routes with an `:id` parameter are not meant to be used directly from the
+ * sidebar because they require a concrete equipment identifier selected from
+ * the equipment catalog.
  *
  * The empty child route redirects users to the equipment list by default.
- *
- * @example
- * ```typescript
- * import { equipmentRoutes } from './equipment.routes';
- *
- * const routes: Routes = [
- *   ...equipmentRoutes
- *
- * ];
- * ```
  */
 const equipmentRoutes: Routes = [
   {

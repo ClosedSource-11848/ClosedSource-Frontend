@@ -93,6 +93,9 @@ export class Equipment implements BaseEntity {
    * @remarks
    * This value is stored as a string, commonly using ISO 8601 date format.
    */
+
+  sensorExternalId?: string;
+
   createdAt: string;
 
   /**
@@ -122,6 +125,7 @@ export class Equipment implements BaseEntity {
     serialNumber: string;
     status: string;
     createdAt: string;
+    sensorExternalId?: string;
   }) {
     this.id = params.id;
     this.labId = params.labId;
@@ -131,5 +135,6 @@ export class Equipment implements BaseEntity {
     this.serialNumber = params.serialNumber;
     this.status = params.status;
     this.createdAt = params.createdAt;
+    this.sensorExternalId = params.sensorExternalId;
   }
 }

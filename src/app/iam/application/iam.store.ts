@@ -1,16 +1,18 @@
 import { computed, Injectable, signal } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { User } from '../domain/model/user.entity';
 import { SignInCommand } from '../domain/model/sign-in.command';
-import { Router } from '@angular/router';
-import { IamApi } from '../infrastructure/iam-api';
 import { SignUpCommand } from '../domain/model/sign-up.command';
 import { RecoverPasswordCommand } from '../domain/model/recover-password.command';
 
+import { IamApi } from '../infrastructure/iam-api';
+import { SignInRequest } from '../infrastructure/sign-in.request';
+import { SignUpRequest } from '../infrastructure/sign-up.request';
+import { RecoverPasswordRequest } from '../infrastructure/recover-password.request';
+
 /**
- * @summary Store reactivo para la gestión de identidad y accesos de QualiTrack.
- * @remarks Utiliza Angular Signals para manejar el estado de la sesión,
- * la carga y los errores de forma reactiva en toda la aplicación.
- * @author QualiTrack
+ * Signal-based application store for Identity and Access Management.
  */
 @Injectable({ providedIn: 'root' })
 export class IamStore {
@@ -19,103 +21,171 @@ export class IamStore {
   private readonly isSignedInSignal = signal<boolean>(false);
   private readonly currentUsernameSignal = signal<string | null>(null);
   private readonly currentUserIdSignal = signal<number | null>(null);
-  private readonly usersSignal = signal<Array<User>>([]);
+  private readonly currentLaboratoryIdSignal = signal<number | null>(null);
+  private readonly usersSignal = signal<User[]>([]);
+  private readonly loadingUsers = signal<boolean>(false);
 
   readonly isSignedIn = this.isSignedInSignal.asReadonly();
-  readonly loadingUsers = signal<boolean>(false);
   readonly currentUsername = this.currentUsernameSignal.asReadonly();
   readonly currentUserId = this.currentUserIdSignal.asReadonly();
-  readonly currentToken = computed(() =>
-    this.isSignedIn() ? localStorage.getItem('token') : null,
-  );
+  readonly currentLaboratoryId = this.currentLaboratoryIdSignal.asReadonly();
+  readonly currentToken = computed(() => localStorage.getItem('token'));
   readonly users = this.usersSignal.asReadonly();
   readonly loading = this._loadingSignal.asReadonly();
   readonly error = this._errorSignal.asReadonly();
   readonly isLoadingUsers = this.loadingUsers.asReadonly();
 
-  constructor(private iamApi: IamApi) {
-    this.isSignedInSignal.set(false);
-    this.currentUsernameSignal.set(null);
-    this.currentUserIdSignal.set(null);
+  constructor(private readonly iamApi: IamApi) {
+    this.restoreSession();
   }
 
-  recoverPassword(recoverPasswordCommand: RecoverPasswordCommand, router: Router) {
-    this._loadingSignal.set(true);
-    this.iamApi.recoverPassword(recoverPasswordCommand).subscribe({
-      next: (resource) => {
-        console.log('Password recovery requested:', resource);
-        this._loadingSignal.set(false);
+  recoverPassword(command: RecoverPasswordCommand, router: Router): void {
+    this.startRequest();
+
+    const request = this.toRecoverPasswordRequest(command);
+
+    this.iamApi.recoverPassword(request).subscribe({
+      next: () => {
+        this.finishRequest();
         router.navigate(['/iam/sign-in']).then();
       },
-      error: (err) => {
-        console.error('Password recovery failed:', err);
-        this._errorSignal.set('Failed to request password recovery.');
-        this._loadingSignal.set(false);
+      error: () => {
+        this.failRequest('Failed to request password recovery.');
       },
     });
   }
 
-  signIn(signInCommand: SignInCommand, router: Router) {
-    this._loadingSignal.set(true);
-    this._errorSignal.set(null);
+  signIn(command: SignInCommand, router: Router): void {
+    this.startRequest();
 
-    this.iamApi.signIn(signInCommand).subscribe({
-      next: (signInResource) => {
-        localStorage.setItem('token', signInResource.token);
-        localStorage.setItem('userId', signInResource.id.toString());
+    const request = this.toSignInRequest(command);
+
+    this.iamApi.signIn(request).subscribe({
+      next: (resource) => {
+        this._errorSignal.set(null);
+
+        localStorage.setItem('token', resource.token);
+        localStorage.setItem('userId', resource.id.toString());
+        localStorage.setItem('username', resource.username);
+        localStorage.setItem('roles', JSON.stringify(resource.roles));
+
+        if (resource.laboratoryId !== null && resource.laboratoryId !== undefined) {
+          localStorage.setItem('laboratoryId', resource.laboratoryId.toString());
+          this.currentLaboratoryIdSignal.set(resource.laboratoryId);
+        } else {
+          localStorage.removeItem('laboratoryId');
+          this.currentLaboratoryIdSignal.set(null);
+        }
 
         this.isSignedInSignal.set(true);
-        this.currentUsernameSignal.set(signInResource.username);
-        this.currentUserIdSignal.set(signInResource.id);
-        this._loadingSignal.set(false);
+        this.currentUsernameSignal.set(resource.username);
+        this.currentUserIdSignal.set(resource.id);
+        this.finishRequest();
 
-        if (signInResource.roles.includes('ROLE_QA_MANAGER')) {
-          router.navigate(['/laboratory-management/lab-profile']).then();
+        if (resource.roles.includes('ROLE_QA_MANAGER')) {
+          router.navigate(['/laboratories/lab-profile']).then();
         } else {
           router.navigate(['/tracking/dashboard']).then();
         }
       },
-      error: (err) => {
-        console.error('Sign-in failed:', err);
-        this.isSignedInSignal.set(false);
-        this.currentUsernameSignal.set(null);
-        this.currentUserIdSignal.set(null);
-        this._loadingSignal.set(false);
-        this._errorSignal.set('Invalid credentials. Please try again.');
+      error: () => {
+        this.clearSession();
+        this.failRequest('Invalid credentials. Please try again.');
         router.navigate(['/iam/sign-in']).then();
       },
     });
   }
 
-  signUp(signUpCommand: SignUpCommand, router: Router) {
-    this._loadingSignal.set(true);
+  signUp(command: SignUpCommand, router: Router): void {
+    this.startRequest();
+
+    const request = this.toSignUpRequest(command);
+
+    this.iamApi.signUp(request).subscribe({
+      next: () => {
+        this._errorSignal.set(null);
+        this.finishRequest();
+        router.navigate(['/iam/sign-in']).then();
+      },
+      error: () => {
+        this.clearSession();
+        this.failRequest('Registration failed. Username may already exist.');
+      },
+    });
+  }
+
+  signOut(router: Router): void {
+    this.clearSession();
+    router.navigate(['/home']).then();
+  }
+
+  clearError(): void {
     this._errorSignal.set(null);
-
-    this.iamApi.signUp(signUpCommand).subscribe({
-      next: (signUpResource) => {
-        console.log('Sign-up successful:', signUpResource);
-        this._loadingSignal.set(false);
-        router.navigate(['/iam/sign-in']).then();
-      },
-      error: (err) => {
-        console.error('Sign-up failed:', err);
-        this.isSignedInSignal.set(false);
-        this.currentUsernameSignal.set(null);
-        this.currentUserIdSignal.set(null);
-        this._loadingSignal.set(false);
-        this._errorSignal.set('Registration failed. Username may already exist.');
-      },
-    });
   }
 
-  signOut(router: Router) {
+  private toSignInRequest(command: SignInCommand): SignInRequest {
+    return {
+      username: command.username,
+      password: command.password,
+    };
+  }
+
+  private toSignUpRequest(command: SignUpCommand): SignUpRequest {
+    return {
+      username: command.username,
+      password: command.password,
+      roles: command.roles,
+      laboratoryId: command.laboratoryId,
+    };
+  }
+
+  private toRecoverPasswordRequest(command: RecoverPasswordCommand): RecoverPasswordRequest {
+    return {
+      username: command.username,
+    };
+  }
+
+  private restoreSession(): void {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+    const username = localStorage.getItem('username');
+    const laboratoryId = localStorage.getItem('laboratoryId');
+
+    if (!token || !userId) {
+      this.clearSession();
+      return;
+    }
+
+    this.isSignedInSignal.set(true);
+    this.currentUserIdSignal.set(Number(userId));
+    this.currentUsernameSignal.set(username);
+    this.currentLaboratoryIdSignal.set(laboratoryId ? Number(laboratoryId) : null);
+  }
+
+  private clearSession(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
+    localStorage.removeItem('username');
+    localStorage.removeItem('roles');
+    localStorage.removeItem('laboratoryId');
 
     this.isSignedInSignal.set(false);
     this.currentUsernameSignal.set(null);
     this.currentUserIdSignal.set(null);
+    this.currentLaboratoryIdSignal.set(null);
+  }
 
-    router.navigate(['/home']).then();
+  private startRequest(): void {
+    this._loadingSignal.set(true);
+    this._errorSignal.set(null);
+  }
+
+  private finishRequest(): void {
+    this._loadingSignal.set(false);
+  }
+
+  private failRequest(message: string): void {
+    this._errorSignal.set(message);
+    this._loadingSignal.set(false);
   }
 }

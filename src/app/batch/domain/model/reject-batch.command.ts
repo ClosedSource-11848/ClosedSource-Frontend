@@ -22,11 +22,6 @@
  */
 export interface RejectBatchCommand {
   /**
-   * The unique numeric identifier of the production batch being rejected.
-   */
-  batchId: number;
-
-  /**
    * The ISO date string representing the exact moment the rejection was formalized.
    */
   rejectionDate: string;

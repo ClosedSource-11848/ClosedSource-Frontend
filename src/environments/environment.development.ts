@@ -2,6 +2,7 @@ export const environment = {
   production: false,
 
   // Base API URL
+  serverBasePath: 'https://qualitrack-platform.onrender.com/api/v1',
 
   // IAM (Identity and Access Management)
   iamSignInEndpointPath: '/authentication/sign-in',
@@ -28,7 +29,7 @@ export const environment = {
   trackingDeviceBindingsEndpointPath: '/device-bindings',
 
   // CA (Compliance & Alerting)
-  caComplianceEndpointPath: '/compliance',
+  caComplianceEndpointPath: '/compliance-events',
   caAlertsEndpointPath: '/alerts',
   caNotificationPrefsEndpointPath: '/notification-preferences',
 
@@ -37,4 +38,10 @@ export const environment = {
   raKpisEndpointPath: '/kpis',
   raAuditLogEndpointPath: '/audit-log',
   raDeviationTrendsEndpointPath: '/deviation-trends',
+
+  // Payments
+  subscriptionPlansEndpointPath: '/subscriptions/plans',
+  subscriptionsEndpointPath: '/subscriptions',
+  paymentsEndpointPath: '/subscriptions',
+  checkoutEndpointPath: '/subscriptions/checkout-sessions',
 };

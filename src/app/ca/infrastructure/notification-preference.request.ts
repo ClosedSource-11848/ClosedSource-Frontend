@@ -1,3 +1,5 @@
+import { AlertSeverity } from '../domain/model/deviation-alert.entity';
+
 /**
  * Data Transfer Object (DTO) for updating notification preferences.
  *
@@ -36,5 +38,5 @@ export interface UpdateNotificationPreferenceRequest {
   /**
    * The new minimum severity threshold for triggering notifications.
    */
-  minimumSeverity: string;
+  minimumSeverity: AlertSeverity;
 }

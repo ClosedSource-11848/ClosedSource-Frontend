@@ -67,7 +67,7 @@ export interface RawMaterialUsageResource extends BaseResource {
   /**
    * The ISO date string representing the exact moment this record was created.
    */
-  createdAt: string;
+  createdAt?: string;
 }
 
 /**

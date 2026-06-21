@@ -9,7 +9,7 @@ import { ComplianceEventResource, ComplianceEventsResponse } from './compliance-
  * In DDD, this assembler is responsible for transforming between:
  * - {@link ComplianceEvent} - Domain entity with compliance-specific logic
  * - {@link ComplianceEventResource} - Infrastructure resource for API communication
- * - {@link ComplianceEventsResponse} - Response envelope from batch operations
+ * - {@link ComplianceEventsResponse} - Response envelope from collection operations
  *
  * This ensures the domain layer remains decoupled from infrastructure concerns
  * like API response formats, serialization details, and wire protocol specifics.
@@ -42,6 +42,16 @@ export class ComplianceEventAssembler implements BaseAssembler<
    */
   toEntitiesFromResponse(response: ComplianceEventsResponse): ComplianceEvent[] {
     return response.complianceEvents.map((event) => this.toEntityFromResource(event));
+  }
+
+  /**
+   * Converts an array of resources into an array of domain entities.
+   *
+   * @param resources - Array of compliance event resources
+   * @returns Array of ComplianceEvent domain entities
+   */
+  toEntitiesFromResources(resources: ComplianceEventResource[]): ComplianceEvent[] {
+    return resources.map((event) => this.toEntityFromResource(event));
   }
 
   /**
@@ -85,6 +95,6 @@ export class ComplianceEventAssembler implements BaseAssembler<
       timestamp: entity.timestamp,
       resolvedBy: entity.resolvedBy,
       createdAt: entity.createdAt,
-    } as ComplianceEventResource;
+    };
   }
 }

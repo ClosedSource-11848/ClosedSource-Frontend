@@ -1,51 +1,64 @@
 /**
- * Represents the HTTP request body for updating the profile information
- * of an existing laboratory within the Laboratory API.
+ * Request payload for creating a laboratory.
  *
  * @remarks
- * This interface defines the inbound data contract expected by the update
- * laboratory endpoint. It models the deserialized JSON body of the HTTP request
- * and is responsible for carrying user-provided input from the presentation
- * layer to the application layer, where it is typically mapped into an
- * {@link UpdateLaboratoryCommand} before being processed by the use case.
- *
- * It deliberately excludes immutable or system-managed fields such as `id`,
- * `ruc`, or `createdAt`, as those must not be modified through this endpoint.
- *
- * @example
- * ```typescript
- * const body: UpdateLaboratoryRequest = {
- *   name: 'BioLab Peru S.A.C.',
- *   address: 'Av. Industrial 789, Lima',
- *   phone: '+51 1 987-6543',
- *   applicableRegulations: ['ISO 17025', 'DIGEMID', 'GMP'],
- * };
- * ```
+ * This interface belongs to the infrastructure layer and represents the HTTP
+ * request body sent to the backend when registering a new laboratory.
+ * It excludes system-generated fields such as `id`, `createdAt`, and `updatedAt`.
  */
-export interface UpdateLaboratoryRequest {
-  /** The updated official registered name of the laboratory. */
+export interface CreateLaboratoryRequest {
+  /**
+   * The official registered name of the laboratory.
+   */
   name: string;
 
-  /** The updated physical address of the laboratory. */
+  /**
+   * The tax identification number of the laboratory.
+   */
+  ruc: string;
+
+  /**
+   * The physical address of the laboratory.
+   */
   address: string;
 
   /**
-   * The updated contact phone number of the laboratory.
-   *
-   * @remarks
-   * The controller layer may apply format validation to ensure the provided
-   * value conforms to the expected phone number structure before forwarding
-   * the request to the application layer.
+   * The contact phone number of the laboratory.
    */
   phone: string;
 
   /**
-   * The updated list of regulatory frameworks or standards applicable to this laboratory.
-   *
-   * @remarks
-   * This field is treated as a full replacement of the existing regulations list,
-   * not a partial merge. The controller layer should validate that all entries
-   * are non-empty strings before forwarding the request to the application layer.
+   * The regulatory frameworks or standards applicable to this laboratory.
+   */
+  applicableRegulations: string[];
+}
+
+/**
+ * Request payload for updating a laboratory profile.
+ *
+ * @remarks
+ * This interface belongs to the infrastructure layer and represents the HTTP
+ * request body sent to the backend when updating mutable laboratory information.
+ * It excludes immutable fields such as `id`, `ruc`, `createdAt`, and `updatedAt`.
+ */
+export interface UpdateLaboratoryRequest {
+  /**
+   * The updated official registered name of the laboratory.
+   */
+  name: string;
+
+  /**
+   * The updated physical address of the laboratory.
+   */
+  address: string;
+
+  /**
+   * The updated contact phone number of the laboratory.
+   */
+  phone: string;
+
+  /**
+   * The updated regulatory frameworks or standards applicable to the laboratory.
    */
   applicableRegulations: string[];
 }

@@ -1,202 +1,198 @@
 @startuml shared-frontend-diagram
-title QualiTrack – Shared Frontend
+title QualiTrack - Shared Frontend
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "external bounded contexts" <<External>> {
+  class IamStore
+  class LaboratoryStore
+  class EquipmentStore
+  class BatchStore
+  class CaStore
+  class RaStore
+  class TrackingStore
+  class SubscriptionStore
+  class AuthenticationSection
+}
 
 package "shared" {
 
-  package "domain" {
-
-    interface ApiResponse {
-      +data: T
-      +message: string
-      +status: number
-    }
-
-    interface PagedResult {
-      +items: T[]
-      +totalItems: number
-      +page: number
-      +pageSize: number
-    }
-
-    interface DateRange {
-      +from: Date
-      +to: Date
-    }
-
-    interface ErrorDetail {
-      +field: string
-      +message: string
-      +code: string
-    }
-
-    interface ErrorResponse {
-      +status: number
-      +message: string
-      +errors: ErrorDetail[]
-      +timestamp: Date
-      +path: string
-    }
-  }
-
-  package "application" {
-
-    class ToastService {
-      +showSuccess(message: string): void
-      +showError(message: string): void
-      +showWarning(message: string): void
-      +showInfo(message: string): void
-      +clear(): void
-    }
-
-    class AuthFacadeRef {
-      +isAuthenticated(): boolean
-      +getToken(): string
-      +getCurrentUserId(): string
-      +getCurrentRole(): string
-      +logout(): void
+  package "domain.model" {
+    interface BaseEntity {
+      +id: number
     }
   }
 
   package "infrastructure" {
-
-    class BaseHttpService {
-      -http: HttpClient
-      -baseUrl: string
-      +get<T>(endpoint: string, params?: any): Observable<T>
-      +post<T>(endpoint: string, body: any): Observable<T>
-      +put<T>(endpoint: string, body: any): Observable<T>
-      +patch<T>(endpoint: string, body: any): Observable<T>
-      +delete<T>(endpoint: string): Observable<T>
-      +downloadBlob(endpoint: string, params?: any): Observable<Blob>
-      +buildParams(params: any): HttpParams
+    interface BaseResource {
+      +id: number
     }
 
-    class TokenInterceptor {
-      -authFacadeRef: AuthFacadeRef
-      +intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>
-      -addAuthorizationHeader(req: HttpRequest<any>, token: string): HttpRequest<any>
+    interface BaseResponse
+
+    interface MessageResource {
+      +message: string
     }
 
-    class ErrorInterceptor {
-      -authFacadeRef: AuthFacadeRef
-      -toastService: ToastService
-      -router: Router
-      +intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>
-      -handleUnauthorized(): void
-      -handleForbidden(): void
-      -handleServerError(error: HttpErrorResponse): void
+    interface BaseAssembler<TEntity, TResource, TResponse> {
+      +toEntityFromResource(resource: TResource): TEntity
+      +toResourceFromEntity(entity: TEntity): TResource
+      +toEntitiesFromResponse(response: TResponse): TEntity[]
+    }
+
+    abstract class BaseApi {
+    }
+
+    abstract class ErrorHandlingEnabledBaseType {
+      #handleError(operation: string): Function
+    }
+
+    abstract class BaseApiEndpoint<TEntity, TResource, TResponse, TAssembler> {
+      #http: HttpClient
+      #endpointUrl: string
+      #assembler: TAssembler
+      +getAll(): Observable<TEntity[]>
+      +getById(id: number): Observable<TEntity>
+      +create(entity: TEntity): Observable<TEntity>
+      +update(entity: TEntity, id: number): Observable<TEntity>
+      +delete(id: number): Observable<void>
     }
   }
 
-  package "interfaces" {
+  package "presentation.components" {
+    class LanguageSwitcher {
+      #currentLang: string
+      #languages: string[]
+      #translate: TranslateService
+      +useLanguage(language: string): void
+    }
 
-    class AuthGuard {
-      -authFacadeRef: AuthFacadeRef
+    class Toolbar {
+    }
+
+    class Layout {
       -router: Router
-      +canActivate(route: ActivatedRouteSnapshot): boolean
-      -redirectToLogin(): void
+      #sidenavMode: 'side' | 'over'
+      #sidenavOpened: boolean
+      #options: NavigationOption[]
+      #navigateTo(link: string): void
+      #isActive(link: string): boolean
     }
 
-    class RoleGuard {
-      -authFacadeRef: AuthFacadeRef
+    class NavigationOption <<type>> {
+      +label: string
+      +icon: string
+      +link: string
+      +children?: NavigationChild[]
+    }
+
+    class NavigationChild <<type>> {
+      +label: string
+      +link: string
+    }
+  }
+
+  package "presentation.views" {
+    class Home {
+    }
+
+    class About {
+    }
+
+    class PageNotFound {
+      #invalidPath: string
+      -route: ActivatedRoute
       -router: Router
-      +requiredRoles: string[]
-      +canActivate(route: ActivatedRouteSnapshot): boolean
-    }
-
-    class ConfirmDialogComponent {
-      +title: string
-      +message: string
-      +confirmLabel: string
-      +cancelLabel: string
-      +isDanger: boolean
-      +confirmed: EventEmitter<void>
-      +cancelled: EventEmitter<void>
-      +onConfirm(): void
-      +onCancel(): void
-    }
-
-    class StatusBadgeComponent {
-      +status: string
-      +statusColorMap: Map<string, string>
-      +statusLabelMap: Map<string, string>
-      +getColor(): string
-      +getLabel(): string
-    }
-
-    class DateRangePickerComponent {
-      +range: DateRange
-      +rangeChange: EventEmitter<DateRange>
-      +minDate: Date
-      +maxDate: Date
-      +onFromChange(date: Date): void
-      +onToChange(date: Date): void
-      +isValidRange(): boolean
-    }
-
-    class SearchInputComponent {
-      +placeholder: string
-      +searchTerm: string
-      +debounceMs: number
-      +searchChange: EventEmitter<string>
       +ngOnInit(): void
-      +onInput(value: string): void
-      +onClear(): void
+      #navigateToHome(): void
     }
 
-    class LoadingSpinnerComponent {
-      +isLoading: boolean
-      +message: string
-      +fullScreen: boolean
+    class Dashboard {
+      #iamStore: IamStore
+      #laboratoryStore: LaboratoryStore
+      #equipmentStore: EquipmentStore
+      #batchStore: BatchStore
+      #caStore: CaStore
+      #raStore: RaStore
+      #trackingStore: TrackingStore
+      #subscriptionStore: SubscriptionStore
+      -router: Router
+      -translate: TranslateService
+      -equipmentPollId?: interval
+      -telemetryInitialized: boolean
+      -langSubscription?: Subscription
+      -languageVersion: Signal<number>
+      #overviewChartType: ChartType
+      #riskChartType: ChartType
+      #chartOptions: ChartOptions
+      #riskChartOptions: ChartOptions
+      #isLoading: Signal<boolean>
+      #healthScore: Signal<number>
+      #healthLabelKey: Signal<string>
+      #healthClass: Signal<string>
+      #summaryCards: Signal<DashboardCard[]>
+      #overviewChartData: Signal<ChartData>
+      #riskChartData: Signal<ChartData>
+      #attentionItems: Signal<AttentionItem[]>
+      +ngOnInit(): void
+      +ngOnDestroy(): void
+      #navigateTo(route: string): void
+      -initializeTelemetryFromFirstEquipment(): void
+      -t(key: string, params?: Record<string, unknown>): string
     }
 
-    class PaginatorComponent {
-      +totalItems: number
-      +pageSize: number
-      +currentPage: number
-      +pageSizeOptions: number[]
-      +pageChange: EventEmitter<number>
-      +pageSizeChange: EventEmitter<number>
-      +getTotalPages(): number
-      +onPageChange(page: number): void
+    class DashboardCard <<type>> {
+      +labelKey: string
+      +value: number
+      +detailKey: string
+      +detailParams: object
+      +icon: string
+      +className: string
+      +route: string
     }
 
-    class EmptyStateComponent {
-      +title: string
-      +message: string
-      +actionLabel: string
-      +iconName: string
-      +action: EventEmitter<void>
-      +onAction(): void
-    }
-
-    class FormatDatePipe {
-      +transform(date: Date, format: string): string
-    }
-
-    class TruncatePipe {
-      +transform(value: string, maxLength: number): string
-    }
-
-    class CapitalizePipe {
-      +transform(value: string): string
+    class AttentionItem <<type>> {
+      +labelKey: string
+      +value: number
+      +icon: string
+      +route: string
     }
   }
 }
 
-BaseHttpService --> TokenInterceptor
-BaseHttpService --> ErrorInterceptor
-BaseHttpService ..> ApiResponse
-BaseHttpService ..> PagedResult
+BaseResource --|> BaseEntity
+BaseApiEndpoint --|> ErrorHandlingEnabledBaseType
+BaseApiEndpoint ..> BaseEntity
+BaseApiEndpoint ..> BaseResource
+BaseApiEndpoint ..> BaseResponse
+BaseApiEndpoint ..> BaseAssembler
 
-TokenInterceptor --> AuthFacadeRef
-ErrorInterceptor --> AuthFacadeRef
-ErrorInterceptor --> ToastService
+BaseAssembler ..> BaseEntity
+BaseAssembler ..> BaseResource
+BaseAssembler ..> BaseResponse
 
-AuthGuard --> AuthFacadeRef
-RoleGuard --> AuthFacadeRef
+Toolbar --> LanguageSwitcher
+Layout --> LanguageSwitcher
+Layout *-- NavigationOption
+NavigationOption *-- NavigationChild
 
-DateRangePickerComponent ..> DateRange
-ErrorInterceptor ..> ErrorResponse
+Home --> Toolbar
+Home --> AuthenticationSection
+PageNotFound --> Router
+PageNotFound --> ActivatedRoute
+
+Dashboard --> IamStore
+Dashboard --> LaboratoryStore
+Dashboard --> EquipmentStore
+Dashboard --> BatchStore
+Dashboard --> CaStore
+Dashboard --> RaStore
+Dashboard --> TrackingStore
+Dashboard --> SubscriptionStore
+Dashboard --> Router
+Dashboard --> TranslateService
+Dashboard *-- DashboardCard
+Dashboard *-- AttentionItem
 
 @enduml

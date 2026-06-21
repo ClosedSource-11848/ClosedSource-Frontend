@@ -1,3 +1,5 @@
+import { AlertSeverity } from './deviation-alert.entity';
+
 /**
  * Command for updating notification preferences.
  *
@@ -8,12 +10,12 @@
  * through the store or application services.
  *
  * @example
- * ```TypesSript
+ * ```typescript
  * const command: UpdateNotificationPreferenceCommand = {
  *   emailEnabled: true,
  *   smsEnabled: false,
  *   inAppEnabled: true,
- *   minimumSeverity: 'HIGH'
+ *   minimumSeverity: 'WARNING'
  * };
  * ```
  */
@@ -36,5 +38,5 @@ export interface UpdateNotificationPreferenceCommand {
   /**
    * The minimum severity level required for a notification to be sent.
    */
-  minimumSeverity: string;
+  minimumSeverity: AlertSeverity;
 }

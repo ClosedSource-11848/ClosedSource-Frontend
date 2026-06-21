@@ -21,8 +21,8 @@ const prefsEndpointUrl = `${environment.serverBasePath}${environment.caNotificat
  * to inherit standard CRUD behavior with preference-specific configuration.
  *
  * The endpoint handles:
- * - GET /preferences/:userId - Retrieve notification settings for a user
- * - PUT /preferences/:userId - Update notification settings for a user
+ * - GET /notification-preferences/{userId} - Retrieve notification settings for a user
+ * - PUT /notification-preferences/{userId} - Update notification settings for a user
  *
  * Resource conversion is delegated to {@link NotificationPreferenceAssembler}.
  *
@@ -30,7 +30,7 @@ const prefsEndpointUrl = `${environment.serverBasePath}${environment.caNotificat
  * ```typescript
  * const endpoint = new NotificationPreferenceApiEndpoint(http);
  * endpoint.getPreferences(789).subscribe(prefs => {
- * // prefs is a fully hydrated NotificationPreference domain entity
+ *   // prefs is a fully hydrated NotificationPreference domain entity
  * });
  * ```
  */
@@ -90,7 +90,9 @@ export class NotificationPreferenceApiEndpoint extends BaseApiEndpoint<
       .put<NotificationPreferenceResource>(`${this.endpointUrl}/${userId}`, request)
       .pipe(
         map((resource) => this.assembler.toEntityFromResource(resource)),
-        catchError(this.handleError('Failed to update notification preferences')),
+        catchError(
+          this.handleError(`Failed to update notification preferences for user ${userId}`),
+        ),
       );
   }
 }

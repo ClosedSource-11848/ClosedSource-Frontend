@@ -12,7 +12,7 @@ import {
  * In DDD, this assembler is responsible for transforming between:
  * - {@link NotificationPreference} - Domain entity managing user communication settings
  * - {@link NotificationPreferenceResource} - Infrastructure resource for API communication
- * - {@link NotificationPreferencesResponse} - Response envelope from batch operations
+ * - {@link NotificationPreferencesResponse} - Response envelope from collection operations
  *
  * This ensures the domain layer remains decoupled from infrastructure concerns
  * like API response formats, serialization details, and communication protocols.
@@ -45,6 +45,16 @@ export class NotificationPreferenceAssembler implements BaseAssembler<
    */
   toEntitiesFromResponse(response: NotificationPreferencesResponse): NotificationPreference[] {
     return response.preferences.map((pref) => this.toEntityFromResource(pref));
+  }
+
+  /**
+   * Converts an array of resources into an array of domain entities.
+   *
+   * @param resources - Array of notification preference resources
+   * @returns Array of NotificationPreference domain entities
+   */
+  toEntitiesFromResources(resources: NotificationPreferenceResource[]): NotificationPreference[] {
+    return resources.map((pref) => this.toEntityFromResource(pref));
   }
 
   /**
@@ -88,6 +98,6 @@ export class NotificationPreferenceAssembler implements BaseAssembler<
       inAppEnabled: entity.inAppEnabled,
       minimumSeverity: entity.minimumSeverity,
       createdAt: entity.createdAt,
-    } as NotificationPreferenceResource;
+    };
   }
 }

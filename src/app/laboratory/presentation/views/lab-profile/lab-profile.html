@@ -19,30 +19,47 @@
     </div>
   }
 
-  @if (store.laboratory(); as lab) {
+  @if (store.laboratory(); as laboratory) {
     @if (!isEditing()) {
       <mat-card class="lab-card">
         <mat-card-header>
           <div mat-card-avatar class="lab-avatar">
             <mat-icon>science</mat-icon>
           </div>
-          <mat-card-title>{{ lab.name }}</mat-card-title>
-          <mat-card-subtitle>RUC: {{ lab.ruc || 'N/A' }}</mat-card-subtitle>
+
+          <mat-card-title>{{ laboratory.name }}</mat-card-title>
+          <mat-card-subtitle>RUC: {{ laboratory.ruc || 'N/A' }}</mat-card-subtitle>
         </mat-card-header>
+
         <mat-card-content class="lab-details">
-          <p><strong>{{ 'lab-profile.address' | translate }}:</strong> {{ lab.address }}</p>
-          <p><strong>{{ 'lab-profile.phone' | translate }}:</strong> {{ lab.phone }}</p>
+          <p>
+            <strong>{{ 'lab-profile.address' | translate }}:</strong>
+            {{ laboratory.address }}
+          </p>
+
+          <p>
+            <strong>{{ 'lab-profile.phone' | translate }}:</strong>
+            {{ laboratory.phone }}
+          </p>
+
           <p>
             <strong>{{ 'lab-profile.regulations' | translate }}:</strong>
             <span class="regulations-tags">
-              @for (reg of lab.applicableRegulations; track reg) {
-                <span class="tag">{{ reg }}</span>
+              @for (regulation of laboratory.applicableRegulations; track regulation) {
+                <span class="tag">{{ regulation }}</span>
               }
             </span>
           </p>
         </mat-card-content>
+
         <mat-card-actions align="end">
-          <button mat-raised-button color="primary" aria-label="Edit laboratory profile" (click)="onEdit()">
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            aria-label="Edit laboratory profile"
+            (click)="onEdit()"
+          >
             <mat-icon>edit</mat-icon>
             {{ 'lab-profile.edit' | translate }}
           </button>
@@ -54,32 +71,42 @@
           <form [formGroup]="form" (ngSubmit)="onSave()" class="edit-form">
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>{{ 'lab-profile.name' | translate }}</mat-label>
-              <input matInput formControlName="name" aria-label="Laboratory name"/>
+              <input matInput formControlName="name" aria-label="Laboratory name">
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>{{ 'lab-profile.address' | translate }}</mat-label>
-              <input matInput formControlName="address" aria-label="Laboratory address"/>
+              <input matInput formControlName="address" aria-label="Laboratory address">
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>{{ 'lab-profile.phone' | translate }}</mat-label>
-              <input matInput formControlName="phone" aria-label="Laboratory phone number"/>
+              <input matInput formControlName="phone" aria-label="Laboratory phone number">
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>{{ 'lab-profile.regulations' | translate }}</mat-label>
-              <mat-select formControlName="applicableRegulations" multiple aria-label="Applicable regulations">
-                @for (reg of regulations; track reg) {
-                  <mat-option [value]="reg">{{ reg }}</mat-option>
+              <mat-select
+                formControlName="applicableRegulations"
+                multiple
+                aria-label="Applicable regulations"
+              >
+                @for (regulation of regulations; track regulation) {
+                  <mat-option [value]="regulation">{{ regulation }}</mat-option>
                 }
               </mat-select>
             </mat-form-field>
 
             <div class="form-actions">
-              <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || store.isLoading()">
+              <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="form.invalid || store.isLoading()"
+              >
                 {{ 'common.save' | translate }}
               </button>
+
               <button mat-button type="button" (click)="onCancel()">
                 {{ 'common.cancel' | translate }}
               </button>

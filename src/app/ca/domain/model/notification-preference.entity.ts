@@ -1,4 +1,5 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
+import { AlertSeverity } from './deviation-alert.entity';
 
 /**
  * Represents a user's notification settings within the Communication domain.
@@ -19,7 +20,7 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
  * emailEnabled: true,
  * smsEnabled: false,
  * inAppEnabled: true,
- * minimumSeverity: 'HIGH',
+ * minimumSeverity: 'WARNING',
  * createdAt: '2026-05-12T11:28:14Z'
  * });
  *
@@ -53,14 +54,14 @@ export class NotificationPreference implements BaseEntity {
   inAppEnabled: boolean;
 
   /**
-   * The threshold of severity required to trigger a notification (e.g., 'LOW', 'CRITICAL').
+   * The threshold of severity required to trigger a notification.
    */
-  minimumSeverity: string;
+  minimumSeverity: AlertSeverity;
 
   /**
    * The timestamp indicating when the preference profile was created.
    */
-  createdAt: string;
+  createdAt?: string;
 
   /**
    * Creates a new NotificationPreference entity.
@@ -84,8 +85,8 @@ export class NotificationPreference implements BaseEntity {
     emailEnabled: boolean;
     smsEnabled: boolean;
     inAppEnabled: boolean;
-    minimumSeverity: string;
-    createdAt: string;
+    minimumSeverity: AlertSeverity;
+    createdAt?: string;
   }) {
     this.id = params.id;
     this.userId = params.userId;

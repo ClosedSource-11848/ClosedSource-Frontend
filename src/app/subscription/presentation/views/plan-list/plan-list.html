@@ -1,0 +1,67 @@
+<div class="plans-container">
+  <header class="page-header">
+    <div>
+      <h1>{{ 'subscription.plans.title' | translate }}</h1>
+      <p>{{ 'subscription.plans.subtitle' | translate }}</p>
+    </div>
+  </header>
+
+  @if (store.isLoading()) {
+    <div class="loading-shade">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  }
+
+  @if (store.error()) {
+    <div class="error-container">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ store.error() }}</p>
+    </div>
+  }
+
+  <div class="plans-grid">
+    @for (plan of store.plans(); track plan.id) {
+      <mat-card class="plan-card mat-elevation-z2" [class.highlight]="plan.code === 'PRO'">
+        <mat-card-header>
+          <mat-card-title>{{ plan.name }}</mat-card-title>
+          <mat-card-subtitle>{{ plan.description }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="price-block">
+            <span class="price">{{ formatPrice(plan) }}</span>
+            <span class="period">
+              / {{ 'subscription.billing-period.' + plan.billingPeriod.toLowerCase() | translate }}
+            </span>
+          </div>
+
+          <div class="limits-grid">
+            <div>
+              <span class="label">{{ 'subscription.plans.max-users' | translate }}</span>
+              <strong>{{ plan.maxUsers }}</strong>
+            </div>
+            <div>
+              <span class="label">{{ 'subscription.plans.max-equipment' | translate }}</span>
+              <strong>{{ plan.maxEquipment }}</strong>
+            </div>
+          </div>
+
+          <ul class="features-list">
+            @for (feature of plan.features; track feature) {
+              <li>
+                <mat-icon>check_circle</mat-icon>
+                <span>{{ feature }}</span>
+              </li>
+            }
+          </ul>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button mat-raised-button color="primary" (click)="onSelectPlan(plan)">
+            {{ 'subscription.plans.select' | translate }}
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    }
+  </div>
+</div>

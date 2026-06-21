@@ -7,12 +7,14 @@
     </div>
   </div>
 
-  <!-- Alertas globales del Store -->
+  <!-- Alertas globales del store -->
   @if (store.error()) {
     <div class="alert error-message">
       <mat-icon>error_outline</mat-icon>
       {{ store.error() }}
-      <button mat-icon-button (click)="store.clearMessages()"><mat-icon>close</mat-icon></button>
+      <button mat-icon-button type="button" (click)="store.clearMessages()">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
   }
 
@@ -20,7 +22,9 @@
     <div class="alert success-message">
       <mat-icon>check_circle</mat-icon>
       {{ store.successMsg() }}
-      <button mat-icon-button (click)="store.clearMessages()"><mat-icon>close</mat-icon></button>
+      <button mat-icon-button type="button" (click)="store.clearMessages()">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
   }
 
@@ -32,10 +36,10 @@
     </div>
   }
 
-  <!-- Cuadrícula de Tarjetas de Reportes -->
+  <!-- Cuadrícula de tarjetas de reportes -->
   <div class="reports-grid" [class.loading-blur]="store.isLoading()">
 
-    <!-- 1. BATCH REPORT CARD -->
+    <!-- Batch report -->
     <mat-card class="report-card">
       <mat-card-header>
         <div mat-card-avatar class="card-icon-container bg-primary">
@@ -48,13 +52,19 @@
       <mat-card-content class="form-content">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ 'report-generator.batch.id-label' | translate }}</mat-label>
-          <input matInput [(ngModel)]="batchForm.batchId" placeholder="e.g. BATCH-2026-05A">
+          <input
+            matInput
+            type="number"
+            min="1"
+            [(ngModel)]="batchForm.batchId"
+            placeholder="e.g. 1">
         </mat-form-field>
 
         <div class="checkbox-group">
           <mat-checkbox [(ngModel)]="batchForm.includeTelemetry" color="primary">
             {{ 'report-generator.batch.include-telemetry' | translate }}
           </mat-checkbox>
+
           <mat-checkbox [(ngModel)]="batchForm.includeDeviations" color="primary">
             {{ 'report-generator.batch.include-deviations' | translate }}
           </mat-checkbox>
@@ -70,14 +80,19 @@
       </mat-card-content>
 
       <mat-card-actions align="end">
-        <button mat-flat-button color="primary" [disabled]="!batchForm.batchId || store.isLoading()" (click)="onGenerateBatchReport()">
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          [disabled]="!batchForm.batchId || store.isLoading()"
+          (click)="onGenerateBatchReport()">
           <mat-icon>download</mat-icon>
           {{ 'common.download' | translate }}
         </button>
       </mat-card-actions>
     </mat-card>
 
-    <!-- 2. COMPLIANCE REPORT CARD -->
+    <!-- Compliance report -->
     <mat-card class="report-card">
       <mat-card-header>
         <div mat-card-avatar class="card-icon-container bg-success">
@@ -108,14 +123,19 @@
       </mat-card-content>
 
       <mat-card-actions align="end">
-        <button mat-flat-button color="primary" [disabled]="!complianceForm.startDate || !complianceForm.endDate || store.isLoading()" (click)="onGenerateComplianceReport()">
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          [disabled]="!complianceForm.startDate || !complianceForm.endDate || store.isLoading()"
+          (click)="onGenerateComplianceReport()">
           <mat-icon>download</mat-icon>
           {{ 'common.download' | translate }}
         </button>
       </mat-card-actions>
     </mat-card>
 
-    <!-- 3. EQUIPMENT LOG EXPORT CARD -->
+    <!-- Equipment log export -->
     <mat-card class="report-card">
       <mat-card-header>
         <div mat-card-avatar class="card-icon-container bg-warning">
@@ -128,7 +148,12 @@
       <mat-card-content class="form-content">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ 'report-generator.equipment.id-label' | translate }}</mat-label>
-          <input matInput [(ngModel)]="equipmentForm.equipmentId" placeholder="e.g. EQ-1005">
+          <input
+            matInput
+            type="number"
+            min="1"
+            [(ngModel)]="equipmentForm.equipmentId"
+            placeholder="e.g. 1">
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
@@ -151,7 +176,12 @@
       </mat-card-content>
 
       <mat-card-actions align="end">
-        <button mat-flat-button color="primary" [disabled]="!equipmentForm.equipmentId || !equipmentForm.startDate || !equipmentForm.endDate || store.isLoading()" (click)="onExportEquipmentLog()">
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          [disabled]="!equipmentForm.equipmentId || !equipmentForm.startDate || !equipmentForm.endDate || store.isLoading()"
+          (click)="onExportEquipmentLog()">
           <mat-icon>download</mat-icon>
           {{ 'common.export' | translate }}
         </button>

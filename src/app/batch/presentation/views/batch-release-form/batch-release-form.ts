@@ -12,7 +12,15 @@ import { BatchStore } from '../../../application/batch.store';
 import { ReleaseBatchCommand } from '../../../domain/model/release-batch.command';
 
 /**
- * Component responsible for managing the batch release process.
+ * Component responsible for releasing a production batch.
+ *
+ * @remarks
+ * This standalone presentation component reads the batch identifier from the
+ * route, collects release information through a reactive form, and sends a
+ * {@link ReleaseBatchCommand} to the batch application store.
+ *
+ * The release operation represents the approval of a batch after successful
+ * quality control and BPM/GMP verification.
  */
 @Component({
   selector: 'app-batch-release-form',
@@ -31,23 +39,38 @@ import { ReleaseBatchCommand } from '../../../domain/model/release-batch.command
   styleUrl: './batch-release-form.css',
 })
 export class BatchReleaseForm implements OnInit {
+  /**
+   * FormBuilder used to create and configure the reactive form.
+   */
   private readonly fb = inject(FormBuilder);
+
+  /**
+   * Activated route used to read the batch identifier from the URL.
+   */
   private readonly route = inject(ActivatedRoute);
+
+  /**
+   * Router used to return to the batch list after submitting the form.
+   */
   private readonly router = inject(Router);
+
+  /**
+   * Store responsible for batch lifecycle operations.
+   */
   protected readonly store = inject(BatchStore);
 
   /**
-   * Reactive form group for batch release data.
+   * Reactive form group for release data.
    */
-  releaseForm!: FormGroup;
+  protected releaseForm!: FormGroup;
 
   /**
-   * The unique numeric identifier of the batch to be released.
+   * Unique numeric identifier of the batch being released.
    */
-  batchId!: number;
+  protected batchId: number = 0;
 
   /**
-   * Initializes the component and sets up the release form.
+   * Lifecycle hook that initializes the release form.
    */
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -60,17 +83,17 @@ export class BatchReleaseForm implements OnInit {
   }
 
   /**
-   * Processes the form submission to release the batch.
+   * Submits the release command for the current batch.
    */
-  onSubmit(): void {
-    if (this.releaseForm.valid && this.batchId) {
-      const command: ReleaseBatchCommand = {
-        batchId: this.batchId,
-        ...this.releaseForm.value,
-      };
+  protected onSubmit(): void {
+    if (this.releaseForm.invalid || !this.batchId) return;
 
-      this.store.releaseBatch(this.batchId, command);
-      this.router.navigate(['/batches/batch-list']).then();
-    }
+    const command: ReleaseBatchCommand = {
+      releaseDate: this.releaseForm.value.releaseDate,
+      notes: this.releaseForm.value.notes,
+    };
+
+    this.store.releaseBatch(this.batchId, command);
+    this.router.navigate(['/batches/batch-list']).then();
   }
 }

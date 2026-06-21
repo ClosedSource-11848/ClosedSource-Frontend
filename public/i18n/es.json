@@ -3,7 +3,17 @@
     "title": "Nos preocupamos por la precisión, aseguramos la calidad.",
     "content": "Gestión avanzada de datos para entornos operativos de alto riesgo. Asegure el cumplimiento normativo total y la precisión a nivel de laboratorio."
   },
+  "auth": {
+    "already-have-account": "¿Ya tienes una cuenta?",
+    "sign-in": "Iniciar Sesión",
+    "or-create-account": "O crea una cuenta"
+  },
   "iam": {
+    "auth": {
+      "already-have-account": "¿Ya tienes una cuenta?",
+      "sign-in": "Iniciar Sesión",
+      "or-create-account": "O crea una cuenta"
+    },
     "sign-in": {
       "title": "Iniciar Sesión",
       "subtitle": "Bienvenido de nuevo a QualiTrack.",
@@ -12,28 +22,49 @@
       "password": "Contraseña",
       "password-placeholder": "Ingrese su contraseña",
       "button": "Ingresar",
-      "no-account": "¿No tienes una cuenta?"
+      "no-account": "¿No tienes una cuenta?",
+      "show-password": "Mostrar contraseña",
+      "hide-password": "Ocultar contraseña",
+      "errors": {
+        "username-required": "El usuario es obligatorio",
+        "username-minlength": "El usuario debe tener al menos 3 caracteres",
+        "password-required": "La contraseña es obligatoria",
+        "password-minlength": "La contraseña debe tener al menos 6 caracteres"
+      }
     },
     "sign-up": {
       "title": "Crear Cuenta",
-      "subtitle": "Regístrese para acceder al sistema QualiTrack.",
+      "subtitle": "Regístrate para acceder al sistema QualiTrack.",
       "username": "Usuario",
-      "username-placeholder": "Elija un nombre de usuario",
+      "username-placeholder": "Elige un nombre de usuario",
       "password": "Contraseña",
-      "password-placeholder": "Cree una contraseña",
+      "password-placeholder": "Crea una contraseña",
       "confirm-password": "Confirmar Contraseña",
-      "confirm-password-placeholder": "Confirme su contraseña",
+      "confirm-password-placeholder": "Confirma tu contraseña",
       "mode-label": "Modo de Registro",
       "register-as": "Registrarse como {{role}}",
+      "already-have-account": "¿Ya tienes una cuenta?",
+      "show-password": "Mostrar contraseña",
+      "hide-password": "Ocultar contraseña",
       "roles": {
         "manager": "QA Manager / Supervisor",
         "operator": "Operador de Laboratorio"
+      },
+      "errors": {
+        "username-required": "El usuario es obligatorio",
+        "username-minlength": "El usuario debe tener al menos 3 caracteres",
+        "password-required": "La contraseña es obligatoria",
+        "password-minlength": "La contraseña debe tener al menos 6 caracteres",
+        "password-strength": "La contraseña debe contener letras y números",
+        "confirm-password-required": "La confirmación de contraseña es obligatoria",
+        "password-mismatch": "Las contraseñas no coinciden"
       }
     }
   },
   "common": {
     "save": "Guardar Cambios",
     "cancel": "Cancelar",
+    "back": "Volver",
     "register": "Registrar",
     "search": "Buscar...",
     "status": "Estado",
@@ -42,7 +73,6 @@
     "required": "Este campo es obligatorio",
     "invalidEmail": "Ingrese un correo válido",
     "minZero": "El valor debe ser al menos 0",
-    "actions": "Acciones",
     "status-loading": "Cargando datos...",
     "all": "Todos",
     "clear": "Limpiar Filtros",
@@ -50,7 +80,23 @@
     "download": "Descargar",
     "export": "Exportar",
     "format": "Formato",
-    "date-range": "Rango de Fechas"
+    "date-range": "Rango de Fechas",
+    "errors": {
+      "required": "Este campo es obligatorio",
+      "invalid-email": "Ingrese un correo válido",
+      "min-zero": "El valor debe ser al menos 0"
+    },
+    "actions": {
+      "label": "Acciones",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "view": "Ver",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "register": "Registrar",
+      "search": "Buscar",
+      "refresh": "Actualizar"
+    }
   },
   "status": {
     "ON_TRACK": "En Camino",
@@ -68,10 +114,238 @@
     "home": "Inicio",
     "dashboard": "Panel de Control",
     "batches": "Gestión de Lotes",
-    "equipment": "Equipos Industriales",
+    "batch-list": "Lotes de Producción",
+    "batch-form": "Crear Lote",
+    "equipment": "Equipos",
+    "equipment-list": "Catálogo de Equipos",
+    "register-equipment": "Registrar Equipo",
     "alerts": "Alertas de Cumplimiento",
-    "reports": "Reportes y Auditoría",
-    "laboratory": "Laboratorio"
+    "alert-dashboard": "Panel de Alertas",
+    "alert-history": "Historial de Alertas",
+    "notification-settings": "Configuración de Notificaciones",
+    "reports": "Reportes y KPIs",
+    "kpi-dashboard": "Panel de KPIs",
+    "deviation-trends": "Tendencias de Desviación",
+    "report-generator": "Generador de Reportes",
+    "audit-log": "Registro de Auditoría",
+    "laboratory": "Laboratorio",
+    "lab-profile": "Perfil del Laboratorio",
+    "lab-form": "Crear Laboratorio",
+    "staff-list": "Gestión de Personal",
+    "staff-form": "Registrar Personal",
+    "product-catalog": "Catálogo de Productos Farmacéuticos",
+    "product-form": "Registrar Producto",
+    "raw-material-list": "Inventario de Materias Primas",
+    "raw-material-form": "Registrar Materia Prima",
+    "tracking": "Tracking y Telemetría",
+    "tracking-dashboard": "Panel de Telemetría",
+    "tracking-history": "Historial de Telemetría",
+    "tracking-analysis": "Análisis de Telemetría",
+    "subscription": "Suscripción y Facturación"
+  },
+  "dashboard": {
+    "command-center": "Centro de Control QualiTrack",
+    "fallback-title": "Operaciones del Laboratorio",
+    "subtitle": "Resumen operativo de laboratorio, equipos, lotes, cumplimiento, reportes, telemetría y estado de suscripción.",
+    "overall-health": "Salud General",
+    "health": {
+      "healthy": "Saludable",
+      "attention": "Requiere atención",
+      "critical": "Crítico"
+    },
+    "cards": {
+      "equipment": "Equipos",
+      "batches": "Lotes",
+      "alerts": "Alertas",
+      "raw-materials": "Materias Primas",
+      "subscription": "Suscripción",
+      "operational": "{{count}} operativos",
+      "in-progress": "{{count}} en progreso",
+      "critical": "{{count}} críticas",
+      "low-stock": "{{count}} con stock bajo",
+      "active-subscription": "Plan activo",
+      "no-subscription": "Sin plan activo"
+    },
+    "charts": {
+      "distribution-title": "Distribución Operativa",
+      "distribution-subtitle": "Registros actuales por bounded context",
+      "risk-title": "Resumen de Riesgos",
+      "risk-subtitle": "Elementos que pueden requerir atención operativa",
+      "staff": "Personal",
+      "products": "Productos",
+      "raw-materials": "Materias primas",
+      "equipment": "Equipos",
+      "batches": "Lotes",
+      "no-data": "Sin datos",
+      "low-stock": "Stock bajo",
+      "maintenance": "Mantenimiento",
+      "critical-alerts": "Alertas críticas",
+      "critical-kpis": "KPIs críticos",
+      "anomalies": "Anomalías"
+    },
+    "attention": {
+      "title": "Requiere Atención",
+      "subtitle": "Señales prioritarias de tus bounded contexts",
+      "low-stock-materials": "Materias primas con stock bajo",
+      "equipment-maintenance": "Equipos que requieren mantenimiento",
+      "critical-compliance-alerts": "Alertas críticas de cumplimiento",
+      "telemetry-anomalies": "Anomalías de telemetría",
+      "subscription-required": "Suscripción requerida",
+      "pending": "{{count}} pendientes",
+      "empty-title": "Sin problemas urgentes",
+      "empty-subtitle": "Tus señales operativas se ven estables."
+    },
+    "telemetry": {
+      "title": "Telemetría en Vivo",
+      "subtitle": "Última señal de monitoreo del equipo",
+      "connection-status": "Estado de Conexión",
+      "measurements": "Mediciones",
+      "anomalies": "Anomalías",
+      "at-risk-kpis": "KPIs en riesgo"
+    },
+    "subscription": {
+      "title": "Suscripción y Facturación",
+      "subtitle": "Administra tu plan actual y el acceso de pago.",
+      "current-status": "Estado Actual",
+      "active": "Activa",
+      "inactive": "Inactiva",
+      "payments": "Pagos",
+      "plan": "Plan",
+      "billing": "Facturación",
+      "plans": "Planes"
+    },
+    "quick-actions": {
+      "laboratory": "Laboratorio",
+      "equipment": "Equipos",
+      "batches": "Lotes",
+      "alerts": "Alertas",
+      "reports": "Reportes",
+      "tracking": "Tracking",
+      "subscription": "Suscripción"
+    }
+  },
+  "subscription": {
+    "plans": {
+      "title": "Planes de Suscripción",
+      "subtitle": "Elige el plan que mejor se adapte a las operaciones de tu laboratorio.",
+      "current-plan": "Plan Actual",
+      "recommended": "Recomendado",
+      "monthly": "Mensual",
+      "yearly": "Anual",
+      "max-users": "Hasta {{count}} usuarios",
+      "max-equipment": "Hasta {{count}} equipos registrados",
+      "features": "Características Incluidas",
+      "select": "Seleccionar Plan",
+      "selected": "Seleccionado",
+      "continue": "Continuar al Pago",
+      "empty": "No hay planes de suscripción disponibles actualmente."
+    },
+    "billing-period": {
+      "monthly": "Mensual",
+      "yearly": "Anual"
+    },
+    "checkout": {
+      "title": "Pago",
+      "subtitle": "Revisa el plan seleccionado antes de continuar con el pago.",
+      "selected-plan": "Plan Seleccionado",
+      "plan-code": "Código del Plan",
+      "billing-period": "Periodo de Facturación",
+      "amount": "Monto",
+      "continue-payment": "Continuar al Pago",
+      "change-plan": "Cambiar Plan",
+      "no-plan-title": "No hay un plan seleccionado",
+      "no-plan-subtitle": "Selecciona un plan de suscripción antes de iniciar el pago.",
+      "go-plans": "Ver Planes"
+    },
+    "payment-success": {
+      "title": "Pago Exitoso",
+      "subtitle": "El pago de tu suscripción se completó correctamente.",
+      "go-dashboard": "Ir al Dashboard",
+      "view-billing": "Ver Facturación"
+    },
+    "payment-cancel": {
+      "title": "Pago Cancelado",
+      "subtitle": "El proceso de pago fue cancelado. Puedes intentarlo nuevamente cuando estés listo.",
+      "try-again": "Intentar de Nuevo",
+      "view-plans": "Ver Planes"
+    },
+    "billing": {
+      "title": "Resumen de Facturación",
+      "subtitle": "Revisa tu suscripción activa y el historial de pagos.",
+      "current-subscription": "Suscripción Actual",
+      "no-active-subscription": "No hay una suscripción activa",
+      "no-active-subscription-desc": "Elige un plan para activar la facturación de tu laboratorio.",
+      "choose-plan": "Elegir Plan",
+      "change-plan": "Cambiar Plan",
+      "plan": "Plan",
+      "plan-id": "ID del Plan",
+      "status": "Estado",
+      "start-date": "Fecha de Inicio",
+      "started-at": "Inició El",
+      "end-date": "Fecha de Fin",
+      "period-ends": "Fin del Periodo",
+      "payments-title": "Historial de Pagos",
+      "payment-history": "Historial de Pagos",
+      "empty-payments": "Aún no se han registrado pagos.",
+      "no-payments": "Aún no se han registrado pagos.",
+      "no-subscription": "No se encontró una suscripción activa.",
+      "table": {
+        "date": "Fecha",
+        "amount": "Monto",
+        "status": "Estado",
+        "provider": "Proveedor",
+        "reference": "Referencia"
+      }
+    },
+    "status": {
+      "ACTIVE": "Activa",
+      "INACTIVE": "Inactiva",
+      "CANCELLED": "Cancelada",
+      "EXPIRED": "Expirada",
+      "PAST_DUE": "Vencida",
+      "active": "Activa",
+      "inactive": "Inactiva",
+      "cancelled": "Cancelada",
+      "expired": "Expirada",
+      "past_due": "Vencida"
+    },
+    "payment-status": {
+      "PENDING": "Pendiente",
+      "PAID": "Pagado",
+      "FAILED": "Fallido",
+      "CANCELLED": "Cancelado",
+      "REFUNDED": "Reembolsado",
+      "pending": "Pendiente",
+      "paid": "Pagado",
+      "failed": "Fallido",
+      "cancelled": "Cancelado",
+      "refunded": "Reembolsado"
+    },
+    "payments": {
+      "title": "Pagos",
+      "date": "Fecha",
+      "amount": "Monto",
+      "currency": "Moneda",
+      "provider": "Proveedor",
+      "reference": "Referencia",
+      "status": "Estado",
+      "paid-at": "Pagado El"
+    },
+    "errors": {
+      "load-plans": "No se pudieron cargar los planes de suscripción.",
+      "load-current": "No se pudo cargar la suscripción actual.",
+      "load-payments": "No se pudo cargar el historial de pagos.",
+      "checkout": "No se pudo crear la sesión de pago."
+    },
+    "messages": {
+      "checkout-created": "La sesión de pago se creó correctamente."
+    }
+  },
+  "ca-compliance": {
+    "status": {
+      "compliant": "Conforme",
+      "non-compliant": "No conforme"
+    }
   },
   "ca-alerts": {
     "subtitle": "Monitoreo en tiempo real de desviaciones BPM",
@@ -82,22 +356,23 @@
       "critical": "Desviaciones Críticas"
     },
     "fields": {
-      "timestamp": "Fecha / Hora",
-      "parameter": "Parámetro Desviado",
       "severity": "Severidad",
-      "equipment": "Equipo",
       "recorded": "Valor Registrado",
-      "threshold": "Límite Tolerado",
+      "threshold": "Valor Límite",
+      "equipment": "Equipo",
       "batch": "Lote",
-      "minimum-severity": "Severidad Mínima"
+      "resolution-notes": "Notas de Resolución",
+      "description": "Descripción"
     },
     "severity": {
+      "low": "Baja",
       "info": "Informativo",
       "warning": "Advertencia",
       "critical": "Crítico"
     },
     "status": {
       "unresolved": "No Resuelto",
+      "acknowledged": "Reconocida",
       "resolved": "Resuelto",
       "ignored": "Ignorado"
     },
@@ -141,6 +416,7 @@
     },
     "status": {
       "pending": "Pendiente",
+      "in_progress": "En Progreso",
       "in-progress": "En Progreso",
       "released": "Liberado",
       "rejected": "Rechazado",
@@ -149,7 +425,91 @@
     "actions": {
       "release": "Liberar Lote",
       "reject": "Rechazar Lote",
-      "view": "Ver Trazabilidad"
+      "view": "Ver Trazabilidad",
+      "view-detail": "Ver Detalle del Lote"
+    }
+  },
+  "batch-form": {
+    "title": "Crear Lote de Producción",
+    "subtitle": "Registra un nuevo ciclo de fabricación para un producto farmacéutico.",
+    "fields": {
+      "product": "Producto Farmacéutico",
+      "batch-number": "Número de Lote",
+      "start-date": "Fecha de Inicio",
+      "quantity": "Cantidad",
+      "unit": "Unidad",
+      "notes": "Notas BPM"
+    },
+    "placeholders": {
+      "batch-number": "LOT-2026-001",
+      "notes": "Agrega observaciones de producción, calidad o instrucciones BPM."
+    },
+    "hints": {
+      "batch-number": "Formato: LOT-YYYY-NNN"
+    },
+    "errors": {
+      "batch-number-format": "El número de lote debe seguir el formato LOT-YYYY-NNN.",
+      "quantity-min": "La cantidad debe ser mayor que 0."
+    }
+  },
+  "batch-detail": {
+    "title": "Detalle del Lote",
+    "tabs": {
+      "general": "Información General",
+      "materials": "Materias Primas Usadas"
+    },
+    "notes": "Notas BPM",
+    "no-notes": "No hay notas registradas para este lote."
+  },
+  "batch-release": {
+    "title": "Liberar Lote",
+    "subtitle": "Proceso de liberación conforme a BPM - ID: {{batchId}}",
+    "fields": {
+      "release-date": "Fecha de Liberación",
+      "notes": "Notas de Liberación de Calidad"
+    },
+    "placeholders": {
+      "notes": "Ingrese las conclusiones del análisis de calidad y la justificación de liberación."
+    },
+    "errors": {
+      "notes-minlength": "Ingrese al menos 10 caracteres para el reporte de liberación."
+    },
+    "actions": {
+      "submit": "Liberar Lote"
+    }
+  },
+  "batch-reject": {
+    "title": "Rechazar Lote",
+    "subtitle": "Proceso de rechazo por no conformidad - ID: {{batchId}}",
+    "fields": {
+      "rejection-date": "Fecha de Rechazo",
+      "reason": "Motivo de Rechazo"
+    },
+    "placeholders": {
+      "reason": "Describa detalladamente la desviación de calidad detectada."
+    },
+    "errors": {
+      "reason-minlength": "El motivo debe tener al menos 15 caracteres para trazabilidad de auditoría."
+    },
+    "actions": {
+      "submit": "Rechazar Lote"
+    }
+  },
+  "batch-usage": {
+    "title": "Registrar Uso de Materia Prima",
+    "history-title": "Historial de Uso de Materias Primas",
+    "empty": "No se ha registrado uso de materias primas para este lote.",
+    "fields": {
+      "raw-material": "Materia Prima",
+      "stock": "Stock",
+      "quantity-used": "Cantidad Usada",
+      "usage-date": "Fecha de Uso"
+    },
+    "actions": {
+      "add": "Agregar Material"
+    },
+    "errors": {
+      "quantity-min": "La cantidad usada debe ser mayor que 0."
     }
   },
   "equipment-list": {
@@ -163,6 +523,9 @@
       "model": "Modelo",
       "serial": "Número de Serie",
       "status": "Estado"
+    },
+    "actions": {
+      "view-detail": "Ver detalle del equipo"
     }
   },
   "equipment-form": {
@@ -172,6 +535,10 @@
       "name": "Ej. Autoclave Estándar",
       "model": "Ej. RX-200",
       "serial": "Ej. SN-987654321"
+    },
+    "errors": {
+      "name-minlength": "El nombre del equipo debe tener al menos 3 caracteres",
+      "serial-pattern": "Solo se permiten letras, números y guiones"
     }
   },
   "equipment-detail": {
@@ -180,16 +547,25 @@
       "general": "Información General",
       "bpm": "Configuración BPM",
       "maintenance": "Mantenimiento"
+    },
+    "fields": {
+      "sensor": "ID Externo del Sensor",
+      "created-at": "Creado En"
     }
   },
   "bpm-config": {
-    "title": "Configuración Parámetros BPM",
+    "title": "Configuración de Parámetros BPM",
     "subtitle": "Establece los rangos de tolerancia para el monitoreo de calidad",
+    "empty": "No hay parámetros BPM configurados para este equipo.",
     "fields": {
       "parameter": "Nombre del Parámetro",
       "min": "Valor Mínimo",
       "max": "Valor Máximo",
       "unit": "Unidad de Medida"
+    },
+    "placeholders": {
+      "parameter": "Ej. Temperatura Interna",
+      "unit": "Ej. °C, %, bar, RPM"
     }
   },
   "maintenance-history": {
@@ -212,7 +588,15 @@
   },
   "maintenance-form": {
     "title": "Registro de Actividad Técnica",
-    "subtitle": "Completa los detalles de la intervención realizada"
+    "subtitle": "Completa los detalles de la intervención realizada",
+    "placeholders": {
+      "technician": "Nombre del técnico",
+      "description": "Describe la actividad de mantenimiento"
+    },
+    "errors": {
+      "technician-minlength": "El nombre del técnico debe tener al menos 3 caracteres",
+      "description-maxlength": "La descripción no puede exceder los 500 caracteres"
+    }
   },
   "equipment-alert": {
     "title": "Alertas de Calibración",
@@ -235,6 +619,16 @@
     "phone": "Teléfono de Contacto",
     "regulations": "Regulaciones Aplicables",
     "edit": "Editar Perfil"
+  },
+  "lab-form": {
+    "title": "Crear Laboratorio",
+    "subtitle": "Registra un nuevo perfil de laboratorio en QualiTrack.",
+    "name": "Nombre del Laboratorio",
+    "ruc": "RUC",
+    "address": "Dirección Física",
+    "phone": "Teléfono de Contacto",
+    "regulations": "Regulaciones Aplicables",
+    "submit": "Crear Laboratorio"
   },
   "staff-list": {
     "title": "Gestión de Personal",
@@ -373,7 +767,13 @@
       "OPERATIONAL": "Operativo",
       "WARNING": "Advertencia",
       "CRITICAL": "Crítico",
-      "OFFLINE": "Desconectado"
+      "OFFLINE": "Desconectado",
+      "operational": "Operativo",
+      "warning": "Advertencia",
+      "critical": "Crítico",
+      "offline": "Desconectado",
+      "unknown-equipment": "Equipo desconocido",
+      "waiting-telemetry": "Esperando telemetría..."
     },
     "dashboard": {
       "title": "Panel de Telemetría",

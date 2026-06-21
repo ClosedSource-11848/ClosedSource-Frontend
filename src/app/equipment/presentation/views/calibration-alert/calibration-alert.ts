@@ -6,21 +6,23 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { EquipmentStore } from '../../../application/equipment.store';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
+import { EquipmentStore } from '../../../application/equipment.store';
+
 /**
- * Component responsible for displaying equipment calibration alerts.
+ * Component responsible for displaying equipment calibration and maintenance alerts.
  *
  * @remarks
- * This standalone Angular component is used to present equipment that may
- * require calibration or maintenance attention. It consumes the EquipmentStore
- * to access equipment state, especially computed selectors related to equipment
- * status.
+ * This standalone Angular component presents equipment that may require
+ * calibration, maintenance, or technical attention.
  *
- * The component belongs to the equipment management feature and is mainly
- * intended for alerting users about equipment that should not be considered
- * fully operational until it is reviewed, calibrated, or maintained.
+ * It consumes EquipmentStore to access computed selectors related to equipment
+ * operational status, especially equipment returned by needsMaintenance.
+ *
+ * The component belongs to the equipment management feature and is intended to
+ * warn users about equipment that should not be considered fully operational
+ * until it is reviewed, calibrated, or maintained.
  *
  * Angular Material modules are used to display the alert content using cards,
  * lists, buttons, icons, and tooltips.
@@ -55,7 +57,7 @@ export class CalibrationAlert {
    * loading states, success messages, and error messages.
    *
    * In this component, it is mainly used to obtain equipment that requires
-   * calibration or maintenance attention through the store selectors.
+   * calibration or maintenance attention through the needsMaintenance selector.
    */
   protected readonly store = inject(EquipmentStore);
 }

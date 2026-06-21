@@ -3,7 +3,17 @@
     "title": "We care about accuracy, we ensure quality.",
     "content": "Advanced data management for high-stakes operational environments. Ensure total compliance and laboratory-grade accuracy."
   },
+  "auth": {
+    "already-have-account": "Already have an account?",
+    "sign-in": "Sign In",
+    "or-create-account": "Or create an account"
+  },
   "iam": {
+    "auth": {
+      "already-have-account": "Already have an account?",
+      "sign-in": "Sign In",
+      "or-create-account": "Or create an account"
+    },
     "sign-in": {
       "title": "Sign In",
       "subtitle": "Welcome back to QualiTrack.",
@@ -12,7 +22,15 @@
       "password": "Password",
       "password-placeholder": "Enter your password",
       "button": "Sign In",
-      "no-account": "Don't have an account?"
+      "no-account": "Don't have an account?",
+      "show-password": "Show password",
+      "hide-password": "Hide password",
+      "errors": {
+        "username-required": "Username is required",
+        "username-minlength": "Username must be at least 3 characters",
+        "password-required": "Password is required",
+        "password-minlength": "Password must be at least 6 characters"
+      }
     },
     "sign-up": {
       "title": "Create Account",
@@ -25,15 +43,28 @@
       "confirm-password-placeholder": "Confirm your password",
       "mode-label": "Registration Mode",
       "register-as": "Register as {{role}}",
+      "already-have-account": "Already have an account?",
+      "show-password": "Show password",
+      "hide-password": "Hide password",
       "roles": {
         "manager": "QA Manager / Supervisor",
         "operator": "Lab Operator"
+      },
+      "errors": {
+        "username-required": "Username is required",
+        "username-minlength": "Username must be at least 3 characters",
+        "password-required": "Password is required",
+        "password-minlength": "Password must be at least 6 characters",
+        "password-strength": "Password must contain letters and numbers",
+        "confirm-password-required": "Confirm password is required",
+        "password-mismatch": "Passwords do not match"
       }
     }
   },
   "common": {
     "save": "Save Changes",
     "cancel": "Cancel",
+    "back": "Back",
     "register": "Register",
     "search": "Search...",
     "status": "Status",
@@ -42,7 +73,6 @@
     "required": "This field is required",
     "invalidEmail": "Please enter a valid email",
     "minZero": "Value must be at least 0",
-    "actions": "Actions",
     "status-loading": "Loading data...",
     "all": "All",
     "clear": "Clear Filters",
@@ -50,7 +80,23 @@
     "download": "Download",
     "export": "Export",
     "format": "Format",
-    "date-range": "Date Range"
+    "date-range": "Date Range",
+    "errors": {
+      "required": "This field is required",
+      "invalid-email": "Please enter a valid email",
+      "min-zero": "Value must be at least 0"
+    },
+    "actions": {
+      "label": "Actions",
+      "save": "Save",
+      "cancel": "Cancel",
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete",
+      "register": "Register",
+      "search": "Search",
+      "refresh": "Refresh"
+    }
   },
   "status": {
     "ON_TRACK": "On Track",
@@ -68,10 +114,238 @@
     "home": "Home",
     "dashboard": "Dashboard",
     "batches": "Batch Management",
+    "batch-list": "Production Batches",
+    "batch-form": "Create Batch",
     "equipment": "Equipment",
+    "equipment-list": "Equipment Catalog",
+    "register-equipment": "Register Equipment",
     "alerts": "Compliance Alerts",
+    "alert-dashboard": "Alert Dashboard",
+    "alert-history": "Alert History",
+    "notification-settings": "Notification Settings",
     "reports": "Reports & KPIs",
-    "laboratory": "Laboratory"
+    "kpi-dashboard": "KPI Dashboard",
+    "deviation-trends": "Deviation Trends",
+    "report-generator": "Report Generator",
+    "audit-log": "Audit Log",
+    "laboratory": "Laboratory",
+    "lab-profile": "Laboratory Profile",
+    "lab-form": "Create Laboratory",
+    "staff-list": "Personnel Management",
+    "staff-form": "Register Staff Member",
+    "product-catalog": "Pharmaceutical Product Catalog",
+    "product-form": "Register Product",
+    "raw-material-list": "Raw Materials Inventory",
+    "raw-material-form": "Register Raw Material",
+    "tracking": "Tracking & Telemetry",
+    "tracking-dashboard": "Telemetry Dashboard",
+    "tracking-history": "Telemetry History",
+    "tracking-analysis": "Telemetry Analysis",
+    "subscription": "Subscription & Billing"
+  },
+  "dashboard": {
+    "command-center": "QualiTrack Command Center",
+    "fallback-title": "Laboratory Operations",
+    "subtitle": "Operational overview across laboratory, equipment, batches, compliance, reports, telemetry, and subscription status.",
+    "overall-health": "Overall Health",
+    "health": {
+      "healthy": "Healthy",
+      "attention": "Needs attention",
+      "critical": "Critical"
+    },
+    "cards": {
+      "equipment": "Equipment",
+      "batches": "Batches",
+      "alerts": "Alerts",
+      "raw-materials": "Raw Materials",
+      "subscription": "Subscription",
+      "operational": "{{count}} operational",
+      "in-progress": "{{count}} in progress",
+      "critical": "{{count}} critical",
+      "low-stock": "{{count}} low stock",
+      "active-subscription": "Active plan",
+      "no-subscription": "No active plan"
+    },
+    "charts": {
+      "distribution-title": "Operational Distribution",
+      "distribution-subtitle": "Current records across bounded contexts",
+      "risk-title": "Risk Overview",
+      "risk-subtitle": "Items that may require operational attention",
+      "staff": "Staff",
+      "products": "Products",
+      "raw-materials": "Raw materials",
+      "equipment": "Equipment",
+      "batches": "Batches",
+      "no-data": "No data",
+      "low-stock": "Low stock",
+      "maintenance": "Maintenance",
+      "critical-alerts": "Critical alerts",
+      "critical-kpis": "Critical KPIs",
+      "anomalies": "Anomalies"
+    },
+    "attention": {
+      "title": "Attention Needed",
+      "subtitle": "Priority signals from your bounded contexts",
+      "low-stock-materials": "Low stock materials",
+      "equipment-maintenance": "Equipment needing maintenance",
+      "critical-compliance-alerts": "Critical compliance alerts",
+      "telemetry-anomalies": "Telemetry anomalies",
+      "subscription-required": "Subscription required",
+      "pending": "{{count}} pending",
+      "empty-title": "No urgent issues",
+      "empty-subtitle": "Your operational signals look stable."
+    },
+    "telemetry": {
+      "title": "Live Telemetry",
+      "subtitle": "Latest equipment monitoring signal",
+      "connection-status": "Connection Status",
+      "measurements": "Measurements",
+      "anomalies": "Anomalies",
+      "at-risk-kpis": "At-risk KPIs"
+    },
+    "subscription": {
+      "title": "Subscription & Billing",
+      "subtitle": "Manage your current plan and payment access.",
+      "current-status": "Current Status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "payments": "Payments",
+      "plan": "Plan",
+      "billing": "Billing",
+      "plans": "Plans"
+    },
+    "quick-actions": {
+      "laboratory": "Laboratory",
+      "equipment": "Equipment",
+      "batches": "Batches",
+      "alerts": "Alerts",
+      "reports": "Reports",
+      "tracking": "Tracking",
+      "subscription": "Subscription"
+    }
+  },
+  "subscription": {
+    "plans": {
+      "title": "Subscription Plans",
+      "subtitle": "Choose the plan that fits your laboratory operations.",
+      "current-plan": "Current Plan",
+      "recommended": "Recommended",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "max-users": "Up to {{count}} users",
+      "max-equipment": "Up to {{count}} equipment records",
+      "features": "Included Features",
+      "select": "Select Plan",
+      "selected": "Selected",
+      "continue": "Continue to Checkout",
+      "empty": "No subscription plans are currently available."
+    },
+    "billing-period": {
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "checkout": {
+      "title": "Checkout",
+      "subtitle": "Review your selected plan before continuing to payment.",
+      "selected-plan": "Selected Plan",
+      "plan-code": "Plan Code",
+      "billing-period": "Billing Period",
+      "amount": "Amount",
+      "continue-payment": "Continue to Payment",
+      "change-plan": "Change Plan",
+      "no-plan-title": "No plan selected",
+      "no-plan-subtitle": "Select a subscription plan before starting checkout.",
+      "go-plans": "View Plans"
+    },
+    "payment-success": {
+      "title": "Payment Successful",
+      "subtitle": "Your subscription payment was completed successfully.",
+      "go-dashboard": "Go to Dashboard",
+      "view-billing": "View Billing"
+    },
+    "payment-cancel": {
+      "title": "Payment Cancelled",
+      "subtitle": "Your payment process was cancelled. You can try again whenever you are ready.",
+      "try-again": "Try Again",
+      "view-plans": "View Plans"
+    },
+    "billing": {
+      "title": "Billing Summary",
+      "subtitle": "Review your active subscription and payment history.",
+      "current-subscription": "Current Subscription",
+      "no-active-subscription": "No active subscription",
+      "no-active-subscription-desc": "Choose a plan to activate billing for your laboratory.",
+      "choose-plan": "Choose Plan",
+      "change-plan": "Change Plan",
+      "plan": "Plan",
+      "plan-id": "Plan ID",
+      "status": "Status",
+      "start-date": "Start Date",
+      "started-at": "Started At",
+      "end-date": "End Date",
+      "period-ends": "Period Ends",
+      "payments-title": "Payment History",
+      "payment-history": "Payment History",
+      "empty-payments": "No payments have been registered yet.",
+      "no-payments": "No payments have been registered yet.",
+      "no-subscription": "No active subscription found.",
+      "table": {
+        "date": "Date",
+        "amount": "Amount",
+        "status": "Status",
+        "provider": "Provider",
+        "reference": "Reference"
+      }
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive",
+      "CANCELLED": "Cancelled",
+      "EXPIRED": "Expired",
+      "PAST_DUE": "Past Due",
+      "active": "Active",
+      "inactive": "Inactive",
+      "cancelled": "Cancelled",
+      "expired": "Expired",
+      "past_due": "Past Due"
+    },
+    "payment-status": {
+      "PENDING": "Pending",
+      "PAID": "Paid",
+      "FAILED": "Failed",
+      "CANCELLED": "Cancelled",
+      "REFUNDED": "Refunded",
+      "pending": "Pending",
+      "paid": "Paid",
+      "failed": "Failed",
+      "cancelled": "Cancelled",
+      "refunded": "Refunded"
+    },
+    "payments": {
+      "title": "Payments",
+      "date": "Date",
+      "amount": "Amount",
+      "currency": "Currency",
+      "provider": "Provider",
+      "reference": "Reference",
+      "status": "Status",
+      "paid-at": "Paid At"
+    },
+    "errors": {
+      "load-plans": "Failed to load subscription plans.",
+      "load-current": "Failed to load current subscription.",
+      "load-payments": "Failed to load payment history.",
+      "checkout": "Failed to create checkout session."
+    },
+    "messages": {
+      "checkout-created": "Checkout session created successfully."
+    }
+  },
+  "ca-compliance": {
+    "status": {
+      "compliant": "Compliant",
+      "non-compliant": "Non-compliant"
+    }
   },
   "ca-alerts": {
     "subtitle": "Real-time monitoring of BPM deviations",
@@ -82,22 +356,23 @@
       "critical": "Critical Deviations"
     },
     "fields": {
-      "timestamp": "Date / Time",
-      "parameter": "Deviated Parameter",
       "severity": "Severity",
-      "equipment": "Equipment",
       "recorded": "Recorded Value",
-      "threshold": "Threshold Limit",
+      "threshold": "Threshold Value",
+      "equipment": "Equipment",
       "batch": "Batch",
-      "minimum-severity": "Minimum Severity"
+      "resolution-notes": "Resolution Notes",
+      "description": "Description"
     },
     "severity": {
+      "low": "Low",
       "info": "Info",
       "warning": "Warning",
       "critical": "Critical"
     },
     "status": {
       "unresolved": "Unresolved",
+      "acknowledged": "Acknowledged",
       "resolved": "Resolved",
       "ignored": "Ignored"
     },
@@ -141,6 +416,7 @@
     },
     "status": {
       "pending": "Pending",
+      "in_progress": "In Progress",
       "in-progress": "In Progress",
       "released": "Released",
       "rejected": "Rejected",
@@ -149,7 +425,91 @@
     "actions": {
       "release": "Release Batch",
       "reject": "Reject Batch",
-      "view": "View Traceability"
+      "view": "View Traceability",
+      "view-detail": "View Batch Detail"
+    }
+  },
+  "batch-form": {
+    "title": "Create Production Batch",
+    "subtitle": "Register a new manufacturing cycle for a pharmaceutical product.",
+    "fields": {
+      "product": "Pharmaceutical Product",
+      "batch-number": "Batch Number",
+      "start-date": "Start Date",
+      "quantity": "Quantity",
+      "unit": "Unit",
+      "notes": "BPM Notes"
+    },
+    "placeholders": {
+      "batch-number": "LOT-2026-001",
+      "notes": "Add production observations, quality notes, or BPM instructions."
+    },
+    "hints": {
+      "batch-number": "Format: LOT-YYYY-NNN"
+    },
+    "errors": {
+      "batch-number-format": "The batch number must follow the LOT-YYYY-NNN format.",
+      "quantity-min": "The quantity must be greater than 0."
+    }
+  },
+  "batch-detail": {
+    "title": "Batch Detail",
+    "tabs": {
+      "general": "General Information",
+      "materials": "Raw Materials Used"
+    },
+    "notes": "BPM Notes",
+    "no-notes": "No notes recorded for this batch."
+  },
+  "batch-release": {
+    "title": "Release Batch",
+    "subtitle": "BPM compliant release process - ID: {{batchId}}",
+    "fields": {
+      "release-date": "Release Date",
+      "notes": "Quality Release Notes"
+    },
+    "placeholders": {
+      "notes": "Enter the conclusions of the quality analysis and release justification."
+    },
+    "errors": {
+      "notes-minlength": "Enter at least 10 characters for the release report."
+    },
+    "actions": {
+      "submit": "Release Batch"
+    }
+  },
+  "batch-reject": {
+    "title": "Reject Batch",
+    "subtitle": "Non-compliant batch rejection process - ID: {{batchId}}",
+    "fields": {
+      "rejection-date": "Rejection Date",
+      "reason": "Rejection Reason"
+    },
+    "placeholders": {
+      "reason": "Describe the detected quality deviation in detail."
+    },
+    "errors": {
+      "reason-minlength": "The reason must contain at least 15 characters for audit traceability."
+    },
+    "actions": {
+      "submit": "Reject Batch"
+    }
+  },
+  "batch-usage": {
+    "title": "Register Raw Material Usage",
+    "history-title": "Raw Material Usage History",
+    "empty": "No raw material usage has been recorded for this batch.",
+    "fields": {
+      "raw-material": "Raw Material",
+      "stock": "Stock",
+      "quantity-used": "Quantity Used",
+      "usage-date": "Usage Date"
+    },
+    "actions": {
+      "add": "Add Material"
+    },
+    "errors": {
+      "quantity-min": "The quantity used must be greater than 0."
     }
   },
   "equipment-list": {
@@ -163,6 +523,9 @@
       "model": "Model",
       "serial": "Serial Number",
       "status": "Status"
+    },
+    "actions": {
+      "view-detail": "View equipment detail"
     }
   },
   "equipment-form": {
@@ -172,6 +535,10 @@
       "name": "e.g. Standard Autoclave",
       "model": "e.g. RX-200",
       "serial": "e.g. SN-987654321"
+    },
+    "errors": {
+      "name-minlength": "The equipment name must have at least 3 characters",
+      "serial-pattern": "Only letters, numbers, and hyphens are allowed"
     }
   },
   "equipment-detail": {
@@ -180,16 +547,25 @@
       "general": "General Info",
       "bpm": "BPM Config",
       "maintenance": "Maintenance"
+    },
+    "fields": {
+      "sensor": "External Sensor ID",
+      "created-at": "Created At"
     }
   },
   "bpm-config": {
     "title": "BPM Parameter Config",
     "subtitle": "Set tolerance ranges for quality monitoring",
+    "empty": "No BPM parameters configured for this equipment.",
     "fields": {
       "parameter": "Parameter Name",
       "min": "Min Value",
       "max": "Max Value",
       "unit": "Unit"
+    },
+    "placeholders": {
+      "parameter": "E.g. Internal Temperature",
+      "unit": "E.g. °C, %, bar, RPM"
     }
   },
   "maintenance-history": {
@@ -212,7 +588,15 @@
   },
   "maintenance-form": {
     "title": "Technical Activity Record",
-    "subtitle": "Complete the details of the intervention performed"
+    "subtitle": "Complete the details of the intervention performed",
+    "placeholders": {
+      "technician": "Technician name",
+      "description": "Describe the maintenance activity"
+    },
+    "errors": {
+      "technician-minlength": "The technician name must have at least 3 characters",
+      "description-maxlength": "The description cannot exceed 500 characters"
+    }
   },
   "equipment-alert": {
     "title": "Calibration Alerts",
@@ -235,6 +619,16 @@
     "phone": "Contact Phone",
     "regulations": "Applicable Regulations",
     "edit": "Edit Profile"
+  },
+  "lab-form": {
+    "title": "Create Laboratory",
+    "subtitle": "Register a new laboratory profile in QualiTrack.",
+    "name": "Laboratory Name",
+    "ruc": "RUC",
+    "address": "Physical Address",
+    "phone": "Contact Phone",
+    "regulations": "Applicable Regulations",
+    "submit": "Create Laboratory"
   },
   "staff-list": {
     "title": "Personnel Management",
@@ -373,7 +767,13 @@
       "OPERATIONAL": "Operational",
       "WARNING": "Warning",
       "CRITICAL": "Critical",
-      "OFFLINE": "Offline"
+      "OFFLINE": "Offline",
+      "operational": "Operational",
+      "warning": "Warning",
+      "critical": "Critical",
+      "offline": "Offline",
+      "unknown-equipment": "Unknown Equipment",
+      "waiting-telemetry": "Waiting for telemetry..."
     },
     "dashboard": {
       "title": "Telemetry Dashboard",

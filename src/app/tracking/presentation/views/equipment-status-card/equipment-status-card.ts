@@ -11,10 +11,10 @@ import { EquipmentStatus } from '../../../domain/model/equipment-status.entity';
  * Presentational component for displaying the real-time operational status of equipment.
  *
  * @remarks
- * Within the presentation layer, this acts as a "dumb" or pure UI component. It receives
- * the equipment's telemetry health data and identity via data bindings (Inputs) and is solely
- * responsible for rendering this information visually using Material Design cards.
- * It isolates UI rendering logic from data fetching or state management.
+ * This component belongs to the presentation layer and acts as a pure UI component.
+ * It receives equipment telemetry status data through inputs and renders the
+ * information using Angular Material components. It does not fetch data, mutate
+ * application state, or coordinate domain workflows.
  */
 @Component({
   selector: 'app-equipment-status-card',
@@ -25,19 +25,20 @@ import { EquipmentStatus } from '../../../domain/model/equipment-status.entity';
 })
 export class EquipmentStatusCardComponent {
   /**
-   * The current operational status record for the equipment.
-   * * @remarks
-   * Passed down from a smart parent component (container). It is marked as required
-   * because the card cannot render its primary metrics without this domain entity.
-   * Accepts `null` to handle asynchronous data loading states gracefully.
+   * Current operational status record for the equipment.
+   *
+   * @remarks
+   * This input is provided by a parent container component. It accepts `null`
+   * so the card can handle asynchronous loading states without breaking the UI.
    */
   @Input({ required: true }) statusRecord!: EquipmentStatus | null;
 
   /**
-   * The human-readable name, alias, or designation of the equipment.
-   * * @remarks
-   * Used for display purposes in the card header to give context to the user.
-   * Defaults to an empty string if not explicitly provided by the parent.
+   * Human-readable equipment name displayed in the card header.
+   *
+   * @remarks
+   * This value is purely presentational and helps users identify which equipment
+   * the telemetry status belongs to.
    */
   @Input() equipmentName: string = '';
 }

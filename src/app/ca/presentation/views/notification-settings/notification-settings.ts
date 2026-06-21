@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, effect } from '@angular/core';
+import { Component, OnInit, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -9,12 +9,13 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDivider } from '@angular/material/list';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { CaStore } from '../../../application/ca.store';
 import { UpdateNotificationPreferenceRequest } from '../../../infrastructure/notification-preference.request';
-import { MatDivider } from '@angular/material/list';
 import { IamStore } from '../../../../iam/application/iam.store';
+import { AlertSeverity } from '../../../domain/model/deviation-alert.entity';
 
 @Component({
   selector: 'app-notification-settings',
@@ -53,6 +54,7 @@ export class NotificationSettings implements OnInit {
 
     effect(() => {
       const pref = this.store.preference();
+
       if (pref) {
         this.settingsForm.patchValue(
           {
@@ -76,14 +78,20 @@ export class NotificationSettings implements OnInit {
       emailEnabled: [true],
       smsEnabled: [false],
       inAppEnabled: [true],
-      minimumSeverity: ['WARNING', Validators.required],
+      minimumSeverity: ['WARNING' as AlertSeverity, Validators.required],
     });
   }
 
   onSubmit(): void {
     if (this.settingsForm.invalid) return;
 
-    const request: UpdateNotificationPreferenceRequest = this.settingsForm.value;
+    const request: UpdateNotificationPreferenceRequest = {
+      emailEnabled: this.settingsForm.value.emailEnabled,
+      smsEnabled: this.settingsForm.value.smsEnabled,
+      inAppEnabled: this.settingsForm.value.inAppEnabled,
+      minimumSeverity: this.settingsForm.value.minimumSeverity as AlertSeverity,
+    };
+
     this.store.updateNotificationPreferences(this.currentUserId, request);
   }
 }

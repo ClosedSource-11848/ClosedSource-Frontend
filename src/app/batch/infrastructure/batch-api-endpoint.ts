@@ -50,6 +50,13 @@ export class BatchApiEndpoint extends BaseApiEndpoint<
     super(http, batchEndpointUrl, new BatchAssembler());
   }
 
+  getBatchById(batchId: number): Observable<Batch> {
+    return this.http.get<BatchResource>(`${this.endpointUrl}/${batchId}`).pipe(
+      map((resource) => this.assembler.toEntityFromResource(resource)),
+      catchError(this.handleError(`Failed to fetch batch ${batchId}`)),
+    );
+  }
+
   /**
    * Retrieves all production batches associated with a specific laboratory.
    *
@@ -62,8 +69,10 @@ export class BatchApiEndpoint extends BaseApiEndpoint<
    * infrastructure payload into an array of pure Batch domain entities.
    */
   getBatchesByLab(labId: number): Observable<Batch[]> {
-    return this.http.get<BatchesResponse>(`${this.endpointUrl}/lab/${labId}`).pipe(
-      map((response) => this.assembler.toEntitiesFromResponse(response)),
+    return this.http.get<BatchResource[]>(`${this.endpointUrl}?labId=${labId}`).pipe(
+      map((resources) =>
+        resources.map((resource) => this.assembler.toEntityFromResource(resource)),
+      ),
       catchError(this.handleError(`Failed to fetch batches for lab ${labId}`)),
     );
   }

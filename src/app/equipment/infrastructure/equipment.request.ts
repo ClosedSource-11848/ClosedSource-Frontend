@@ -30,8 +30,7 @@ export interface RegisterEquipmentRequest {
    * This value links the equipment registration request to a specific
    * laboratory within the system.
    */
-  labId: number;
-
+  laboratoryId: number;
   /**
    * The display name of the equipment.
    *

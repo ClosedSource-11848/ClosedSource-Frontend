@@ -6,6 +6,7 @@ import { BpmParameterConfig } from '../domain/model/bpm-parameter-config.entity'
 import { BpmConfigResource, BpmConfigsResponse } from './bpm-config-response';
 import { BpmConfigAssembler } from './bpm-config-assembler';
 import { ConfigureBpmRequest } from './bpm-config.request';
+import { MessageResource } from '../../shared/infrastructure/message-response';
 
 /**
  * The base endpoint URL used to access equipment-related API resources.
@@ -82,10 +83,14 @@ export class BpmConfigApiEndpoint extends BaseApiEndpoint<
    * method from BaseApiEndpoint.
    */
   getConfigByEquipment(equipmentId: number): Observable<BpmParameterConfig[]> {
-    return this.http.get<BpmConfigsResponse>(`${this.endpointUrl}/${equipmentId}/bpm-config`).pipe(
-      map((response) => this.assembler.toEntitiesFromResponse(response)),
-      catchError(this.handleError(`Failed to fetch BPM config for equipment ${equipmentId}`)),
-    );
+    return this.http
+      .get<BpmConfigResource[]>(`${this.endpointUrl}/${equipmentId}/bpm-configs`)
+      .pipe(
+        map((resources) =>
+          resources.map((resource) => this.assembler.toEntityFromResource(resource)),
+        ),
+        catchError(this.handleError(`Failed to fetch BPM config for equipment ${equipmentId}`)),
+      );
   }
 
   /**
@@ -102,10 +107,9 @@ export class BpmConfigApiEndpoint extends BaseApiEndpoint<
    * If the request fails, the error is handled using the inherited handleError
    * method from BaseApiEndpoint.
    */
-  configureBpm(request: ConfigureBpmRequest): Observable<BpmParameterConfig> {
-    return this.http.post<BpmConfigResource>(`${this.endpointUrl}/bpm-config`, request).pipe(
-      map((resource) => this.assembler.toEntityFromResource(resource)),
-      catchError(this.handleError('Failed to configure BPM parameters')),
-    );
+  configureBpm(request: ConfigureBpmRequest): Observable<MessageResource> {
+    return this.http
+      .post<MessageResource>(`${this.endpointUrl}/${request.equipmentId}/bpm-configs`, request)
+      .pipe(catchError(this.handleError('Failed to configure BPM parameters')));
   }
 }

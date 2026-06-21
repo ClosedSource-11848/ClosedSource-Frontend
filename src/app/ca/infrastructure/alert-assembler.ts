@@ -9,7 +9,7 @@ import { AlertResource, AlertsResponse } from './alert-response';
  * In DDD, this assembler is responsible for transforming between:
  * - {@link DeviationAlert} - Domain entity with manufacturing/quality logic
  * - {@link AlertResource} - Infrastructure resource for API communication
- * - {@link AlertsResponse} - Response envelope from batch operations
+ * - {@link AlertsResponse} - Response envelope from collection operations
  *
  * This ensures the domain layer remains decoupled from infrastructure concerns
  * like API response formats, field naming conventions, and serialization details.
@@ -28,8 +28,8 @@ import { AlertResource, AlertsResponse } from './alert-response';
 export class AlertAssembler implements BaseAssembler<
   DeviationAlert,
   AlertResource,
-  AlertsResponse>
-  {
+  AlertsResponse
+> {
   /**
    * Converts a collection response into an array of domain entities.
    *
@@ -42,6 +42,16 @@ export class AlertAssembler implements BaseAssembler<
    */
   toEntitiesFromResponse(response: AlertsResponse): DeviationAlert[] {
     return response.alerts.map((alert) => this.toEntityFromResource(alert));
+  }
+
+  /**
+   * Converts an array of resources into an array of domain entities.
+   *
+   * @param resources - Array of alert resources
+   * @returns Array of DeviationAlert domain entities
+   */
+  toEntitiesFromResources(resources: AlertResource[]): DeviationAlert[] {
+    return resources.map((alert) => this.toEntityFromResource(alert));
   }
 
   /**
@@ -93,6 +103,6 @@ export class AlertAssembler implements BaseAssembler<
       severity: entity.severity,
       status: entity.status,
       createdAt: entity.createdAt,
-    } as AlertResource;
+    };
   }
 }

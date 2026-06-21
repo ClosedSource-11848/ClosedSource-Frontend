@@ -1,7 +1,11 @@
 import { Routes } from '@angular/router';
 import { Home } from './shared/presentation/views/home/home';
+import { Layout } from './shared/presentation/components/layout/layout';
 
 const about = () => import('./shared/presentation/views/about/about').then((m) => m.About);
+
+const dashboard = () =>
+  import('./shared/presentation/views/dashboard/dashboard').then((m) => m.Dashboard);
 
 const pageNotFound = () =>
   import('./shared/presentation/views/page-not-found/page-not-found').then((m) => m.PageNotFound);
@@ -23,12 +27,19 @@ const raRoutes = () => import('./ra/presentation/ra-routes').then((m) => m.raRou
 const trackingRoutes = () =>
   import('./tracking/presentation/tracking-routes').then((m) => m.trackingRoutes);
 
+const subscriptionRoutes = () =>
+  import('./subscription/presentation/subscription-routes').then((m) => m.subscriptionRoutes);
 
 const baseTitle = 'QualiTrack';
 
 export const routes: Routes = [
   { path: 'home', component: Home, title: `Home - ${baseTitle}` },
   { path: 'about', loadComponent: about, title: `About - ${baseTitle}` },
+  {
+    path: 'dashboard',
+    component: Layout,
+    children: [{ path: '', loadComponent: dashboard, title: `Dashboard - ${baseTitle}` }],
+  },
   { path: 'iam', loadChildren: iamRoutes },
   { path: 'laboratories', loadChildren: laboratoryRoutes },
   { path: 'equipments', loadChildren: equipmentRoutes },
@@ -36,6 +47,7 @@ export const routes: Routes = [
   { path: 'alerts', loadChildren: caRoutes },
   { path: 'reports', loadChildren: raRoutes },
   { path: 'tracking', loadChildren: trackingRoutes },
+  { path: 'subscriptions', loadChildren: subscriptionRoutes },
 
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', loadComponent: pageNotFound, title: `Page Not Found - ${baseTitle}` },

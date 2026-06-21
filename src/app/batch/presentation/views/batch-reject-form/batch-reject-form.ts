@@ -12,7 +12,15 @@ import { BatchStore } from '../../../application/batch.store';
 import { RejectBatchCommand } from '../../../domain/model/reject-batch.command';
 
 /**
- * Component responsible for managing the batch rejection process.
+ * Component responsible for rejecting a production batch.
+ *
+ * @remarks
+ * This standalone presentation component reads the batch identifier from the
+ * route, collects rejection information through a reactive form, and sends a
+ * {@link RejectBatchCommand} to the batch application store.
+ *
+ * The rejection operation records a BPM/GMP-relevant justification when a batch
+ * fails quality control or cannot be released for distribution.
  */
 @Component({
   selector: 'app-batch-reject-form',
@@ -31,23 +39,38 @@ import { RejectBatchCommand } from '../../../domain/model/reject-batch.command';
   styleUrl: './batch-reject-form.css',
 })
 export class BatchRejectForm implements OnInit {
+  /**
+   * FormBuilder used to create and configure the reactive form.
+   */
   private readonly fb = inject(FormBuilder);
+
+  /**
+   * Activated route used to read the batch identifier from the URL.
+   */
   private readonly route = inject(ActivatedRoute);
+
+  /**
+   * Router used to return to the batch list after submitting the form.
+   */
   private readonly router = inject(Router);
+
+  /**
+   * Store responsible for batch lifecycle operations.
+   */
   protected readonly store = inject(BatchStore);
 
   /**
-   * Reactive form group for batch rejection data.
+   * Reactive form group for rejection data.
    */
-  rejectForm!: FormGroup;
+  protected rejectForm!: FormGroup;
 
   /**
-   * The unique numeric identifier of the batch to be rejected.
+   * Unique numeric identifier of the batch being rejected.
    */
-  batchId!: number;
+  protected batchId: number = 0;
 
   /**
-   * Initializes the component and sets up the rejection form.
+   * Lifecycle hook that initializes the rejection form.
    */
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -60,17 +83,17 @@ export class BatchRejectForm implements OnInit {
   }
 
   /**
-   * Processes the form submission to reject the batch.
+   * Submits the rejection command for the current batch.
    */
-  onSubmit(): void {
-    if (this.rejectForm.valid && this.batchId) {
-      const command: RejectBatchCommand = {
-        batchId: this.batchId,
-        ...this.rejectForm.value,
-      };
+  protected onSubmit(): void {
+    if (this.rejectForm.invalid || !this.batchId) return;
 
-      this.store.rejectBatch(this.batchId, command);
-      this.router.navigate(['/batches/batch-list']).then();
-    }
+    const command: RejectBatchCommand = {
+      rejectionDate: this.rejectForm.value.rejectionDate,
+      reason: this.rejectForm.value.reason,
+    };
+
+    this.store.rejectBatch(this.batchId, command);
+    this.router.navigate(['/batches/batch-list']).then();
   }
 }

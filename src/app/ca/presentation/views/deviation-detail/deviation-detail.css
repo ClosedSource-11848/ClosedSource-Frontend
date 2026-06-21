@@ -5,7 +5,6 @@
   padding: 24px;
 }
 
-
 .page-header {
   display: flex;
   align-items: center;
@@ -87,6 +86,14 @@
   font-weight: 600;
 }
 
+.resolution-form {
+  margin-top: 24px;
+}
+
+.full-width {
+  width: 100%;
+}
+
 .actions-container {
   padding: 16px;
   gap: 8px;
@@ -115,22 +122,20 @@
   font-weight: 500;
 }
 
-.critical, .unresolved {
+.critical,
+.unresolved {
   background-color: #fee2e2 !important;
   color: #b91c1c !important;
 }
 
-.warning {
+.warning,
+.acknowledged {
   background-color: #fef3c7 !important;
   color: #b45309 !important;
 }
 
-.info, .resolved {
+.low,
+.resolved {
   background-color: #e0e7ff !important;
   color: #4338ca !important;
-}
-
-.ignored {
-  background-color: #f1f5f9 !important;
-  color: #475569 !important;
 }

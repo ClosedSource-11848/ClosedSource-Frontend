@@ -37,10 +37,22 @@
       </mat-form-field>
 
       <div class="filter-actions">
-        <button mat-stroked-button (click)="clearFilters()" [disabled]="store.isLoading()">
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="clearFilters()"
+          [disabled]="store.isLoading() || !filters.equipmentId"
+        >
           {{ 'common.clear' | translate }}
         </button>
-        <button mat-flat-button color="primary" (click)="loadHistoryData()" [disabled]="store.isLoading() || !filters.equipmentId">
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          (click)="loadHistoryData()"
+          [disabled]="store.isLoading() || !filters.equipmentId"
+        >
           <mat-icon>search</mat-icon>
           {{ 'common.search' | translate }}
         </button>
@@ -71,7 +83,9 @@
 
       <ng-container matColumnDef="parameterName">
         <th mat-header-cell *matHeaderCellDef>{{ 'tracking.history.parameter' | translate }}</th>
-        <td mat-cell *matCellDef="let point" class="param-cell">{{ point.parameterName }}</td>
+        <td mat-cell *matCellDef="let point" class="param-cell">
+          {{ point.parameterName }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="recordedValue">
@@ -101,7 +115,12 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="catalog-row" [class.row-deviated]="row.isAnomaly"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns;"
+        class="catalog-row"
+        [class.row-deviated]="row.isAnomaly"
+      ></tr>
     </table>
 
     @if (!store.isLoading() && store.telemetryHistory().length === 0) {

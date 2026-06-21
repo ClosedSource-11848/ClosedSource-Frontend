@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TranslatePipe } from '@ngx-translate/core';
+
 import { EquipmentStore } from '../../../application/equipment.store';
 
 /**
@@ -15,9 +16,9 @@ import { EquipmentStore } from '../../../application/equipment.store';
  *
  * @remarks
  * This standalone Angular component shows the detail view of an equipment item.
- * It obtains the equipment identifier from the route, loads the related BPM
- * configuration, and retrieves the maintenance history associated with that
- * equipment.
+ * It obtains the equipment identifier from the route, loads the equipment by ID,
+ * loads the related BPM configuration, and retrieves the maintenance history
+ * associated with that equipment.
  *
  * The component interacts with the EquipmentStore to access equipment state,
  * BPM parameter configurations, maintenance records, loading state, and other
@@ -62,8 +63,9 @@ export class EquipmentDetail implements OnInit {
    * Store responsible for equipment-related state and operations.
    *
    * @remarks
-   * The store provides access to the equipment list, BPM configurations,
-   * maintenance history, loading state, error messages, and success messages.
+   * The store provides access to the equipment list, selected equipment,
+   * BPM configurations, maintenance history, loading state, error messages,
+   * and success messages.
    */
   protected readonly store = inject(EquipmentStore);
 
@@ -82,13 +84,19 @@ export class EquipmentDetail implements OnInit {
    * @remarks
    * During initialization, this method reads the equipment id from the route.
    * If the id exists, it stores the value in the equipmentId signal and then
-   * loads the BPM configuration and maintenance history for that equipment.
+   * loads the equipment by ID, BPM configuration, and maintenance history.
+   *
+   * Loading the equipment by ID allows the detail view to work even when the
+   * user enters the route directly without previously loading the equipment list.
    */
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
+
     if (idParam) {
       const id = Number(idParam);
+
       this.equipmentId.set(id);
+      this.store.loadEquipmentById(id);
       this.store.loadBpmConfig(id);
       this.store.loadMaintenanceHistory(id);
     }
@@ -97,15 +105,17 @@ export class EquipmentDetail implements OnInit {
   /**
    * Gets the equipment entity currently associated with this detail view.
    *
-   * @returns The matching equipment entity if found; otherwise, undefined.
+   * @returns The selected equipment if available, otherwise the matching item
+   * from the equipment list.
    *
    * @remarks
-   * This getter searches the equipment list from the store and returns the
-   * equipment whose identifier matches the current equipmentId signal.
-   *
-   * It is useful for displaying the selected equipment data in the template.
+   * This getter first checks the selected equipment loaded by ID. If no selected
+   * equipment is available, it falls back to searching the equipment list.
    */
   protected get currentEquipment() {
-    return this.store.equipmentList().find((e) => e.id === this.equipmentId());
+    return (
+      this.store.selectedEquipment() ??
+      this.store.equipmentList().find((equipment) => equipment.id === this.equipmentId())
+    );
   }
 }

@@ -108,17 +108,14 @@ table {
   color: #b91c1c !important;
 }
 
-.warning {
+.warning,
+.acknowledged {
   background-color: #fef3c7 !important;
   color: #b45309 !important;
 }
 
-.info, .resolved {
+.low,
+.resolved {
   background-color: #e0e7ff !important;
   color: #4338ca !important;
-}
-
-.ignored {
-  background-color: #f1f5f9 !important;
-  color: #475569 !important;
 }

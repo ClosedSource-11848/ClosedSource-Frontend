@@ -3,8 +3,8 @@
  *
  * @remarks
  * This interface represents the payload sent from the client application to the API
- * when initiating a batch report generation. It acts as the infrastructure-level
- * counterpart to the GenerateBatchReportCommand in the application layer.
+ * when initiating batch report generation. It mirrors the domain command while
+ * remaining an infrastructure-level HTTP contract.
  */
 export interface GenerateBatchReportRequest {
   /**
@@ -13,12 +13,12 @@ export interface GenerateBatchReportRequest {
   batchId: number;
 
   /**
-   * Flag indicating whether to include sensor and process telemetry data.
+   * Indicates whether sensor and process telemetry should be included.
    */
   includeTelemetry: boolean;
 
   /**
-   * Flag indicating whether to include logged deviation alerts.
+   * Indicates whether deviation alerts should be included.
    */
   includeDeviations: boolean;
 
@@ -28,7 +28,7 @@ export interface GenerateBatchReportRequest {
   format: 'PDF' | 'CSV';
 
   /**
-   * The numeric identifier of the user or system requesting the report.
+   * The numeric identifier of the user requesting the report.
    */
   requestedBy: number;
 }
@@ -37,23 +37,22 @@ export interface GenerateBatchReportRequest {
  * Data Transfer Object (DTO) for requesting a regulatory compliance report.
  *
  * @remarks
- * This interface defines the expected JSON payload from the client to initiate
- * the generation of a compliance audit report for a specific laboratory over a
- * defined time period.
+ * This interface defines the HTTP payload used to generate a compliance audit
+ * report for a specific laboratory over a defined period.
  */
 export interface GenerateComplianceReportRequest {
   /**
    * The unique numeric identifier of the laboratory to audit.
    */
-  labId: number;
+  laboratoryId: number;
 
   /**
-   * The start date and time of the reporting period (ISO string format).
+   * The start date and time of the reporting period.
    */
   startDate: string;
 
   /**
-   * The end date and time of the reporting period (ISO string format).
+   * The end date and time of the reporting period.
    */
   endDate: string;
 
@@ -63,7 +62,7 @@ export interface GenerateComplianceReportRequest {
   format: 'PDF' | 'CSV';
 
   /**
-   * The numeric identifier of the user or system requesting the report.
+   * The numeric identifier of the user requesting the report.
    */
   requestedBy: number;
 }
@@ -72,9 +71,8 @@ export interface GenerateComplianceReportRequest {
  * Data Transfer Object (DTO) for requesting the export of equipment logs.
  *
  * @remarks
- * This interface dictates the structure of the API request used to trigger
- * the extraction of historical maintenance and operational logs for a specific
- * piece of equipment.
+ * This interface represents the HTTP payload used to export historical audit
+ * or operational records for a specific piece of equipment.
  */
 export interface ExportEquipmentLogRequest {
   /**
@@ -83,22 +81,22 @@ export interface ExportEquipmentLogRequest {
   equipmentId: number;
 
   /**
-   * The start date and time of the logging period (ISO string format).
+   * The start date and time of the exported period.
    */
   startDate: string;
 
   /**
-   * The end date and time of the logging period (ISO string format).
+   * The end date and time of the exported period.
    */
   endDate: string;
 
   /**
-   * The requested output format for the exported logs.
+   * The requested output format for the exported file.
    */
   format: 'PDF' | 'CSV';
 
   /**
-   * The numeric identifier of the user or system requesting the export.
+   * The numeric identifier of the user requesting the export.
    */
   requestedBy: number;
 }

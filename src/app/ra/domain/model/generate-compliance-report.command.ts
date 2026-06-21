@@ -2,27 +2,22 @@
  * Command to trigger the generation of a regulatory compliance report for a laboratory.
  *
  * @remarks
- * In Domain-Driven Design, this interface represents a command pattern used
- * to request a compliance audit report. It specifies the target laboratory,
- * the time window for the report, the desired output format, and the requester's
- * identity.
- *
- * This command is processed by application services to gather audit trails
- * and compliance events for the specified laboratory.
+ * In Domain-Driven Design, this command represents the user's intent to generate
+ * a compliance audit document for a laboratory within a specific time window.
  */
 export interface GenerateComplianceReportCommand {
   /**
    * The unique numeric identifier of the laboratory.
    */
-  labId: number;
+  laboratoryId: number;
 
   /**
-   * The start date and time of the reporting period (ISO string format).
+   * The start date and time of the reporting period.
    */
   startDate: string;
 
   /**
-   * The end date and time of the reporting period (ISO string format).
+   * The end date and time of the reporting period.
    */
   endDate: string;
 
@@ -32,7 +27,7 @@ export interface GenerateComplianceReportCommand {
   format: 'PDF' | 'CSV';
 
   /**
-   * The numeric identifier of the user or system requesting the report.
+   * The numeric identifier of the user requesting the report.
    */
   requestedBy: number;
 }
