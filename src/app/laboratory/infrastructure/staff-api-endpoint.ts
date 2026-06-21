@@ -15,7 +15,7 @@ const staffEndpointUrl = `${environment.serverBasePath}${environment.laboratoryS
  * HTTP endpoint client for laboratory staff operations.
  *
  * @remarks
- * This endpoint handles staff listing, registration, and deactivation.
+ * This endpoint handles staff listing, registration, and status updates.
  */
 export class StaffApiEndpoint extends BaseApiEndpoint<
   StaffMember,
@@ -67,11 +67,14 @@ export class StaffApiEndpoint extends BaseApiEndpoint<
    * @returns Observable stream completing when the deactivation succeeds
    *
    * @remarks
-   * Maps to `PUT /staff/{staffId}/deactivation`.
+   * Maps to `PATCH /staff/{staffId}` with `{ active: false }`.
    */
   deactivateStaff(staffId: number): Observable<void> {
     return this.http
-      .put<void>(`${staffEndpointUrl}/${staffId}/deactivation`, {})
-      .pipe(catchError(this.handleError(`Failed to deactivate staff member ${staffId}`)));
+      .patch<MessageResource>(`${staffEndpointUrl}/${staffId}`, { active: false })
+      .pipe(
+        map(() => undefined),
+        catchError(this.handleError(`Failed to deactivate staff member ${staffId}`)),
+      );
   }
 }

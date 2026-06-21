@@ -9,60 +9,32 @@ import {
 } from './telemetry-history-response';
 import { TelemetryHistoryAssembler } from './telemetry-history-assembler';
 
-const telemetryHistoryEndpointUrl = `${environment.serverBasePath}${environment.trackingTelemetryEndpointPath}/history`;
+const equipmentsEndpointUrl = `${environment.serverBasePath}${environment.equipmentEndpointPath}`;
 
-/**
- * HTTP endpoint client for historical telemetry operations.
- *
- * @remarks
- * This endpoint retrieves historical telemetry points used by charts, anomaly
- * views, and tracking history screens.
- */
 export class TelemetryHistoryApiEndpoint extends BaseApiEndpoint<
   TelemetryHistoryPoint,
   TelemetryHistoryPointResource,
   TelemetryHistoryResponse,
   TelemetryHistoryAssembler
 > {
-  /**
-   * Creates a new TelemetryHistoryApiEndpoint instance.
-   *
-   * @param http - Angular HttpClient used to perform HTTP requests
-   */
   constructor(http: HttpClient) {
-    super(http, telemetryHistoryEndpointUrl, new TelemetryHistoryAssembler());
+    super(http, equipmentsEndpointUrl, new TelemetryHistoryAssembler());
   }
 
-  /**
-   * Retrieves telemetry history using optional filters.
-   *
-   * @param filters - Optional query filters
-   * @param filters.equipmentId - Numeric equipment identifier
-   * @param filters.from - Start timestamp in ISO string format
-   * @param filters.to - End timestamp in ISO string format
-   * @returns Observable stream emitting historical telemetry points
-   *
-   * @remarks
-   * The backend may return either a direct array or a response envelope containing
-   * a `historyPoints` property. This method supports both response styles.
-   */
-  getTelemetryHistory(filters?: {
-    equipmentId?: number;
+  getTelemetryHistory(filters: {
+    equipmentId: number;
     from?: string;
     to?: string;
   }): Observable<TelemetryHistoryPoint[]> {
     let params = new HttpParams();
 
-    if (filters) {
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          params = params.set(key, String(value));
-        }
-      });
-    }
+    if (filters.from) params = params.set('from', filters.from);
+    if (filters.to) params = params.set('to', filters.to);
 
     return this.http
-      .get<TelemetryHistoryResponse | TelemetryHistoryPointResource[]>(this.endpointUrl, { params })
+      .get<
+        TelemetryHistoryResponse | TelemetryHistoryPointResource[]
+      >(`${this.endpointUrl}/${filters.equipmentId}${environment.equipmentTelemetryHistoryEndpointPath}`, { params })
       .pipe(
         map((response) => {
           if (Array.isArray(response)) {
@@ -71,7 +43,11 @@ export class TelemetryHistoryApiEndpoint extends BaseApiEndpoint<
 
           return this.assembler.toEntitiesFromResponse(response);
         }),
-        catchError(this.handleError('Failed to fetch telemetry history')),
+        catchError(
+          this.handleError(
+            `Failed to fetch telemetry history for equipment ${filters.equipmentId}`,
+          ),
+        ),
       );
   }
 }

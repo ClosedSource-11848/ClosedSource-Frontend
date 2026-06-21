@@ -10,6 +10,7 @@ import { Payment } from '../domain/model/payment.entity';
 import { SubscriptionApiEndpoint } from './subscription-api-endpoint';
 import { CreateCheckoutSessionRequest } from './checkout.request';
 import { CheckoutSessionResource } from './checkout-response';
+import { UpdateSubscriptionStatusRequest } from './update-subscription-status.request';
 
 /**
  * HTTP API facade for the Subscription bounded context.
@@ -74,5 +75,12 @@ export class SubscriptionApi extends BaseApi {
     request: CreateCheckoutSessionRequest,
   ): Observable<CheckoutSessionResource> {
     return this.endpoint.createCheckoutSession(request);
+  }
+
+  cancelSubscription(
+    subscriptionId: number,
+    request: UpdateSubscriptionStatusRequest,
+  ): Observable<number> {
+    return this.endpoint.cancelSubscription(subscriptionId, request);
   }
 }
