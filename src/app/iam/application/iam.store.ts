@@ -22,6 +22,7 @@ export class IamStore {
   private readonly currentUsernameSignal = signal<string | null>(null);
   private readonly currentUserIdSignal = signal<number | null>(null);
   private readonly currentLaboratoryIdSignal = signal<number | null>(null);
+  private readonly currentRolesSignal = signal<string[]>([]);
   private readonly usersSignal = signal<User[]>([]);
   private readonly loadingUsers = signal<boolean>(false);
 
@@ -29,11 +30,38 @@ export class IamStore {
   readonly currentUsername = this.currentUsernameSignal.asReadonly();
   readonly currentUserId = this.currentUserIdSignal.asReadonly();
   readonly currentLaboratoryId = this.currentLaboratoryIdSignal.asReadonly();
+  readonly currentRoles = this.currentRolesSignal.asReadonly();
   readonly currentToken = computed(() => localStorage.getItem('token'));
   readonly users = this.usersSignal.asReadonly();
   readonly loading = this._loadingSignal.asReadonly();
   readonly error = this._errorSignal.asReadonly();
   readonly isLoadingUsers = this.loadingUsers.asReadonly();
+
+  readonly currentPrimaryRole = computed(() => {
+    const role = this.currentRoles()[0];
+
+    if (!role) return null;
+
+    return role
+      .replace('ROLE_', '')
+      .replace(/_/g, ' ')
+      .toLowerCase()
+      .replace(/\b\w/g, (letter) => letter.toUpperCase());
+  });
+
+  readonly currentUserInitials = computed(() => {
+    const username = this.currentUsername();
+
+    if (!username) return 'U';
+
+    return username
+      .trim()
+      .split(/\s+/)
+      .map((part) => part.charAt(0))
+      .join('')
+      .slice(0, 2)
+      .toUpperCase();
+  });
 
   constructor(private readonly iamApi: IamApi) {
     this.restoreSession();
@@ -80,6 +108,7 @@ export class IamStore {
         this.isSignedInSignal.set(true);
         this.currentUsernameSignal.set(resource.username);
         this.currentUserIdSignal.set(resource.id);
+        this.currentRolesSignal.set(resource.roles);
         this.finishRequest();
 
         if (resource.roles.includes('ROLE_QA_MANAGER')) {
@@ -150,6 +179,7 @@ export class IamStore {
     const userId = localStorage.getItem('userId');
     const username = localStorage.getItem('username');
     const laboratoryId = localStorage.getItem('laboratoryId');
+    const roles = localStorage.getItem('roles');
 
     if (!token || !userId) {
       this.clearSession();
@@ -160,6 +190,7 @@ export class IamStore {
     this.currentUserIdSignal.set(Number(userId));
     this.currentUsernameSignal.set(username);
     this.currentLaboratoryIdSignal.set(laboratoryId ? Number(laboratoryId) : null);
+    this.currentRolesSignal.set(roles ? JSON.parse(roles) : []);
   }
 
   private clearSession(): void {
@@ -173,6 +204,7 @@ export class IamStore {
     this.currentUsernameSignal.set(null);
     this.currentUserIdSignal.set(null);
     this.currentLaboratoryIdSignal.set(null);
+    this.currentRolesSignal.set([]);
   }
 
   private startRequest(): void {
