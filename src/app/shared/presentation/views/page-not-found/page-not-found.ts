@@ -1,32 +1,37 @@
+import { Location } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { MatButton } from '@angular/material/button';
+
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+
+import { IamStore } from '../../../../iam/application/iam.store';
+import { Toolbar } from '../../components/toolbar/toolbar';
 
 /**
- * @summary Vista de página no encontrada (404) de QualiTrack.
- * @remarks Se activa cuando el usuario navega a una ruta que no existe en
- * la aplicación. Muestra la ruta inválida y proporciona un botón para
- * redirigir al usuario a la vista de inicio. Utiliza ActivatedRoute para
- * obtener el segmento de URL que generó el error.
- * @author Ruiz Madrid, Billy Jake
+ * Page rendered when users navigate to an unknown route.
  */
 @Component({
   selector: 'app-page-not-found',
-  imports: [TranslatePipe, MatButton],
+  standalone: true,
+  imports: [RouterLink, TranslatePipe, MatButtonModule, MatIconModule, Toolbar],
   templateUrl: './page-not-found.html',
   styleUrl: './page-not-found.css',
 })
 export class PageNotFound implements OnInit {
-  protected invalidPath: string = '';
-  private route: ActivatedRoute = inject(ActivatedRoute);
-  private router: Router = inject(Router);
+  protected invalidPath = '';
+
+  protected readonly iamStore = inject(IamStore);
+
+  private readonly router = inject(Router);
+  private readonly location = inject(Location);
 
   ngOnInit(): void {
-    this.invalidPath = this.route.snapshot.url.map((url) => url.path).join('/');
+    this.invalidPath = this.router.url || '/';
   }
 
-  protected navigateToHome(): void {
-    this.router.navigate(['home']).then();
+  protected goBack(): void {
+    this.location.back();
   }
 }
