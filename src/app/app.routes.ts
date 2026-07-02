@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { Home } from './shared/presentation/views/home/home';
 import { Layout } from './shared/presentation/components/layout/layout';
+import { iamGuard } from './iam/infrastructure/iam-guard';
 
 const about = () => import('./shared/presentation/views/about/about').then((m) => m.About);
 
@@ -38,15 +39,16 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: Layout,
+    canActivate: [iamGuard],
     children: [{ path: '', loadComponent: dashboard, title: `Dashboard - ${baseTitle}` }],
   },
   { path: 'iam', loadChildren: iamRoutes },
-  { path: 'laboratories', loadChildren: laboratoryRoutes },
-  { path: 'equipments', loadChildren: equipmentRoutes },
-  { path: 'batches', loadChildren: batchRoutes },
-  { path: 'alerts', loadChildren: caRoutes },
-  { path: 'reports', loadChildren: raRoutes },
-  { path: 'tracking', loadChildren: trackingRoutes },
+  { path: 'laboratories', loadChildren: laboratoryRoutes, canActivate: [iamGuard] },
+  { path: 'equipments', loadChildren: equipmentRoutes, canActivate: [iamGuard] },
+  { path: 'batches', loadChildren: batchRoutes, canActivate: [iamGuard] },
+  { path: 'alerts', loadChildren: caRoutes, canActivate: [iamGuard] },
+  { path: 'reports', loadChildren: raRoutes, canActivate: [iamGuard] },
+  { path: 'tracking', loadChildren: trackingRoutes, canActivate: [iamGuard] },
   { path: 'subscriptions', loadChildren: subscriptionRoutes },
 
   { path: '', redirectTo: '/home', pathMatch: 'full' },
