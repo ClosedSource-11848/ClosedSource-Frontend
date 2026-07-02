@@ -247,6 +247,12 @@
     "checkout": {
       "title": "Checkout",
       "subtitle": "Review your selected plan before continuing to payment.",
+      "plan": "Plan",
+      "billing": "Billing",
+      "total": "Total",
+      "pay": "Pay",
+      "no-plan": "No plan selected",
+      "no-plan-message": "Select a subscription plan before continuing.",
       "selected-plan": "Selected Plan",
       "plan-code": "Plan Code",
       "billing-period": "Billing Period",
@@ -266,6 +272,8 @@
     "payment-cancel": {
       "title": "Payment Cancelled",
       "subtitle": "Your payment process was cancelled. You can try again whenever you are ready.",
+      "choose-plan": "Choose another plan",
+      "go-dashboard": "Go to Dashboard",
       "try-again": "Try Again",
       "view-plans": "View Plans"
     },
@@ -273,6 +281,7 @@
       "title": "Billing Summary",
       "subtitle": "Review your active subscription and payment history.",
       "current-subscription": "Current Subscription",
+      "cancel-subscription": "Cancel Subscription",
       "no-active-subscription": "No active subscription",
       "no-active-subscription-desc": "Choose a plan to activate billing for your laboratory.",
       "choose-plan": "Choose Plan",
@@ -356,7 +365,10 @@
       "critical": "Critical Deviations"
     },
     "fields": {
+      "timestamp": "Timestamp",
+      "parameter": "Parameter",
       "severity": "Severity",
+      "minimum-severity": "Minimum Severity",
       "recorded": "Recorded Value",
       "threshold": "Threshold Value",
       "equipment": "Equipment",
@@ -625,6 +637,7 @@
     "subtitle": "Register a new laboratory profile in QualiTrack.",
     "name": "Laboratory Name",
     "ruc": "RUC",
+    "rucLength": "RUC must contain 11 digits",
     "address": "Physical Address",
     "phone": "Contact Phone",
     "regulations": "Applicable Regulations",
@@ -641,6 +654,7 @@
   },
   "staff-form": {
     "title": "Register Staff Member",
+    "subtitle": "Create a staff profile and assign its operational role.",
     "fullName": "Full Name",
     "role": "Assigned Role",
     "email": "Email Address"
@@ -655,10 +669,12 @@
   },
   "product-form": {
     "title": "Register New Product / Batch",
+    "subtitle": "Define a pharmaceutical product and its BPM quality specifications.",
     "code": "Internal Product Code",
     "name": "Commercial Name",
     "description": "Therapeutic Description",
-    "specifications": "Quality Specifications (BPM)"
+    "specifications": "Quality Specifications (BPM)",
+    "specifications-hint": "Include acceptance criteria, limits, and required controls."
   },
   "raw-material-list": {
     "title": "Raw Materials Inventory",
@@ -675,6 +691,7 @@
   },
   "raw-material-form": {
     "title": "Register Raw Material Usage",
+    "subtitle": "Register raw material inventory data and stock thresholds.",
     "name": "Material Name",
     "code": "Internal Code",
     "supplier": "Supplier Name",
@@ -682,7 +699,8 @@
     "expirationDate": "Expiration Date",
     "quantityInStock": "Initial Quantity / Usage",
     "unit": "Measurement Unit",
-    "minimumStock": "Minimum Stock Threshold"
+    "minimumStock": "Minimum Stock Threshold",
+    "minimumStockHint": "The system will flag stock below this threshold."
   },
   "audit-log": {
     "title": "System Audit Log",
@@ -701,6 +719,7 @@
   },
   "deviation-trend": {
     "title": "Deviation Trends Analysis",
+    "select-equipment": "Select Equipment",
     "parameter": "Parameter",
     "equipment": "Equipment",
     "direction": "Trend Direction",
@@ -718,6 +737,7 @@
   },
   "kpi-dashboard": {
     "title": "Performance & KPI Dashboard",
+    "chart-title": "KPI Performance Trend",
     "overall-health": "Overall Health Score",
     "last-updated": "Last updated",
     "at-risk-params": "At Risk Parameters",
@@ -754,13 +774,77 @@
     }
   },
   "page-not-found": {
-    "title": "Page Not Found",
-    "content": "The path <strong>{{invalid_path}}</strong> is not valid.",
-    "go-home": "Go to Home"
+    "eyebrow": "Route not found",
+    "title": "This page is not available",
+    "content": "The route you tried to open does not exist or is no longer available. You can return to a safe area and continue working in QualiTrack.",
+    "go-home": "Go to Home",
+    "go-dashboard": "Go to Dashboard",
+    "go-back": "Go Back",
+    "help": {
+      "laboratory": {
+        "title": "Laboratory",
+        "description": "Manage laboratory profiles, staff, products and raw materials."
+      },
+      "tracking": {
+        "title": "Tracking",
+        "description": "Review telemetry status, measurements, history and anomalies."
+      },
+      "reports": {
+        "title": "Reports",
+        "description": "Access KPIs, deviation trends, audit logs and regulatory reports."
+      }
+    }
   },
   "about": {
-    "title": "About QualiTrack",
-    "content": "QualiTrack is a comprehensive pharmaceutical quality management system with IoT integration."
+    "eyebrow": "About the platform",
+    "title": "Quality management, traceability and compliance in one connected workspace",
+    "content": "QualiTrack helps pharmaceutical laboratories digitize critical quality operations through laboratory profiles, equipment monitoring, batch traceability, compliance alerts, KPI dashboards, audit logs and subscription-based access.",
+    "actions": {
+      "start": "Start as QA Manager",
+      "back-home": "Back to Home",
+      "evaluate": "Evaluate QualiTrack"
+    },
+    "panel": {
+      "platform": "QualiTrack Platform",
+      "platform-description": "A connected workspace for regulated pharmaceutical quality teams.",
+      "iot": "Equipment telemetry",
+      "bpm": "Compliance rules",
+      "ra": "Reports and audit",
+      "saas": "Subscription access"
+    },
+    "value": {
+      "eyebrow": "Why it matters",
+      "title": "Built for daily quality operations",
+      "subtitle": "QualiTrack connects operational records, equipment data and compliance evidence so quality teams can work with more control and less manual effort.",
+      "traceability": {
+        "title": "End-to-end traceability",
+        "description": "Connect laboratories, products, raw materials and production batches to keep quality evidence organized."
+      },
+      "monitoring": {
+        "title": "Equipment visibility",
+        "description": "Track equipment status, BPM parameters, telemetry measurements and maintenance records from one place."
+      },
+      "audit": {
+        "title": "Audit-ready evidence",
+        "description": "Generate reports, inspect KPI dashboards and review audit logs for critical quality actions."
+      }
+    },
+    "workflow": {
+      "eyebrow": "How it works",
+      "title": "From registration to regulatory evidence",
+      "description": "The platform follows the natural work of a laboratory quality team, from setup to monitoring, control and reporting.",
+      "items": [
+        "Register the laboratory, staff, products and raw materials.",
+        "Configure equipment, BPM parameters and maintenance records.",
+        "Track batches, telemetry measurements, anomalies and compliance alerts.",
+        "Review KPIs, generate reports and keep audit evidence available."
+      ]
+    },
+    "team": {
+      "eyebrow": "ClosedSource Team",
+      "title": "A product designed around pharmaceutical quality workflows",
+      "description": "QualiTrack was created to support laboratories that need better visibility, traceability and confidence when managing regulated production and quality processes."
+    }
   },
   "tracking": {
     "status": {

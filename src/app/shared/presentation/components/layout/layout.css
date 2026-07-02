@@ -31,6 +31,13 @@
   flex: 1 1 auto;
 }
 
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
 /* ==================== LAYOUT BODY ==================== */
 .layout-body {
   position: fixed;
@@ -227,5 +234,9 @@ mat-sidenav-content {
 
   .content-wrapper {
     padding: 16px;
+  }
+
+  .toolbar-actions {
+    gap: 8px;
   }
 }

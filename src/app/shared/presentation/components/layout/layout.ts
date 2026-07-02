@@ -10,14 +10,16 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { LanguageSwitcher } from '../language-switcher/language-switcher';
+import { UserSessionSection } from '../../../../iam/presentation/components/user-session-section/user-session-section';
 
 /**
  * Layout component for the main application shell.
  *
  * @remarks
- * Provides the fixed toolbar, side navigation menu, language switcher,
- * and routed content outlet. Routes that require path parameters are excluded
- * from the menu to avoid navigating users to not-found pages.
+ * Provides the fixed toolbar, side navigation menu, authenticated user section,
+ * language switcher, and routed content outlet. Routes that require path
+ * parameters are excluded from the menu to avoid navigating users to not-found
+ * pages.
  */
 @Component({
   selector: 'app-layout',
@@ -32,6 +34,7 @@ import { LanguageSwitcher } from '../language-switcher/language-switcher';
     MatExpansionModule,
     MatTooltipModule,
     LanguageSwitcher,
+    UserSessionSection,
   ],
   templateUrl: './layout.html',
   styleUrl: './layout.css',
